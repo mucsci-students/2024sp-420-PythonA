@@ -8,4 +8,4 @@ Download source code:
 
 ```git clone https://github.com/mucsci-students/2024sp-420-CWorld.git```
 
-Authors: Peter Freedman, 
+Authors: Peter Freedman, Marshall Feng
