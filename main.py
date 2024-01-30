@@ -1,5 +1,4 @@
-import Controller
+from Controller import Controller
 
-app = Controller.Controller()
-# app.run()
-print(app)
+app = Controller()
+app.run()
