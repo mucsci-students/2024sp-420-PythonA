@@ -1,15 +1,17 @@
 from Input import Input
 from Output import Output
+from Diagram import Diagram
 
 class Controller:
     def __init__(self) -> None:
-        self.input = Input()
-        self.output = Output()
-        self.shouldQuit = False
+        self._input = Input()
+        self._output = Output()
+        self._shouldQuit = False
+        self._diagram = Diagram()
 
     def run(self) -> None:
-        while not self.shouldQuit:
-            s = self.input.readLine()
+        while not self._shouldQuit:
+            s = self._input.readLine()
             if s == 'quit' or s == 'exit':
-                self.shouldQuit = True
-            self.output.write('Last cmd: {}'.format(s))
+                self._shouldQuit = True
+            self._output.write('Last cmd: {}'.format(s))
