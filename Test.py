@@ -11,7 +11,11 @@ class Test:
         returns a string in the form "self.name detail - expected {} actual {}" if the test was failed
     '''
     def exec(self, detail:str, expected, *args):
-        output = self.func(*args)
+        try:
+            output = self.func(*args)
+        except Exception as e:
+            return self.__createOutput(detail, str(expected), str(e))
+
         
         return self.__createOutput(detail, str(expected), str(output))
 
@@ -24,8 +28,10 @@ class Test:
 
     '''
     def checkUpdate(self, detail:str, expected, searchLoc, *args):
-
-        self.func(*args)
+        try:
+            self.func(*args)
+        except Exception as e:
+            return self.__createOutput(detail, str(expected), str(e))
 
         return self.__createOutput(detail, str(expected), str(searchLoc()))
     
@@ -42,6 +48,7 @@ class Test:
         if(expected == actual):
             return output + "passed"
         else:
-            return output + "\n\tExpected: " + expected + "\n\tActual: " + output    
+            return output + "\n\tExpected: " + expected + "\n\tActual: " + actual    
 
         
+ 
