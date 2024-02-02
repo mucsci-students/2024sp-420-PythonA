@@ -34,7 +34,7 @@ def cmdHelp(command:str):
         menu += "-d dest - deletes a relationship between the selected class and destination 'dest' if one exists\n"
     
     elif("list" == command):
-        menu = "all    - list all classes and their contents in the UML Diagram\n"
+        menu = "all   - list all classes and their contents in the UML Diagram\n"
         menu += "class - list all classes in the UML Diagram\n"
         menu += "rel   - list all relationships in the UML Diagram\n"
         menu += "class name - list all contents of class 'name'\n"
