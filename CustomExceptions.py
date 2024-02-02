@@ -10,7 +10,14 @@ class CustomExceptions:
             name (str): The name of the existing entity.
         """
         def __init__(self, name) -> None:
-            super().__init__(f"Entity with name '{name}' already exists.")
+
+            super().__init__(f"Object with name '{name}' already exists.")
+    
+    class CommandNotFoundError(Error):
+        """Exception raised when an invalid command is entered"""
+
+        def __init__(self, name) -> None:
+            super().__init__(f"Command '{name}' does not exist. Try again or type 'help' for help.")
 
     class EntityNotFoundError(Error):
         """
