@@ -3,6 +3,8 @@
 from CustomExceptions import CustomExceptions   #if an invalid command was entered after help
 
 def basicHelp():
+    #Shows the top layer help menu that details what more specific help commands work on
+    #returns a string that contains the menu
     menu = "Use 'help [command]' for detailed information about command usage\n\t"
     menu += "class - displays all commands related to class creation and modification\n\t"
     menu += "att   - displays all commands related to attribute creation and modification\n\t"
@@ -14,6 +16,8 @@ def basicHelp():
     return menu
 
 def cmdHelp(command:str):
+    #parses a string that corresponds to one of the options in the outer level help menu
+    #returns a string containing all options that correspond to the provided command
     menu = CustomExceptions.CommandNotFoundError(command)
 
     if("class" == command):
