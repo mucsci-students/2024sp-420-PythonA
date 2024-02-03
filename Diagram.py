@@ -77,7 +77,27 @@ class Diagram:
         """
         entity_names = list(self._entities.keys())
         return ', '.join(entity_names)
-
-    def deleteRelation(self, relation: Relation) -> None:
-        pass
+        
+    def add_relation(self, source, destination):
+        """
+        Adds a relation if the source and destination are valid and the
+        relation does not already exist. Returns a string describing results.
+        """
+        for rel in self._relations:
+            if rel.get_source() == source and rel.get_destination() == destination:
+                return "Relation already exists."
+        
+        relationship = Relation(source, destination)
+        self._relations.append(relationship)
+        return "Success."
+    
+    def delete_relation(self, source, destination):
+        """
+        Deletes a relation if it exists. Returns a string describing results.
+        """
+        for rel in self._relations:
+            if rel.get_source() == source and rel.get_destination() == destination:
+                self._relations.remove(rel)
+                return "Success."
+        return "Relation does not exist."
             
