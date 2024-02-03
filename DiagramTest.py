@@ -1,5 +1,8 @@
+import os
+
 from Test import Test
 from Diagram import Diagram
+from Serializer import Serializer
 
 def main():
     """
@@ -26,5 +29,19 @@ def main():
     # listEntities Testing
     listTest = Test("listEntities", dia.listEntities)
     print(listTest.exec("Entity exists", "NewEntity"))
+
+    # Save/Load Testing
+    toSave = Diagram()
+    toSave.addEntity(name='First')
+    toSave.addEntity(name='Second')
+    toSave.addEntity(name='Third')
+    serializer = Serializer()
+    dirname = os.path.dirname(__file__)
+    serializer.serialize(diagram=toSave, path=os.path.join(dirname, 'save.test'))
+    toLoad = Diagram()
+    serializer.deserialize(diagram=toLoad, path=os.path.join(dirname, 'save.test'))
+    res = 'Save/Load - {}'
+    print(res.format('Passed') if toSave.listEntities() == toLoad.listEntities() else res.format('Failed'))
     
-main()
+if __name__ == '__main__':
+    main()
