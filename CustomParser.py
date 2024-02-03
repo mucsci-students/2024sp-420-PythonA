@@ -23,6 +23,7 @@ def __findFunction(command:str, flags:str) -> function:
     '''
     cmd = CustomExceptions.CommandNotFoundError(command)
     #skip the hyphen
+    #FIX THIS - it does not actually split the args char by char rn.
     args = flags[1].split()
 
     if "class" == command:
