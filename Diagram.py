@@ -80,4 +80,4 @@ class Diagram:
 
     def deleteRelation(self, relation: Relation) -> None:
         pass
-            
+    
