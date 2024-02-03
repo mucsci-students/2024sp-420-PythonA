@@ -62,5 +62,4 @@ class Serializer:
         return open(path, 'r').read()
     
     def __write(self, path: str, content: str) -> None:
-        with open(path, 'w') as file:
-            file.write(content)
+        open(path, 'w').write(content)
