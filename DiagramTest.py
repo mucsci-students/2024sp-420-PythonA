@@ -1,5 +1,8 @@
+import os
+
 from Test import Test
 from Diagram import Diagram
+from Serializer import Serializer
 from Entity import Entity
 
 def main():
@@ -26,7 +29,7 @@ def main():
     # listEntities Testing
     listTest = Test("listEntities", dia.listEntities)
     print(listTest.exec("Entity exists", "NewEntity"))
-
+    
     #addAttribute Testing
     addAttrTest = Test("addAttribute", entity.addAttributes)
     print(addAttrTest.exec("Valid attribute name", None, "Attribute1"))
@@ -41,5 +44,19 @@ def main():
     deleteAtrrTest = Test("deleteAttribute", entity.deleteAttributes)
     print(deleteAtrrTest.exec("Delete existing attribute", None, "newAttribute"))
     print(deleteAtrrTest.exec("Attribute not found", "Attribute with name 'nonExistentAttribute' does not exist.", "nonExistentAttribute"))
-
-main()
+    
+    # Save/Load Testing
+    toSave = Diagram()
+    toSave.addEntity(name='First')
+    toSave.addEntity(name='Second')
+    toSave.addEntity(name='Third')
+    serializer = Serializer()
+    dirname = os.path.dirname(__file__)
+    serializer.serialize(diagram=toSave, path=os.path.join(dirname, 'save.test'))
+    toLoad = Diagram()
+    serializer.deserialize(diagram=toLoad, path=os.path.join(dirname, 'save.test'))
+    res = 'Save/Load - {}'
+    print(res.format('Passed') if toSave.listEntities() == toLoad.listEntities() else res.format('Failed'))
+    
+if __name__ == '__main__':
+    main()
