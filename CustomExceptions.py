@@ -28,3 +28,39 @@ class CustomExceptions:
         """
         def __init__(self, name) -> None:
             super().__init__(f"Entity with name '{name}' does not exists.")
+                        
+    class RelationExistsError(Error):
+        """
+        Exception raised when the relation being added already exists.
+        
+        Args:
+            source (Entity): The source of the relation that was being added.
+            destination (Entity): The destination of the relation that was
+                being added.
+                
+        Raises:
+            None.
+            
+        Returns:
+            None.
+        """
+        def __init__(self, source, destination):
+            super().__init__(f"Relation between '{source} -> {destination}' already exists.")
+            
+    class RelationDoesNotExistError(Error):
+        """
+        Exception raised when the relation being deleted does not exist.
+        
+        Args:
+            source (Entity): The source of the relation that was being deleted.
+            destination (Entity): The destination of the relation that was
+                being deleted.
+                
+        Raises:
+            None.
+            
+        Returns:
+            None.
+        """
+        def __init__(self, source, destination):
+            super().__init__(f"Relation between '{source} -> {destination}' does not exist.")
