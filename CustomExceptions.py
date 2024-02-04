@@ -28,3 +28,21 @@ class CustomExceptions:
         """
         def __init__(self, name) -> None:
             super().__init__(f"Entity with name '{name}' does not exists.")
+
+    class AttributeExistsError(Error):
+        """Exception raised when an attribute with a given name already exists.
+
+        Args:
+            attr (str): The name of the existing attribute.
+        """
+        def __init__(self, attr) -> None:
+            super().__init__(f"Attribute with name '{attr}' already exists.")
+    
+    class AttributeNotFoundError(Error):
+        """Exception raised when an attribute with a given name is not found.
+
+        Args:
+            attr (str): The name of the attribute not found.
+        """
+        def __init__(self, attr) -> None:
+            super().__init__(f"Attribute with name '{attr}' does not exist.")
