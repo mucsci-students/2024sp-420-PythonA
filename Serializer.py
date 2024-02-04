@@ -30,7 +30,7 @@ class Serializer:
         - `path` (str): The file path where the JSON file will be saved.
 
         # Returns:
-        - (bool): Whether or not serialization succeed.
+        - (bool): True if the serialize operation is successful, False otherwise.
         '''
         # TODO: Change error handling after error log is complete
         entities = {name: vars(obj) for name, obj in diagram._entities.items()}
@@ -50,7 +50,7 @@ class Serializer:
         - `path` (str): The file path of the JSON file to deserialize.
 
         # Returns:
-        - (bool): Whether or not deserialization succeed.
+        - (bool): True if the deserialize operation is successful, False otherwise.
         '''
         # TODO: Change error handling after error log is complete
         try:

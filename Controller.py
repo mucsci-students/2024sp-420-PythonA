@@ -18,10 +18,30 @@ class Controller:
                 self._shouldQuit = True
             self._output.write('Last cmd: {}'.format(s))
         
-    def save(self, path: str) -> None:
-        self._serializer.serialize(diagram=self._diagram, path=path)
+    def save(self, path: str) -> bool:
+        '''
+        Saves the current diagram using a serializer to the specified file path.
 
-    def load(self, path: str) -> None:
+        # Parameters:
+        - `path` (str): The path where the diagram should be saved.
+
+        # Returns:
+        - (bool): True if the save operation is successful, False otherwise.
+        '''
+        return self._serializer.serialize(diagram=self._diagram, path=path)
+
+    def load(self, path: str) -> bool:
+        '''
+        Loads a diagram from the specified file path using a deserializer.
+
+        # Parameters:
+        - `path` (str): The path from which the diagram should be loaded.
+
+        # Returns:
+        - (bool): True if the load operation is successful, False otherwise.
+        '''
         loadedDiagram = Diagram()
-        self._serializer.deserialize(diagram=loadedDiagram, path=path)
+        if not self._serializer.deserialize(diagram=loadedDiagram, path=path):
+            return False
         self._diagram = loadedDiagram
+        return True
