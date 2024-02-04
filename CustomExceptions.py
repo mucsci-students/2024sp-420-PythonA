@@ -41,10 +41,10 @@ class CustomExceptions:
     
     class InvalidFlagError(Error):
         """
-        Exception raised when an input argument is not valid.
+        Exception raised when an input flag is not valid.
 
         Args:
-            flag (str): The name of the argument that was not found.
+            flag (str): The name of the flag that was not found.
             command (str): The name of the command that was called with the invalid flag.
         """
         def __init__(self, flag, command) -> None:
