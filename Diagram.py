@@ -80,24 +80,47 @@ class Diagram:
         
     def add_relation(self, source, destination):
         """
-        Adds a relation if the source and destination are valid and the
-        relation does not already exist. Returns a string describing results.
+        Adds a relation between two Entities.
+        
+        Args:
+            source (Entity): The entity that is the source of the relation.
+            destination (Entity): The entity that is the destination of the relation.
+            
+        Raises:
+            CustumExceptions.RelationExistsError: On attempt to add a relation
+                that already exists between the source and the destination
+                entities.
+                
+        Returns:
+            The relation that was added.
         """
         for rel in self._relations:
             if rel.get_source() == source and rel.get_destination() == destination:
-                return "Relation already exists."
+                raise CustomExceptions.RelationExistsError(source, destination)
         
         relationship = Relation(source, destination)
         self._relations.append(relationship)
-        return "Success."
+        return relationship
     
     def delete_relation(self, source, destination):
         """
-        Deletes a relation if it exists. Returns a string describing results.
+        Deletes a relation between two Entities.
+        
+        Args:
+            source (Entity): The enitity that is the source of the relation.
+            destination (Entity): The entity that is the destination of the relation.
+        
+        Raises:
+            CustomExceptions.RelationDoesNotExistError: On attempt to delete a
+            relation that does not exist between the source and the
+            destination entities.
+            
+        Returns:
+            A copy of the deleted relation.
         """
-        for rel in self._relations:
+        for i, rel in enumerate(self._relations):
             if rel.get_source() == source and rel.get_destination() == destination:
-                self._relations.remove(rel)
-                return "Success."
-        return "Relation does not exist."
+                deleted_relation = self._relations.pop(i)
+                return deleted_relation
+        raise CustomExceptions.RelationDoesNotExistError(source, destination)
             
