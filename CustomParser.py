@@ -72,18 +72,18 @@ def __findFunction(command:str, flags:str) -> function:
             cmd = CE.InvalidFlagError(args[0], command)
     
     elif"att" == command:
-       if    args[0] == "a":
-            cmd = 
+       pass
     
     elif"rel" == command:
-       
+       pass
     
     elif"list" == command:
-       
+       pass
+    
     elif"save" == command:
-       
+       pass
     
     elif"load" == command:
-        print("hi")
+       pass
     
     return {cmd}
