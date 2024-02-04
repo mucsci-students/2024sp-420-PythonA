@@ -17,12 +17,7 @@ class Entity:
 
         Args:
             name (str): New name to be set
-
-        Raises:
-            ValueError: If the name contains non-alphanumeric characters.
         """
-        if not name.isalnum():
-            raise ValueError("Name must contain only alphanumeric characters")
         self._name = name
     
     def addAttributes(self, attr: str) -> None:
@@ -34,15 +29,12 @@ class Entity:
 
         Raises:
             CustomExceptions.AttributeExistsError: If the attribute already exists in the set.
-            ValueError: If the attribute name contains non-alphanumeric characters.
         """
         if attr in self._attributes:
             raise CustomExceptions.AttributeExistsError(attr)
-        if not attr.isalnum():
-            raise ValueError("Name must contain only alphanumeric characters")
         self._attributes.add(attr)
 
-    def deleteAttribute(self, attr: str) -> None:
+    def deleteAttributes(self, attr: str) -> None:
         """
         Deletes an attribute from this entity if it exists.
 
@@ -54,9 +46,9 @@ class Entity:
         """
         if attr not in self._attributes:
             raise CustomExceptions.AttributeNotFoundError(attr)
-        del self._attributes(attr)
+        self._attributes.remove(attr)
 
-    def renameAttribute(self, oldAttribute: str, newAttribute: str) -> None:
+    def renameAttributes(self, oldAttribute: str, newAttribute: str) -> None:
         """
         Renames an attribute from its old name to a new name
 
@@ -67,15 +59,11 @@ class Entity:
         Raises:
             CustomExceptions.AttributeNotFoundError: If the old attribute name does not exits in the entity's attribute
             CustomExceptions.AttributeExitsError: If the new name is already used for another attribute
-            ValueError: If the new attribute name contains non-alphanumeric characters.
         """
         if oldAttribute not in self._attributes:
             raise CustomExceptions.AttributeNotFoundError(oldAttribute)
         if newAttribute in self._attributes:
             raise CustomExceptions.AttributeExistsError(newAttribute)
-        if not newAttribute.isalnum():
-            raise ValueError("New name must contain only alphanumeric characters ")
-        
         # Remove the old attribute and add the new attribute name
         self._attributes.remove(oldAttribute)
         self._attributes.add(newAttribute)
