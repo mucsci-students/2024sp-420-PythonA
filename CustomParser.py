@@ -70,25 +70,26 @@ def __findFunction(command:str, flags:str) -> function:
             cmd = Controller.selectClass
         else:
             cmd = CE.InvalidFlagError(args[0], command)
-    
-    elif"att" == command:
-       #requires class selection
-       if Controller.getClass() == None:
-           cmd = CE.NoEntitySelected()
-           return {cmd}
-       if args[0] == "a":
-           cmd = 
-    
-    elif"rel" == command:
+
+    elif "list" == command:
        pass
     
-    elif"list" == command:
+    elif "save" == command:
        pass
     
-    elif"save" == command:
+    elif "load" == command:
        pass
+
+    #all commands below this point require an active class
+    elif Diagram.getClass() == None:
+        cmd = CE.NoEntitySelected()
+
+    elif "att" == command: 
+        pass
+
+    elif "rel" == command:
+        pass
+     
     
-    elif"load" == command:
-       pass
     
     return {cmd}
