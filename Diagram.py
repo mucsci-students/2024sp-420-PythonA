@@ -78,6 +78,53 @@ class Diagram:
         entity_names = list(self._entities.keys())
         return ', '.join(entity_names)
 
+        
+    def add_relation(self, source, destination):
+        """
+        Adds a relation between two Entities.
+        
+        Args:
+            source (Entity): The entity that is the source of the relation.
+            destination (Entity): The entity that is the destination of the relation.
+            
+        Raises:
+            CustumExceptions.RelationExistsError: On attempt to add a relation
+                that already exists between the source and the destination
+                entities.
+                
+        Returns:
+            The relation that was added.
+        """
+        for rel in self._relations:
+            if rel.get_source() == source and rel.get_destination() == destination:
+                raise CustomExceptions.RelationExistsError(source, destination)
+        
+        relationship = Relation(source, destination)
+        self._relations.append(relationship)
+        return relationship
+    
+    def delete_relation(self, source, destination):
+        """
+        Deletes a relation between two Entities.
+        
+        Args:
+            source (Entity): The enitity that is the source of the relation.
+            destination (Entity): The entity that is the destination of the relation.
+        
+        Raises:
+            CustomExceptions.RelationDoesNotExistError: On attempt to delete a
+            relation that does not exist between the source and the
+            destination entities.
+            
+        Returns:
+            A copy of the deleted relation.
+        """
+        for i, rel in enumerate(self._relations):
+            if rel.get_source() == source and rel.get_destination() == destination:
+                deleted_relation = self._relations.pop(i)
+                return deleted_relation
+        raise CustomExceptions.RelationDoesNotExistError(source, destination)
+
     def deleteRelation(self, relation: Relation) -> None:
         pass
     
