@@ -49,3 +49,14 @@ class CustomExceptions:
         """
         def __init__(self, flag, command) -> None:
             super().__init__(f"Command '{command}' has no flag '-{flag}'.")
+    
+    class NoEntitySelected(Error):
+        """
+        Exception raised when an input argument is not valid.
+
+        Args:
+            flag (str): The name of the argument that was not found.
+            command (str): The name of the command that was called with the invalid flag.
+        """
+        def __init__(self) -> None:
+            super().__init__(f"No class selected. Use 'class -s name' to select a class.")

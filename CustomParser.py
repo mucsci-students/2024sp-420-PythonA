@@ -72,7 +72,12 @@ def __findFunction(command:str, flags:str) -> function:
             cmd = CE.InvalidFlagError(args[0], command)
     
     elif"att" == command:
-       pass
+       #requires class selection
+       if Controller.getClass() == None:
+           cmd = CE.NoEntitySelected()
+           return {cmd}
+       if args[0] == "a":
+           cmd = 
     
     elif"rel" == command:
        pass
