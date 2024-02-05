@@ -58,26 +58,38 @@ def __findFunction(command:str, flags:str) -> function:
     cmd = CE.CommandNotFoundError(command)
     
     args = list(flags[1:]) #start at 1 to skip the hyphen
+    flag = args[0]  #renamed for readability
 
     if "class" == command:
-        if   args[0] == "a":
+        if   flag == "a":
             cmd = Diagram.addEntity
-        elif args[0] == "d":
+        elif flag == "d":
             cmd = Diagram.deleteEntity
-        elif args[0] == "r":
+        elif flag == "r":
             cmd = Entity.setName
-        elif args[0] == "s":
+        elif flag == "s":
             cmd = Controller.selectClass
         else:
-            cmd = CE.InvalidFlagError(args[0], command)
+            cmd = CE.InvalidFlagError(flag, command)
 
     elif "list" == command:
-       pass
+        if   flag == "a":
+            cmd = None #TODO - List all classes and their attributes and relationships
+        elif flag == "c":
+            cmd = Diagram.listEntities
+        elif flag == "r":
+            cmd = None #TODO - List all relationships
+        elif flag == "c" and len(args) > 1: #check if they put in a class name 
+            cmd = None #TODO - List all data about a given class
+        else:
+            cmd = CE.InvalidFlagError(flag, command)
     
     elif "save" == command:
-       pass
-    
-    elif "load" == command:
+        if   flag == "n":
+            cmd = None #TODO - the command for saving a file with a name
+        else:
+            cmd = CE.InvalidFlagError(flag, command)
+    elif "load" == command:  #placeholder for eventual load flags - could be removed
        pass
 
     #all commands below this point require an active class
@@ -85,11 +97,21 @@ def __findFunction(command:str, flags:str) -> function:
         cmd = CE.NoEntitySelected()
 
     elif "att" == command: 
-        pass
+        if  flag == "a":
+            cmd = None #TODO: Command that creates an attribute
+        elif flag == "d":
+            cmd = None #TODO: Command that deletes an attribute
+        elif flag == "r":
+            cmd = None #TODO: Command that renames an attribute
+        else:
+            cmd = CE.InvalidFlagError(flag, command)
 
     elif "rel" == command:
-        pass
-     
-    
+        if  flag == "a":
+            cmd = None #TODO: Command that adds a relationship
+        elif flag == "d":
+            cmd = None #TODO: Command that deletes a relationship
+        else:
+            cmd = CE.InvalidFlagError(flag, command)
     
     return {cmd}
