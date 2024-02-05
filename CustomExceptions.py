@@ -27,7 +27,28 @@ class CustomExceptions:
             name (str): The name of the entity not found.
         """
         def __init__(self, name) -> None:
-            super().__init__(f"Entity with name '{name}' does not exists.")
+            super().__init__(f"Entity with name '{name}' does not exist.")
+    
+    class InvalidArgumentError(Error):
+        """
+        Exception raised when an input argument is not valid.
+
+        Args:
+            name (str): The name of the argument that was not found.
+        """
+        def __init__(self, name) -> None:
+            super().__init__(f"Argument '{name}' is not alphanumeric.")
+    
+    class InvalidFlagError(Error):
+        """
+        Exception raised when an input flag is not valid.
+
+        Args:
+            flag (str): The name of the flag that was not found.
+            command (str): The name of the command that was called with the invalid flag.
+        """
+        def __init__(self, flag, command) -> None:
+            super().__init__(f"Command '{command}' has no flag '-{flag}'.")
 
     class AttributeExistsError(Error):
         """Exception raised when an attribute with a given name already exists.
