@@ -47,6 +47,21 @@ class Relation:
             destination (Entity): The destination entity of the relation.
         """
         return self._destination
+    
+    def contains(self, entity: Entity):
+        """
+        Checks if the given entity is part of the relation.
+
+        Args:
+            entity (Entity): The entity to check for existence within the relation.
+
+        Returns:
+            bool: True if the given entity is either the source or the destination of the relation, False otherwise.
+        """
+        if entity == self._source or entity == self._destination:
+            return True
+        else:
+            return False
 
     def __str__(self):
         """
