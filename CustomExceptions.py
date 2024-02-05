@@ -27,7 +27,6 @@ class CustomExceptions:
             name (str): The name of the entity not found.
         """
         def __init__(self, name) -> None:
-            super().__init__(f"Entity with name '{name}' does not exists.")
                         
     class RelationExistsError(Error):
         """
@@ -38,11 +37,6 @@ class CustomExceptions:
             destination (Entity): The destination of the relation that was
                 being added.
                 
-        Raises:
-            None.
-            
-        Returns:
-            None.
         """
         def __init__(self, source, destination):
             super().__init__(f"Relation between '{source} -> {destination}' already exists.")
@@ -55,12 +49,46 @@ class CustomExceptions:
             source (Entity): The source of the relation that was being deleted.
             destination (Entity): The destination of the relation that was
                 being deleted.
-                
-        Raises:
-            None.
-            
-        Returns:
-            None.
+
         """
         def __init__(self, source, destination):
             super().__init__(f"Relation between '{source} -> {destination}' does not exist.")
+    
+    class InvalidArgumentError(Error):
+        """
+        Exception raised when an input argument is not valid.
+
+        Args:
+            name (str): The name of the argument that was not found.
+        """
+        def __init__(self, name) -> None:
+            super().__init__(f"Argument '{name}' is not alphanumeric.")
+    
+    class InvalidFlagError(Error):
+        """
+        Exception raised when an input flag is not valid.
+
+        Args:
+            flag (str): The name of the flag that was not found.
+            command (str): The name of the command that was called with the invalid flag.
+        """
+        def __init__(self, flag, command) -> None:
+            super().__init__(f"Command '{command}' has no flag '-{flag}'.")
+
+    class AttributeExistsError(Error):
+        """Exception raised when an attribute with a given name already exists.
+
+        Args:
+            attr (str): The name of the existing attribute.
+        """
+        def __init__(self, attr) -> None:
+            super().__init__(f"Attribute with name '{attr}' already exists.")
+    
+    class AttributeNotFoundError(Error):
+        """Exception raised when an attribute with a given name is not found.
+
+        Args:
+            attr (str): The name of the attribute not found.
+        """
+        def __init__(self, attr) -> None:
+            super().__init__(f"Attribute with name '{attr}' does not exist.")

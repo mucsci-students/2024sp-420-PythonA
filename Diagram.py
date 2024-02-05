@@ -77,6 +77,7 @@ class Diagram:
         """
         entity_names = list(self._entities.keys())
         return ', '.join(entity_names)
+
         
     def add_relation(self, source, destination):
         """
@@ -123,4 +124,7 @@ class Diagram:
                 deleted_relation = self._relations.pop(i)
                 return deleted_relation
         raise CustomExceptions.RelationDoesNotExistError(source, destination)
-            
+
+    def deleteRelation(self, relation: Relation) -> None:
+        pass
+    
