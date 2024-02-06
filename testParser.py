@@ -34,10 +34,19 @@ def main():
     #print(saveTests.exec("no name", [CLASS.METHOD], "save"))
     print(saveTests.exec("invalid flag",[CE.InvalidFlagError("z","save")],"save -z"))
 
-    
+    loadTests = Test("Load Methods", P.parse)
+    #print (loadTests.exec("with name", [CLASS.METHOD, "test"], "load -f test"))
+    print(loadTests.exec("invalid flag",[CE.InvalidFlagError("z","load")],"load -z"))
 
+    attributeTests = Test("Attribute Methods", P.parse)
+    #print(attributeTests.exec("add", [CLASS.METHOD, "test"],"att -a test"))
+    #print(attributeTests.exec("delete", [CLASS.METHOD, "test"],"att -d test"))
+    #print(attributeTests.exec("rename", [CLASS.METHOD, "test", "test2"],"att -r test test2"))
+    print(attributeTests.exec("invalid flag",[CE.InvalidFlagError("z","att")],"att -z"))
 
-
-
+    relationTests = Test("Relation Methods", P.parse)
+    #print(relationTests.exec("add", [CLASS.METHOD, "test"], "rel -a test"))
+    #print(relationTests.exec("delete", [CLASS.METHOD, "test"], "rel -d test"))
+    print(relationTests.exec("invalid flag",[CE.InvalidFlagError("z","rel")],"rel -z"))
 
 main()

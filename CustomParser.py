@@ -18,23 +18,23 @@ def parse (input:str) -> list:
             With invalid flag: CustomExceptions.InvalidFlagError
             With invalid command: CustomExceptions.CommandNotFoundError
     '''
-    
+
     components = input.split(" ")
-    #check args, except IndexError in case there are none
-    try:
-        args = components[2:]
-        out = __checkArgs(args)
-    except IndexError as e:
-        args = []
-    #if args are invalid, return that error
-    if(isinstance(out, Exception)):
-        return [out] + args
-    #otherwise, find the function (again, protecting against invalid index)
-    try:
-        out = [__findFunction(command=components[0], flags=components[1])] + args
-    except IndexError as e:
-        out = [__findFunction(command=components[0], flags="")] + args
-    return out
+    args = components[2:]
+
+    if   len(components) < 1:
+        out = [None]
+    elif len(components) == 1:
+        #TODO - Figure out why this try/except is needed. Maybe "flag = args[0] in __findFunction?"
+        try:
+            out = [__findFunction(command=components[0], flags=[""])]
+        except IndexError as e:
+            out = [CE.CommandNotFoundError(components[0])]
+    else:
+        out = [__checkArgs(args)]
+        if not isinstance(out[0], Exception):
+            out = [__findFunction(command=components[0], flags=components[1])]
+    return out + args
 
 
 def __checkArgs(args:list):
@@ -103,11 +103,15 @@ def __findFunction(command:str, flags:str):
         else:
             cmd = CE.InvalidFlagError(flag, command)
     elif "load" == command:  #placeholder for eventual load flags - could be removed
-       cmd = None #TODO - the method to load the file
+        if   flag == "f":
+            cmd = None #TODO - the method to load the file
+        else:
+            cmd = CE.InvalidFlagError(flag, command)
 
     #all commands below this point require an active class
-    elif Diagram.getClass() == None:
-        cmd = CE.NoEntitySelected()
+    #TODO: implement getClass and uncomment this check
+    #elif Diagram.getClass() == None:
+        #cmd = CE.NoEntitySelected()
 
     elif "att" == command: 
         if  flag == "a":
@@ -126,5 +130,5 @@ def __findFunction(command:str, flags:str):
             cmd = None #TODO: Command that deletes a relationship
         else:
             cmd = CE.InvalidFlagError(flag, command)
-    
+
     return cmd
