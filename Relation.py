@@ -1,6 +1,22 @@
 from Entity import Entity
 
 class Relation:
+    def __init__(self):
+                """
+        Creates a default relation with no source and no destination.
+        
+        Args:
+            None.
+            
+        Raises:
+            None.
+            
+        Returns:
+            None.
+        """
+        self._source = ""
+        self._destination = ""
+
     def __init__(self, source, destination):
         """
         Creates a relation from source and destination.
