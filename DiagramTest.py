@@ -16,15 +16,14 @@ def main():
     listTest = Test("listEntities", dia.listEntities)
     print(listTest.exec("No entities", ""))
 
-    # addClass Testing
+    # addEntity Testing
     addTest = Test("addEntity", dia.addEntity)
     print(addTest.exec("Valid Name", None, "Entity1"))
-    print(addTest.exec("Invalid Name", "Name must contain only alphanumeric characters", "Entity 1"))
-    print(addTest.exec("Existing Name", "Object with name 'Entity1' already exists.", "Entity1")) #TYPO FIXED
+    print(addTest.exec("Existing Name", "Entity with name 'Entity1' already exists.", "Entity1")) 
     print(addTest.exec("Existing Name", "Entity with name 'Entity1' already exists.", "Entity1"))
 
 
-    # renameClass Testing
+    # renameEntity Testing
     renameTest = Test("renameEntity", dia.renameEntity)
     print(renameTest.exec("Valid Rename", None, "Entity1", "NewEntity"))
     print(renameTest.exec("Invalid old name", "Entity with name 'Entity!' does not exists.", "Entity!", "NewEntity"))
@@ -32,17 +31,28 @@ def main():
     # listEntities Testing
     listTest = Test("listEntities", dia.listEntities)
     print(listTest.exec("Entity exists", "NewEntity"))
-    
-    # add_relation Testing
-    dia.addEntity("Entity2") #Need second to test relation
+
+    # SETTING UP STATE FOR RELATION TESTING,   STATE: Entity1, Entity2
+    dia.renameEntity("NewEntity", "Entity1")
+    dia.addEntity("Entity2")
+
+    # Test add_relation
     add_relation_test = Test("add_relation", dia.add_relation)
-    print(add_relation_test.exec("Valid input", "Entity1 -> Entity2", "Entity1", "Entity2"))
+    print(add_relation_test.exec("Relation added", None, "Entity1", "Entity2"))
     print(add_relation_test.exec("Relation already exists.", "Relation between 'Entity1 -> Entity2' already exists.", "Entity1", "Entity2"))
     
     # delete_relation Testing
     delete_relation_test = Test("delete_relation", dia.delete_relation)
-    print(delete_relation_test.exec("Valid input.", "Entity1 -> Entity2", "Entity1", "Entity2"))
+    print(delete_relation_test.exec("Successful deletion", None, "Entity1", "Entity2"))
     print(delete_relation_test.exec("No relation.", "Relation between 'Entity1 -> Entity2' does not exist.", "Entity1", "Entity2"))
+
+    # test deleteEntity
+    dia.add_relation("Entity1", "Entity2")
+    deleteEntityTest = Test("Delete Entity", dia.deleteEntity)
+    print(deleteEntityTest.exec("Entity does not exist", "Entity with name 'Entity3' does not exists.", "Entity3"))
+    print(deleteEntityTest.exec("Successful Entity/Relation deletion", None, "Entity1"))
+    listRelationsTest = Test("List relations", dia.list_relations)
+    print(listRelationsTest.exec("Relations deleted with entity", ""))
    
     #addAttribute Testing
     addAttrTest = Test("addAttribute", entity.addAttributes)

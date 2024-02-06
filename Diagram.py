@@ -29,20 +29,26 @@ class Diagram:
         Delete a given entity from our dictionary.
 
         Args:
-            name (str): The name of the entity to deleted.
+            name (str): The name of the entity to be deleted.
 
         Raises:
-            CustomExceptions.EntityNotFoundError: If a entity to be deleted does not exist.
+            CustomExceptions.EntityNotFoundError: If an entity to be deleted does not exist.
 
         Returns:
             None
         """
         if name not in self._entities:
             raise CustomExceptions.EntityNotFoundError(name)
-        # Delete relations containing the given entity
+        
+        # Check for relations involving the entity and remove them
+        relations_to_remove = []
         for relation in self._relations:
             if relation.contains(self._entities[name]):
-                self.deleteRelation(relation)
+                relations_to_remove.append(relation)
+        for relation in relations_to_remove:
+            self._relations.remove(relation)
+        
+        # Remove the entity from the dictionary
         del self._entities[name]
 
 
@@ -77,54 +83,66 @@ class Diagram:
         """
         entity_names = list(self._entities.keys())
         return ', '.join(entity_names)
+    
+    def list_relations(self) -> str:
+        """
+        Lists all existing relations as a string.
+
+        Returns:
+            str: A string representation of all existing relations.
+        """
+        relations_list = []
+        for relation in self._relations:
+            relations_list.append(str(relation))
+        return '\n'.join(relations_list)
 
         
-    def add_relation(self, source, destination):
+    def add_relation(self, source, destination) -> None:
         """
         Adds a relation between two Entities.
         
         Args:
-            source (Entity): The entity that is the source of the relation.
-            destination (Entity): The entity that is the destination of the relation.
+            source (str): The name of the source entity
+            destination (str): The name of the destination entity
             
         Raises:
-            CustumExceptions.RelationExistsError: On attempt to add a relation
-                that already exists between the source and the destination
-                entities.
-                
-        Returns:
-            The relation that was added.
+            CustomExceptions.EntityNotFoundError: If either the source or the destination entity is not found.
+            CustomExceptions.RelationExistsError: If a relation already exists between the source and destination entities.
         """
+        # Check for valid source and destination
+        if source not in self._entities:
+            raise CustomExceptions.EntityNotFoundError(source)
+        if destination not in self._entities:
+            raise CustomExceptions.EntityNotFoundError(destination)
+        # Check for duplicate relationship containing same source and destination
         for rel in self._relations:
-            if rel.get_source() == source and rel.get_destination() == destination:
+            if rel.get_source() == self._entities[source] and rel.get_destination() == self._entities[destination]:
                 raise CustomExceptions.RelationExistsError(source, destination)
-        
-        relationship = Relation(source, destination)
+        # Pass entity objects to relation and add relation to list of existing relations
+        relationship = Relation(self._entities[source], self._entities[destination])
         self._relations.append(relationship)
-        return relationship
     
-    def delete_relation(self, source, destination):
+    def delete_relation(self, source, destination) -> None:
         """
         Deletes a relation between two Entities.
         
         Args:
-            source (Entity): The enitity that is the source of the relation.
-            destination (Entity): The entity that is the destination of the relation.
+            source (str): The str that is the source of the relation.
+            destination (str): The str that is the destination of the relation.
         
         Raises:
-            CustomExceptions.RelationDoesNotExistError: On attempt to delete a
-            relation that does not exist between the source and the
-            destination entities.
-            
-        Returns:
-            A copy of the deleted relation.
+            CustomExceptions.EntityNotFoundError: If either the source or the destination entity is not found.
+            CustomExceptions.RelationDoesNotExistError: If a relation does not exist between the source and destination entities.
         """
+        # Check for valid source and destination
+        if source not in self._entities:
+            raise CustomExceptions.EntityNotFoundError(source)
+        if destination not in self._entities:
+            raise CustomExceptions.EntityNotFoundError(destination)
+        # Look for matching relation to delete
         for i, rel in enumerate(self._relations):
-            if rel.get_source() == source and rel.get_destination() == destination:
-                deleted_relation = self._relations.pop(i)
-                return deleted_relation
+            if rel.get_source() == self._entities[source] and rel.get_destination() == self._entities[destination]:
+                del self._relations[i]
+                return
         raise CustomExceptions.RelationDoesNotExistError(source, destination)
-
-    def deleteRelation(self, relation: Relation) -> None:
-        pass
     
