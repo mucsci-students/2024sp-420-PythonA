@@ -1,7 +1,7 @@
 from Entity import Entity
 
 class Relation:
-    def __init__(self, source, destination):
+    def __init__(self, source=None, destination=None):
         """
         Creates a relation from source and destination.
         
@@ -15,14 +15,8 @@ class Relation:
         Returns:
             None.
         """
-        if source == None:
-            self._source = None
-        else:
-            self._source = source
-        if destination == None:
-            self._destination == None
-        else:
-            self._destination = destination
+       self._source = source
+       self._destination = destination
     
     def get_source(self):
         """
