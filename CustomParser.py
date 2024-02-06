@@ -68,7 +68,7 @@ def __findFunction(command:str, flags:str):
     '''
     cmd = CE.CommandNotFoundError(command)
     
-    args = list(flags[1:]) #start at 1 to skip the hyphen
+    args = list(flags.strip("-")) 
     flag = args[0]  #renamed for readability
 
     if "class" == command:
@@ -78,8 +78,6 @@ def __findFunction(command:str, flags:str):
             cmd = Diagram.deleteEntity
         elif flag == "r":
             cmd = Entity.setName
-        elif flag == "s":
-            cmd = Controller.selectClass
         else:
             cmd = CE.InvalidFlagError(flag, command)
 
@@ -108,11 +106,6 @@ def __findFunction(command:str, flags:str):
         else:
             cmd = CE.InvalidFlagError(flag, command)
 
-    #all commands below this point require an active class
-    #TODO: implement getClass and uncomment this check
-    #elif Diagram.getClass() == None:
-        #cmd = CE.NoEntitySelected()
-
     elif "att" == command: 
         if  flag == "a":
             cmd = None #TODO: Command that creates an attribute
@@ -130,5 +123,10 @@ def __findFunction(command:str, flags:str):
             cmd = None #TODO: Command that deletes a relationship
         else:
             cmd = CE.InvalidFlagError(flag, command)
-
+    
+    elif "exit" or "quit" == command:
+        if flag == "":
+            cmd = None #TODO: Quit Command
+        else:
+            cmd = CE.InvalidFlagError(flag, command)
     return cmd
