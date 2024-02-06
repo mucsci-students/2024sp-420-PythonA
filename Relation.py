@@ -1,22 +1,6 @@
 from Entity import Entity
 
 class Relation:
-    def __init__(self):
-                """
-        Creates a default relation with no source and no destination.
-        
-        Args:
-            None.
-            
-        Raises:
-            None.
-            
-        Returns:
-            None.
-        """
-        self._source = ""
-        self._destination = ""
-
     def __init__(self, source, destination):
         """
         Creates a relation from source and destination.
@@ -31,8 +15,14 @@ class Relation:
         Returns:
             None.
         """
-        self._source = source
-        self._destination = destination
+        if source == None:
+            self._source = None
+        else:
+            self._source = source
+        if destination == None:
+            self._destination == None
+        else:
+            self._destination = destination
     
     def get_source(self):
         """
