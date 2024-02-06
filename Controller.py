@@ -3,6 +3,8 @@ from Output import Output
 from Serializer import Serializer
 from CustomExceptions import CustomExceptions as CE
 from Diagram import Diagram
+import os
+from Help import basicHelp, cmdHelp
 
 class Controller:
     def __init__(self) -> None:
@@ -16,15 +18,54 @@ class Controller:
         while not self._shouldQuit:
             s = self._input.readLine()
             input = self.parse(s)
+
             if not (isinstance(input[0], Exception)):
                 command = input[0]
                 args = input[1:]
-                input[0](self._diagram, *args)
-
+                func = command(*args)
+                self._output.write(str(func))
+            else:
+                self._output.write(str(input[0]))
+            
+            #quit routine entrypoint TODO: Move to __findFunction
             if s == 'quit' or s == 'exit':
-                self._shouldQuit = True
-            self._output.write('Last cmd: {}'.format(s))
+                exit_prep = self.quit()
+                if(exit_prep == True):
+                    self._shouldQuit = True
+                else:
+                    self._output.write(str(exit_prep))
+                    
+    def quit(self):
+        '''Basic Quit Routine. Prompts user to save, where to save, 
+            validates input.
+            
+        Returns:
+            If the name and filepath were valid or user doesn't want to save, returns true
+            If name is invalid, returns invalid filename exception
+            If filepath is invalid, returns invalid filepath exception
+        '''
+        self._output.write("Would you like to save? [y]/n: ")
+        answer = self._input.readLine("")
+        if answer != "n" or "N" or "no" or "No":
+            self._output.write("Name of file to save: ")
+            answer = self._input.readLine("")
+        else:
+            #user wants to quit without saving
+            return True
         
+        if self.__checkArgs([answer]) == None:
+            self._output.write("Filepath to save to: ")
+            fp = self._input.readLine("")
+        else:
+            return CE.IOFailedError("Save", "invalid filename")
+        fp += answer + '.json'
+        if os.path.exists(fp):
+            self._serializer.serialize(self._diagram, fp)
+            return True
+        else:
+            return CE.IOFailedError("Save", "invalid filepath")
+        return CE.IOFailedError("Save", "an unknown fatal error")
+
     def save(self, path: str) -> bool:
         '''
         Saves the current diagram using a serializer to the specified file path.
@@ -113,16 +154,17 @@ class Controller:
         '''
         cmd = CE.CommandNotFoundError(command)
         
-        args = list(flags.strip("-")) 
-        flag = args[0]  #renamed for readability
-
+        args = list(flags)
+        print("args: ", args)
+        flag = args[1] #renamed for readability
+        print("flag: ", flag)
         if "class" == command:
             if   flag == "a":
                 cmd = self._diagram.addEntity
             elif flag == "d":
                 cmd = self._diagram.deleteEntity
             elif flag == "r":
-                cmd = self.diagram.renameEntity
+                cmd = self._diagram.renameEntity
             else:
                 cmd = CE.InvalidFlagError(flag, command)
 
@@ -139,17 +181,10 @@ class Controller:
                 cmd = CE.InvalidFlagError(flag, command)
         
         elif "save" == command:
-            if   flag == "n":
-                cmd = None #TODO - the command for saving a file with a name
-            elif flag == "":
-                cmd = None #TODO - the command to save a file based on the name of the current file
-            else:
-                cmd = CE.InvalidFlagError(flag, command)
-        elif "load" == command:  #placeholder for eventual load flags - could be removed
-            if   flag == "f":
-                cmd = None #TODO - the method to load the file
-            else:
-                cmd = CE.InvalidFlagError(flag, command)
+            cmd = Serializer.serialize
+
+        elif "load" == command: 
+            cmd = Serializer.deserialize
 
         elif "att" == command: 
             if  flag == "a":
@@ -163,15 +198,21 @@ class Controller:
 
         elif "rel" == command:
             if  flag == "a":
-                cmd = None #TODO: Command that adds a relationship
+                cmd = self._diagram.add_relation
             elif flag == "d":
-                cmd = None #TODO: Command that deletes a relationship
+                cmd = self._diagram.delete_relation
             else:
                 cmd = CE.InvalidFlagError(flag, command)
-        
+        #TODO: how to handle commands with no flags sometimes?
         elif "exit" or "quit" == command:
-            if flag == "":
+            if flag == None:
                 cmd = None #TODO: Quit Command
+            else:
+                cmd = CE.InvalidFlagError(flag, command)
+        elif "help" == command:
+            #TODO - implement all the specific help calls
+            if len(args) == 0:
+                cmd = basicHelp
             else:
                 cmd = CE.InvalidFlagError(flag, command)
         return cmd

@@ -27,6 +27,7 @@ class CustomExceptions:
             name (str): The name of the entity not found.
         """
         def __init__(self, name) -> None:
+            super().__init__(f"Class {name} does not exist.")
                         
     class RelationExistsError(Error):
         """
@@ -103,3 +104,13 @@ class CustomExceptions:
         """
         def __init__(self, attr) -> None:
             super().__init__(f"Attribute with name '{attr}' does not exist.")
+    
+    class IOFailedError(Error):
+        '''Exception raised when an I/O Operation fails (saving or loading)
+        
+        Args:
+            opname (str): the name of the operation that failed
+            reason (str): the reason that opname failed
+        '''
+        def __init__(self, opname, reason) -> None:
+            super().__init__(f"{opname} failed due to {reason}. Please try again.")
