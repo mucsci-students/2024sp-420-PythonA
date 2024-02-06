@@ -18,12 +18,23 @@ def parse (input:str) -> list:
             With invalid flag: CustomExceptions.InvalidFlagError
             With invalid command: CustomExceptions.CommandNotFoundError
     '''
+    
     components = input.split(" ")
+    #check args, except IndexError in case there are none
     try:
-        __checkArgs(args=components[2:])
-    except CE.InvalidArgumentError as e:
-        return e
-    return __findFunction(command=components[0], flags=components[1])
+        args = components[2:]
+        out = __checkArgs(args)
+    except IndexError as e:
+        args = []
+    #if args are invalid, return that error
+    if(isinstance(out, Exception)):
+        return [out] + args
+    #otherwise, find the function (again, protecting against invalid index)
+    try:
+        out = [__findFunction(command=components[0], flags=components[1])] + args
+    except IndexError as e:
+        out = [__findFunction(command=components[0], flags="")] + args
+    return out
 
 
 def __checkArgs(args:list):
@@ -40,10 +51,10 @@ def __checkArgs(args:list):
     '''
      for arg in args:
         if not(arg.isalnum()):
-            raise CE.InvalidArgumentError(arg)
+            return CE.InvalidArgumentError(arg)
      return None
 
-def __findFunction(command:str, flags:str) -> function:
+def __findFunction(command:str, flags:str):
     '''Given a command and flags, finds and returns the appropriate function
         
         Args: 
@@ -87,10 +98,12 @@ def __findFunction(command:str, flags:str) -> function:
     elif "save" == command:
         if   flag == "n":
             cmd = None #TODO - the command for saving a file with a name
+        elif flag == "":
+            cmd = None #TODO - the command to save a file based on the name of the current file
         else:
             cmd = CE.InvalidFlagError(flag, command)
     elif "load" == command:  #placeholder for eventual load flags - could be removed
-       pass
+       cmd = None #TODO - the method to load the file
 
     #all commands below this point require an active class
     elif Diagram.getClass() == None:
@@ -114,4 +127,4 @@ def __findFunction(command:str, flags:str) -> function:
         else:
             cmd = CE.InvalidFlagError(flag, command)
     
-    return {cmd}
+    return cmd
