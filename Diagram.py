@@ -23,6 +23,19 @@ class Diagram:
         if name in self._entities:
             raise CustomExceptions.EntityExistsError(name)
         self._entities[name] = Entity(name)
+
+    def getEntity(self, name: str) -> None:
+        """
+        Retrieves an entity from the diagram if it exists.
+
+        Args:
+            name (str): The name of the entity to be retrieved.
+
+        Returns:
+            Entity or None: The Entity object if it exists, otherwise None
+        """
+        return self._entities.get(name, None)
+
     
     def deleteEntity(self, name: str) -> None:
         """
