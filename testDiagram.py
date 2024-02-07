@@ -2,7 +2,7 @@ import os
 
 from Test import Test
 from Diagram import Diagram
-from Serializer import Serializer
+import Serializer
 from Entity import Entity
 
 def main():
@@ -74,13 +74,17 @@ def main():
     toSave.addEntity(name='First')
     toSave.addEntity(name='Second')
     toSave.addEntity(name='Third')
-    serializer = Serializer()
+    toSave.add_relation('First', 'Second')
+    toSave.add_relation('Second', 'First')
+    toSave.add_relation('First', 'Third')
+    toSave.add_relation('Second', 'Third')
     dirname = os.path.dirname(__file__)
-    serializer.serialize(diagram=toSave, path=os.path.join(dirname, 'save.test'))
+    Serializer.serialize(diagram=toSave, path=os.path.join(dirname, 'save.test'))
     toLoad = Diagram()
-    serializer.deserialize(diagram=toLoad, path=os.path.join(dirname, 'save.test'))
+    Serializer.deserialize(diagram=toLoad, path=os.path.join(dirname, 'save.test'))
     res = 'Save/Load - {}'
-    print(res.format('Passed') if toSave.listEntities() == toLoad.listEntities() else res.format('Failed'))
+    passed = toSave.listEntities() == toLoad.listEntities() and toSave.list_relations() == toLoad.list_relations()
+    print(res.format('Passed' if passed else 'Failed'))
     
 if __name__ == '__main__':
     main()
