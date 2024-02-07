@@ -3,6 +3,9 @@ class CustomExceptions:
         """Base class for other exceptions."""
         pass
 
+    #===============================================================================
+                                #Entity Exceptions
+    #===============================================================================
     class EntityExistsError(Error):
         """Exception raised when an entity with a given name already exists.
 
@@ -10,14 +13,7 @@ class CustomExceptions:
             name (str): The name of the existing entity.
         """
         def __init__(self, name) -> None:
-
-            super().__init__(f"Object with name '{name}' already exists.")
-    
-    class CommandNotFoundError(Error):
-        """Exception raised when an invalid command is entered"""
-
-        def __init__(self, name) -> None:
-            super().__init__(f"Command '{name}' does not exist. Try again or type 'help' for help.")
+            super().__init__(f"Entity with name '{name}' already exists.")
 
     class EntityNotFoundError(Error):
         """
@@ -27,8 +23,32 @@ class CustomExceptions:
             name (str): The name of the entity not found.
         """
         def __init__(self, name) -> None:
-            super().__init__(f"Class {name} does not exist.")
+            super().__init__(f"Entity with name '{name}' does not exists.")
+    
+    #===============================================================================
+                                #Attribute Exceptions
+    #===============================================================================
+    class AttributeExistsError(Error):
+        """Exception raised when an attribute with a given name already exists.
+
+        Args:
+            attr (str): The name of the existing attribute.
+        """
+        def __init__(self, attr) -> None:
+            super().__init__(f"Attribute with name '{attr}' already exists.")
+    
+    class AttributeNotFoundError(Error):
+        """Exception raised when an attribute with a given name is not found.
+
+        Args:
+            attr (str): The name of the attribute not found.
+        """
+        def __init__(self, attr) -> None:
+            super().__init__(f"Attribute with name '{attr}' does not exist.")
                         
+    #===============================================================================
+                                #Relation Exceptions
+    #===============================================================================
     class RelationExistsError(Error):
         """
         Exception raised when the relation being added already exists.
@@ -37,7 +57,7 @@ class CustomExceptions:
             source (Entity): The source of the relation that was being added.
             destination (Entity): The destination of the relation that was
                 being added.
-                
+
         """
         def __init__(self, source, destination):
             super().__init__(f"Relation between '{source} -> {destination}' already exists.")
@@ -54,7 +74,10 @@ class CustomExceptions:
         """
         def __init__(self, source, destination):
             super().__init__(f"Relation between '{source} -> {destination}' does not exist.")
-    
+
+    #===============================================================================
+                                #Parser/Controller Exceptions
+    #===============================================================================
     class InvalidArgumentError(Error):
         """
         Exception raised when an input argument is not valid.
@@ -87,23 +110,11 @@ class CustomExceptions:
         def __init__(self) -> None:
             super().__init__(f"No class selected. Use 'class -s name' to select a class.")
 
-    class AttributeExistsError(Error):
-        """Exception raised when an attribute with a given name already exists.
+    class CommandNotFoundError(Error):
+        """Exception raised when an invalid command is entered"""
 
-        Args:
-            attr (str): The name of the existing attribute.
-        """
-        def __init__(self, attr) -> None:
-            super().__init__(f"Attribute with name '{attr}' already exists.")
-    
-    class AttributeNotFoundError(Error):
-        """Exception raised when an attribute with a given name is not found.
-
-        Args:
-            attr (str): The name of the attribute not found.
-        """
-        def __init__(self, attr) -> None:
-            super().__init__(f"Attribute with name '{attr}' does not exist.")
+        def __init__(self, name) -> None:
+            super().__init__(f"Command '{name}' does not exist. Try again or type 'help' for help.")
     
     class IOFailedError(Error):
         '''Exception raised when an I/O Operation fails (saving or loading)

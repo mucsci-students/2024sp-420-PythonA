@@ -67,3 +67,12 @@ class Entity:
         # Remove the old attribute and add the new attribute name
         self._attributes.remove(oldAttribute)
         self._attributes.add(newAttribute)
+
+    def __str__(self) -> str:
+        """
+        Returns the string representation of the Entity object (its name).
+
+        Returns:
+            str: The name of the entity.
+        """
+        return self._name
