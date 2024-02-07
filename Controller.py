@@ -18,15 +18,19 @@ class Controller:
             s = self._input.readLine()
             input = self.parse(s)
 
-            if not (isinstance(input[0], Exception)):
+            if not isinstance(input[0], Exception) and input != None:
                 command = input[0]
                 args = input[1:]
-                func = command(*args)
-                self._output.write(str(func))
+
+                try:
+                    command(*args)
+                except Exception as e:
+                    self._output.write(str(e))
             else:
                 self._output.write(str(input[0]))
             
-            #quit routine entrypoint TODO: Move to __findFunction
+            #quit routine entrypoint 
+                #TODO: make quit method self contained, move to __findFunction so that all function calls go through command(*args) above
             if s == 'quit' or s == 'exit':
                 exit_prep = self.quit()
                 if(exit_prep == True):
@@ -116,17 +120,22 @@ class Controller:
         args = components[2:]
 
         if   len(components) < 1:
-            out = [None]
+            out = None
         elif len(components) == 1:
-            try:
-                out = [self.__findFunction(command=components[0], flags=[], args=[])]
-            except IndexError as e:
-                out = [CE.CommandNotFoundError(components[0])]
+            out = self.__findFunction(command=components[0])
+        #this case only exists for help. It could be removed but the syntax of help would feel weird.
+        elif len(components) == 2:
+            out = self.__findFunction(command=components[0], flags=components[1])
+            #help and list are really giving me problems rn. Probably going to restructure them later.
+            #(this case only exists to separate list calls which use flags and not args from help calls which are vice verse)
+            if not components[1].__contains__("-"):
+                args = components[1:]
         else:
-            out = [self.__checkArgs(args)]
-            if not isinstance(out[0], Exception):
-                out = [self.__findFunction(command=components[0], flags=components[1], args=args)]
-        return out + args
+            out = self.__checkArgs(args)
+            if not isinstance(out, Exception):
+                out = self.__findFunction(command=components[0], flags=components[1], args=args)
+            
+        return [out] + args
 
     def __checkArgs(self, args:list):
         '''Given a list of args, checks to make sure each one is valid. 
@@ -134,18 +143,17 @@ class Controller:
             
             Args: 
                 args(list): a list of strings to be checked
-            
-            Raises: 
-                CustomExceptions.InvalidArgumentError: at least one argument is not valid.
                 
-            Return: None if all args are valid
+            Return: 
+                CustomExceptions.InvalidArgumentError if an argument provided is invalid
+                The list of args provided if all args are valid
         '''
         for arg in args:
             if not(arg.isalnum()):
                 return CE.InvalidArgumentError(arg)
-        return None
+        return args
 
-    def __findFunction(self, command:str, flags:str, args:list):
+    def __findFunction(self, command:str, flags:str = "", args:list = []):
         '''Given a command and flags, finds and returns the appropriate function
             
             Args: 
@@ -158,11 +166,14 @@ class Controller:
                 With an invalid flag: CustomExceptions.InvalidFlagError
         '''
         cmd = CE.CommandNotFoundError(command)
+
+        #if there is something in flags, chop a hyphen off the front.
+        if len(flags) > 1 and flags[0] == "-":
+            flag = flags[1:]
+        else:
+            flag = flags
         
-        args = list(flags)
-        print("args: ", args)
-        flag = args[1] #renamed for readability
-        print("flag: ", flag)
+        #sorting through by command, then flag, to figure out which method will be called.
         if "class" == command:
             if   flag == "a":
                 cmd = self._diagram.addEntity
@@ -180,16 +191,22 @@ class Controller:
                 cmd = self._diagram.listEntities
             elif flag == "r":
                 cmd = None #TODO - List all relationships
-            elif flag == "c" and len(args) > 1: #check if they put in a class name 
+            elif flag == "c" and len(args) > 0: 
                 cmd = None #TODO - List all data about a given class
             else:
                 cmd = CE.InvalidFlagError(flag, command)
         
         elif "save" == command:
-            cmd = self.save
+            if flag == "f":
+                cmd = self.save
+            else:
+                cmd = CE.InvalidFlagError(flag, command)
 
         elif "load" == command: 
-            cmd = self.load
+            if flag == "f":
+                cmd = self.load
+            else:
+                cmd = CE.InvalidFlagError(flag, command)
 
         elif "att" == command: 
             if  flag == "a":
@@ -208,16 +225,21 @@ class Controller:
                 cmd = self._diagram.delete_relation
             else:
                 cmd = CE.InvalidFlagError(flag, command)
-        #TODO: how to handle commands with no flags sometimes?
-        elif "exit" or "quit" == command:
-            if flag == None:
-                cmd = None #TODO: Quit Command
+
+        elif "exit" == command or "quit" == command:
+            if flag == "":
+                cmd = self.quit
             else:
                 cmd = CE.InvalidFlagError(flag, command)
+
         elif "help" == command:
-            #TODO - implement all the specific help calls
-            if len(args) == 0:
+            valid_help_flags = ["class", "list","save","load","att","rel","exit","quit"]
+
+            if flag == "":
                 cmd = basicHelp
+            elif valid_help_flags.__contains__(flag):
+                cmd = cmdHelp
             else:
                 cmd = CE.InvalidFlagError(flag, command)
+
         return cmd
