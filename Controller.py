@@ -22,11 +22,14 @@ class Controller:
             if not isinstance(input[0], Exception) and input != None:
                 command = input[0]
                 args = input[1:]
-
+                out = ""
                 try:
-                    command(*args)
+                    out = command(*args)
                 except Exception as e:
                     self._output.write(str(e))
+
+                if out != None:
+                    self._output.write(str(out))  
             else:
                 self._output.write(str(input[0]))
             
@@ -115,7 +118,7 @@ class Controller:
         args = components[2:]
 
         if   len(components) < 1:
-            out = None
+            out = self.__findFunction("")
         elif len(components) == 1:
             out = self.__findFunction(command=components[0])
         #this case only exists for help. It could be removed but the syntax of help would feel weird.
@@ -236,5 +239,8 @@ class Controller:
                 cmd = cmdHelp
             else:
                 cmd = CE.InvalidFlagError(flag, command)
+        
+        else:
+            cmd = CE.CommandNotFoundError(command)
 
         return cmd
