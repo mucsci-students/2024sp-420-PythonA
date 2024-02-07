@@ -11,6 +11,17 @@ class Entity:
         self.setName(name)
         self._attributes = set()
 
+    def getName(self) -> str:
+        '''
+        Return entity name
+
+        # Returns:
+
+        - (str): The name of entity
+        
+        '''
+        return self._name
+
     def setName(self, name: str) -> None:
         """
         Update entity name
