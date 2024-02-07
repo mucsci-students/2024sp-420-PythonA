@@ -15,8 +15,8 @@ class Relation:
         Returns:
             None.
         """
-       self._source = source
-       self._destination = destination
+        self._source = source
+        self._destination = destination
     
     def get_source(self):
         """
