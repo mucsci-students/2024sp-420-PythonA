@@ -129,8 +129,7 @@ class Controller:
         #this case only exists for help. It could be removed but the syntax of help would feel weird.
         elif len(components) == 2:
             out = self.__findFunction(command=components[0], flags=components[1])
-            #help and list are really giving me problems rn. Probably going to restructure them later.
-            #(this case only exists to separate list calls which use flags and not args from help calls which are vice verse)
+            
             if not components[1].__contains__("-"):
                 args = components[1:]
         else:
