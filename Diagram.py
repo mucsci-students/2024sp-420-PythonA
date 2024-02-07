@@ -26,7 +26,7 @@ class Diagram:
 
     def getEntity(self, name: str) -> None:
         """
-        Retrieves an attribute from the diagram if it exists.
+        Retrieves an entity from the diagram if it exists.
 
         Args:
             name (str): The name of the entity to be retrieved.
