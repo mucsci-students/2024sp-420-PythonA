@@ -38,11 +38,10 @@ def cmdHelp(command:str):
         menu += "-d dest - deletes a relationship between the selected class and destination 'dest' if one exists\n"
     
     elif("list" == command):
-        menu = "all   - list all classes and their contents in the UML Diagram\n"
-        menu += "class - list all classes in the UML Diagram\n"
-        menu += "rel   - list all relationships in the UML Diagram\n"
-        menu += "class name - list all contents of class 'name'\n"
-        menu += "rel name   - list all relationships of class 'name'\n"
+        menu = "-a   - list all classes and their contents in the UML Diagram\n"
+        menu += "-c - list all classes in the UML Diagram\n"
+        menu += "-r   - list all relationships in the UML Diagram\n"
+        menu += "-c name - list all contents of class 'name'\n"
     
     elif("save" == command):
         menu = "-n name - saves the UML Diagram as a JSON file with name 'name'\n"
