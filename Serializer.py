@@ -34,7 +34,13 @@ class Serializer:
         '''
         # TODO: Change error handling after error log is complete
         entities = {name: vars(obj) for name, obj in diagram._entities.items()}
-        relations = [vars(x) for x in diagram._relations]
+        relations = []
+        for x in diagram._relations:
+            properties = vars(x)
+            for property_name, property_val in properties.items():
+                if isinstance(property_val, Entity):
+                    properties[property_name] = property_val.getName()
+            relations.append(properties)
         try:
             self.__write(path=path, content=json.dumps(obj={'entities': entities, 'relations': relations}, cls=CustomJSONEncoder))
         except Exception:
@@ -70,6 +76,8 @@ class Serializer:
                 for properties in attr_obj:
                     relation = Relation()
                     for property_name, property_val in properties.items():
+                        if isinstance(getattr(relation, property_name), Entity):
+                            property_val = diagram._entities[property_val]
                         if isinstance(getattr(relation, property_name), set): # Because custom encoder save set as list
                             property_val = set(property_val)
                         setattr(relation, property_name, property_val)
