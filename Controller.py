@@ -1,6 +1,6 @@
 from Input import Input
 from Output import Output
-from Serializer import Serializer
+import Serializer
 from CustomExceptions import CustomExceptions as CE
 from Diagram import Diagram
 import os
@@ -11,7 +11,6 @@ class Controller:
         self._input = Input()
         self._output = Output()
         self._shouldQuit = False
-        self._serializer = Serializer()
         self._diagram = Diagram()
 
     def run(self) -> None:
@@ -51,52 +50,58 @@ class Controller:
             If name is invalid, returns invalid filename exception
             If filepath is invalid, returns invalid filepath exception
         '''
-        self._output.write("Would you like to save? [y]/n: ")
-        answer = self._input.readLine("")
-        if answer != "n" or "N" or "no" or "No":
-            self._output.write("Name of file to save: ")
-            answer = self._input.readLine("")
-        else:
+        while True:
+            answer = self._input.readLine('Would you like to save before quit? [Y]/n: ').strip()
+            if not answer or answer in ['Y', 'n']: # default or Y/n
+                break
+        if answer == 'n':
             #user wants to quit without saving
             return True
-        
+        else:
+            answer = self._input.readLine('Name of file to save: ')
+
         if self.__checkArgs([answer]) == None:
-            self._output.write("Filepath to save to: ")
-            fp = self._input.readLine("")
+            #fp = self._input.readLine('Filepath to save to: ')
+            pass
         else:
             return CE.IOFailedError("Save", "invalid filename")
-        fp += answer + '.json'
-        if os.path.exists(fp):
-            self._serializer.serialize(self._diagram, fp)
+
+        if self.save(answer):
             return True
-        else:
-            return CE.IOFailedError("Save", "invalid filepath")
         return CE.IOFailedError("Save", "an unknown fatal error")
 
-    def save(self, path: str) -> bool:
+    def save(self, name: str) -> bool:
         '''
-        Saves the current diagram using a serializer to the specified file path.
+        Saves the current diagram using a serializer with the given filename
 
-        # Parameters:
-        - `path` (str): The path where the diagram should be saved.
+        #### Parameters:
+        - `name` (str): The name of the file to be saved.
 
-        # Returns:
+        #### Returns:
         - (bool): True if the save operation is successful, False otherwise.
         '''
-        return self._serializer.serialize(diagram=self._diagram, path=path)
+        path = os.path.join(os.path.dirname(__file__), 'save')
+        if not os.path.exists(path):
+            os.makedirs(path)
+        path = os.path.join(path, name + '.json')
+        return Serializer.serialize(diagram=self._diagram, path=path)
 
-    def load(self, path: str) -> bool:
+    def load(self, name: str) -> bool:
         '''
-        Loads a diagram from the specified file path using a deserializer.
+        Loads a diagram with the given filename using a deserializer.
 
-        # Parameters:
-        - `path` (str): The path from which the diagram should be loaded.
+        #### Parameters:
+        - `path` (str): The name of the file to be loaded.
 
-        # Returns:
+        #### Returns:
         - (bool): True if the load operation is successful, False otherwise.
         '''
+        path = os.path.join(os.path.dirname(__file__), 'save')
+        if not os.path.exists(path):
+            os.makedirs(path)
+        path = os.path.join(path, name + '.json')
         loadedDiagram = Diagram()
-        if not self._serializer.deserialize(diagram=loadedDiagram, path=path):
+        if not Serializer.deserialize(diagram=loadedDiagram, path=path):
             return False
         self._diagram = loadedDiagram
         return True
@@ -205,7 +210,7 @@ class Controller:
                 cmd = self.load
             else:
                 cmd = CE.InvalidFlagError(flag, command)
-                
+
         elif "att" == command: 
             if  flag == "a":
                 cmd = None #TODO: Command that creates an attribute
