@@ -110,18 +110,21 @@ class Controller:
         components = input.split()
         args = components[2:]
 
+        #TODO - there is definitely a way to write this to exclude all these cases. IDK if it is worth the time tbh.
         if   len(components) < 1:
-            out = [None]
+            out = None
         elif len(components) == 1:
-            try:
-                out = [self.__findFunction(command=components[0], flags=[], args=[])]
-            except IndexError as e:
-                out = [CE.CommandNotFoundError(components[0])]
+            out = self.__findFunction(command=components[0])
+        #this case only exists for help. It could be removed but the syntax of help would feel weird.
+        elif len(components) == 2:
+            out = self.__findFunction(command=components[0], flags=components[1])
+            args = components[1:]
         else:
-            out = [self.__checkArgs(args)]
+            out = self.__checkArgs(args)
             if not isinstance(out[0], Exception):
-                out = [self.__findFunction(command=components[0], flags=components[1], args=args)]
-        return out + args
+                out = self.__findFunction(command=components[0], flags=components[1], args=args)
+
+        return [out] + args
 
     def __checkArgs(self, args:list):
         '''Given a list of args, checks to make sure each one is valid. 
@@ -129,18 +132,17 @@ class Controller:
             
             Args: 
                 args(list): a list of strings to be checked
-            
-            Raises: 
-                CustomExceptions.InvalidArgumentError: at least one argument is not valid.
                 
-            Return: None if all args are valid
+            Return: 
+                CustomExceptions.InvalidArgumentError if an argument provided is invalid
+                The list of args provided if all args are valid
         '''
         for arg in args:
             if not(arg.isalnum()):
-                return CE.InvalidArgumentError(arg)
-        return None
+                return [CE.InvalidArgumentError(arg)]
+        return args
 
-    def __findFunction(self, command:str, flags:str, args:list):
+    def __findFunction(self, command:str, flags:str = "", args:list = []):
         '''Given a command and flags, finds and returns the appropriate function
             
             Args: 
@@ -153,11 +155,13 @@ class Controller:
                 With an invalid flag: CustomExceptions.InvalidFlagError
         '''
         cmd = CE.CommandNotFoundError(command)
-        
-        args = list(flags)
-        print("args: ", args)
-        flag = args[1] #renamed for readability
-        print("flag: ", flag)
+
+
+        if len(flags) > 1 and flags[0] == "-":
+            flag = flags[1:]
+        else:
+            flag = flags
+
         if "class" == command:
             if   flag == "a":
                 cmd = self._diagram.addEntity
@@ -175,7 +179,7 @@ class Controller:
                 cmd = self._diagram.listEntities
             elif flag == "r":
                 cmd = None #TODO - List all relationships
-            elif flag == "c" and len(args) > 1: #check if they put in a class name 
+            elif flag == "c" and len(args) > 0: #check if they put in a class name 
                 cmd = None #TODO - List all data about a given class
             else:
                 cmd = CE.InvalidFlagError(flag, command)
@@ -197,22 +201,27 @@ class Controller:
                 cmd = CE.InvalidFlagError(flag, command)
 
         elif "rel" == command:
-            if  flag == "a":
+            if  flag == "z":
                 cmd = self._diagram.add_relation
             elif flag == "d":
                 cmd = self._diagram.delete_relation
             else:
                 cmd = CE.InvalidFlagError(flag, command)
-        #TODO: how to handle commands with no flags sometimes?
-        elif "exit" or "quit" == command:
-            if flag == None:
+
+        elif "exit" == command or "quit" == command:
+            if flag == "":
                 cmd = None #TODO: Quit Command
             else:
                 cmd = CE.InvalidFlagError(flag, command)
+
         elif "help" == command:
-            #TODO - implement all the specific help calls
-            if len(args) == 0:
+            valid_commands = ["class", "list","save","load","att","rel","exit","quit"]
+
+            if flag == "":
                 cmd = basicHelp
+            elif valid_commands.__contains__(flag):
+                cmd = cmdHelp
             else:
                 cmd = CE.InvalidFlagError(flag, command)
+
         return cmd
