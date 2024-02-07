@@ -19,15 +19,19 @@ class Controller:
             s = self._input.readLine()
             input = self.parse(s)
 
-            if not (isinstance(input[0], Exception)):
+            if not isinstance(input[0], Exception) and input != None:
                 command = input[0]
                 args = input[1:]
-                func = command(*args)
-                self._output.write(str(func))
+
+                try:
+                    command(*args)
+                except Exception as e:
+                    self._output.write(str(e))
             else:
                 self._output.write(str(input[0]))
             
-            #quit routine entrypoint TODO: Move to __findFunction
+            #quit routine entrypoint 
+                #TODO: make quit method self contained, move to __findFunction so that all function calls go through command(*args) above
             if s == 'quit' or s == 'exit':
                 exit_prep = self.quit()
                 if(exit_prep == True):
@@ -110,7 +114,6 @@ class Controller:
         components = input.split()
         args = components[2:]
 
-        #TODO - there is definitely a way to write this to exclude all these cases. IDK if it is worth the time tbh.
         if   len(components) < 1:
             out = None
         elif len(components) == 1:
@@ -118,12 +121,15 @@ class Controller:
         #this case only exists for help. It could be removed but the syntax of help would feel weird.
         elif len(components) == 2:
             out = self.__findFunction(command=components[0], flags=components[1])
-            args = components[1:]
+            #help and list are really giving me problems rn. Probably going to restructure them later.
+            #(this case only exists to separate list calls which use flags and not args from help calls which are vice verse)
+            if not components[1].__contains__("-"):
+                args = components[1:]
         else:
             out = self.__checkArgs(args)
-            if not isinstance(out[0], Exception):
+            if not isinstance(out, Exception):
                 out = self.__findFunction(command=components[0], flags=components[1], args=args)
-
+            
         return [out] + args
 
     def __checkArgs(self, args:list):
@@ -139,7 +145,7 @@ class Controller:
         '''
         for arg in args:
             if not(arg.isalnum()):
-                return [CE.InvalidArgumentError(arg)]
+                return CE.InvalidArgumentError(arg)
         return args
 
     def __findFunction(self, command:str, flags:str = "", args:list = []):
@@ -156,12 +162,13 @@ class Controller:
         '''
         cmd = CE.CommandNotFoundError(command)
 
-
+        #if there is something in flags, chop a hyphen off the front.
         if len(flags) > 1 and flags[0] == "-":
             flag = flags[1:]
         else:
             flag = flags
-
+        
+        #sorting through by command, then flag, to figure out which method will be called.
         if "class" == command:
             if   flag == "a":
                 cmd = self._diagram.addEntity
@@ -179,17 +186,23 @@ class Controller:
                 cmd = self._diagram.listEntities
             elif flag == "r":
                 cmd = None #TODO - List all relationships
-            elif flag == "c" and len(args) > 0: #check if they put in a class name 
+            elif flag == "c" and len(args) > 0: 
                 cmd = None #TODO - List all data about a given class
             else:
                 cmd = CE.InvalidFlagError(flag, command)
         
         elif "save" == command:
-            cmd = Serializer.serialize
+            if flag == "f":
+                cmd = self.save
+            else:
+                cmd = CE.InvalidFlagError(flag, command)
 
         elif "load" == command: 
-            cmd = Serializer.deserialize
-
+            if flag == "f":
+                cmd = self.load
+            else:
+                cmd = CE.InvalidFlagError(flag, command)
+                
         elif "att" == command: 
             if  flag == "a":
                 cmd = None #TODO: Command that creates an attribute
@@ -201,7 +214,7 @@ class Controller:
                 cmd = CE.InvalidFlagError(flag, command)
 
         elif "rel" == command:
-            if  flag == "z":
+            if  flag == "a":
                 cmd = self._diagram.add_relation
             elif flag == "d":
                 cmd = self._diagram.delete_relation
@@ -210,16 +223,16 @@ class Controller:
 
         elif "exit" == command or "quit" == command:
             if flag == "":
-                cmd = None #TODO: Quit Command
+                cmd = self.quit
             else:
                 cmd = CE.InvalidFlagError(flag, command)
 
         elif "help" == command:
-            valid_commands = ["class", "list","save","load","att","rel","exit","quit"]
+            valid_help_flags = ["class", "list","save","load","att","rel","exit","quit"]
 
             if flag == "":
                 cmd = basicHelp
-            elif valid_commands.__contains__(flag):
+            elif valid_help_flags.__contains__(flag):
                 cmd = cmdHelp
             else:
                 cmd = CE.InvalidFlagError(flag, command)
