@@ -31,7 +31,7 @@ class Entity:
         """
         self._name = name
     
-    def addAttributes(self, attr: str) -> None:
+    def addAttribute(self, attr: str) -> None:
         """
         Adds a new attribute to the '_attributes' set.
 
@@ -45,7 +45,7 @@ class Entity:
             raise CustomExceptions.AttributeExistsError(attr)
         self._attributes.add(attr)
 
-    def deleteAttributes(self, attr: str) -> None:
+    def deleteAttribute(self, attr: str) -> None:
         """
         Deletes an attribute from this entity if it exists.
 
@@ -59,7 +59,7 @@ class Entity:
             raise CustomExceptions.AttributeNotFoundError(attr)
         self._attributes.remove(attr)
 
-    def renameAttributes(self, oldAttribute: str, newAttribute: str) -> None:
+    def renameAttribute(self, oldAttribute: str, newAttribute: str) -> None:
         """
         Renames an attribute from its old name to a new name
 
@@ -73,6 +73,7 @@ class Entity:
         """
         if oldAttribute not in self._attributes:
             raise CustomExceptions.AttributeNotFoundError(oldAttribute)
+        
         if newAttribute in self._attributes:
             raise CustomExceptions.AttributeExistsError(newAttribute)
         # Remove the old attribute and add the new attribute name

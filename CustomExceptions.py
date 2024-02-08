@@ -23,7 +23,7 @@ class CustomExceptions:
             name (str): The name of the entity not found.
         """
         def __init__(self, name) -> None:
-            super().__init__(f"Entity with name '{name}' does not exists.")
+            super().__init__(f"Entity with name '{name}' does not exist.")
     
     #===============================================================================
                                 #Attribute Exceptions
