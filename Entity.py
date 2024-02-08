@@ -30,8 +30,8 @@ class Entity:
             name (str): New name to be set
         """
         self._name = name
-    
-    def addAttributes(self, attr: str) -> None:
+        
+    def add_attribute(self, attr) -> None:
         """
         Adds a new attribute to the '_attributes' set.
 
