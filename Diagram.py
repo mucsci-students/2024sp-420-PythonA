@@ -89,17 +89,66 @@ class Diagram:
         entity.setName(newName)
         self._entities[newName] = self._entities.pop(oldName)
         
-    def listEntities(self) -> str:
+    def list_everything(self, opt):
         """
+        Returns a representation of the entire diagram.
+        
+        Args:
+            opt (str): The option that was passed by the controller. Unused.
+            
+        Raises:
+            None
+            
+        Returns:
+            A templated string containing all entities, their attributes, and
+                their relations.
+        """
+        result = ""
+        for entity in self._entities.values():
+            result += self.list_entity_details(entity.getName()) + "\n\n"
+        return result
+        
+    def list_entity_details(self, entity_name):
+        """
+        Returns the attributes and relations of the entity.
+        
+        Args:
+            entity_name (str): The name of the entity to get details of.
+            
+        Raises:
+            None
+            
+        Returns:
+            A templated string containing the attributes and relations.
+        """
+        entity = self._entities[entity_name]
+        att = entity._attributes
+        rels = [rel for rel in self._relations if rel.contains(entity)]
+        result = entity_name + "'s Attributes:\n"
+        att_string = ', '.join(att)
+        result2 = entity_name + "'s Relations:\n"
+        rel_string = ', '.join(str(rel) for rel in rels)
+        return result + att_string + "\n" + result2 + rel_string
+
+    def list_entities(self, opt):
+        """
+        Returns the attributes in the relation.
+        
+        Args:
+            opt (str): The option that was passed by the controller. Unused.
+        
         Returns:
             str: String containing names of all existing entities.
         """
         entity_names = list(self._entities.keys())
         return ', '.join(entity_names)
     
-    def list_relations(self) -> str:
+    def list_relations(self, opt):
         """
         Lists all existing relations as a string.
+        
+        Args:
+            opt (str): The option that was passed by the controller. Unused.
 
         Returns:
             str: A string representation of all existing relations.
