@@ -4,7 +4,7 @@ import Serializer
 from CustomExceptions import CustomExceptions as CE
 from Diagram import Diagram
 import os
-from Help import basicHelp, cmdHelp
+import Help
 
 class Controller:
     def __init__(self) -> None:
@@ -23,7 +23,7 @@ class Controller:
                 try:
                     out = command(*args)
                 except Exception as e:
-                    Output.write(str("hello"))
+                    Output.write(str(e))
 
                 if out != None:
                     Output.write(str(out))  
@@ -227,16 +227,6 @@ class Controller:
                 cmd = CE.InvalidFlagError(flag, command)
 
         elif "help" == command:
-            valid_help_flags = ["class", "list","save","load","att","rel","exit","quit"]
-
-            if flag == "":
-                cmd = basicHelp
-            elif valid_help_flags.__contains__(flag):
-                cmd = cmdHelp
-            else:
-                cmd = CE.InvalidFlagError(flag, command)
-        
-        else:
-            cmd = CE.CommandNotFoundError(command)
+            cmd = Help.help
 
         return cmd
