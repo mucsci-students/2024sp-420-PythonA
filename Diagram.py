@@ -99,7 +99,7 @@ class Diagram:
         """
         result = ""
         for entity in self._entities.values():
-            result += self.list_entity_details(entity.getName()) + "\n\n"
+            result += self.list_entity_details(entity.getName()) + "\n"
         return result
         
     def list_entity_details(self, entity_name):
@@ -121,7 +121,7 @@ class Diagram:
         entity = self._entities[entity_name]
         att = entity._attributes
         rels = [rel for rel in self._relations if rel.contains(entity)]
-        result = entity_name + "'s Attributes:\n"
+        result ="\n" + entity_name + "'s Attributes:\n"
         att_string = ', '.join(att)
         result2 = entity_name + "'s Relations:\n"
         rel_string = ', '.join(str(rel) for rel in rels)
@@ -135,7 +135,7 @@ class Diagram:
             str: String containing names of all existing entities.
         """
         entity_names = list(self._entities.keys())
-        return ', '.join(entity_names)
+        return '\n' + ', '.join(entity_names)
     
     def list_relations(self):
         """
