@@ -25,7 +25,7 @@ class Controller:
                 try:
                     out = command(*args)
                 except Exception as e:
-                    self._output.write(str("hello"))
+                    self._output.write(str(e))
 
                 if out != None:
                     self._output.write(str(out))  
