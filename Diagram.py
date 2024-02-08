@@ -89,6 +89,11 @@ class Diagram:
         entity.setName(newName)
         self._entities[newName] = self._entities.pop(oldName)
         
+    def add_att_to_entity(self, ent, attr):
+        #TODO:  Comments
+        ent_updating = self._entities[ent]
+        ent_updating.add_attribute(attr)
+        
     def listEntities(self) -> str:
         """
         Returns:
@@ -158,4 +163,3 @@ class Diagram:
                 del self._relations[i]
                 return
         raise CustomExceptions.RelationDoesNotExistError(source, destination)
-    
