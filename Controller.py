@@ -211,8 +211,7 @@ class Controller:
                 cmd = CE.InvalidFlagError(flag, command)
 
         elif "att" == command:
-            entityName = args[0]
-            entity = self._diagram.getEntity(entityName)
+            entity = self._diagram.getEntity(args[0)
             if  flag == "a":
                 cmd = entity.addAttribute
             elif flag == "d":
