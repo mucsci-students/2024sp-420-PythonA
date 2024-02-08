@@ -29,7 +29,7 @@ def cmdHelp(command:str):
     elif("att" == command):
         menu += "-a class name - adds an attribute with name 'name' to class 'class'\n\t"
         menu += "-d class name - deletes an attribute with name 'name' from class 'class' if one exists\n\t"
-        menu += "-r old new - renames an attribute from name 'old' to name 'new' in the selected class\n"
+        menu += "-r class old new - renames an attribute from name 'old' to name 'new' in class 'class'\n"
     
     elif("rel" == command):
         menu += "-a src dest - adds a relationship between class 'src' and class 'dest' assuming both are valid\n\t"
