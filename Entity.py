@@ -73,6 +73,7 @@ class Entity:
         """
         if oldAttribute not in self._attributes:
             raise CustomExceptions.AttributeNotFoundError(oldAttribute)
+        
         if newAttribute in self._attributes:
             raise CustomExceptions.AttributeExistsError(newAttribute)
         # Remove the old attribute and add the new attribute name

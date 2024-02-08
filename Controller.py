@@ -25,7 +25,7 @@ class Controller:
                 try:
                     out = command(*args)
                 except Exception as e:
-                    self._output.write(str(e))
+                    self._output.write(str("hello"))
 
                 if out != None:
                     self._output.write(str(out))  
@@ -211,15 +211,19 @@ class Controller:
                 cmd = CE.InvalidFlagError(flag, command)
 
         elif "att" == command:
-            entity = self._diagram.getEntity(args[0)
-            if  flag == "a":
-                cmd = entity.addAttribute
-            elif flag == "d":
-                cmd = entity.deleteAttribute
-            elif flag == "r":
-                cmd = entity.renameAttribute
+            name = args.pop(0)
+            entity = self._diagram.getEntity(name)
+            if entity != None:
+                if  flag == "a":
+                    cmd = entity.addAttribute
+                elif flag == "d":
+                    cmd = entity.deleteAttribute
+                elif flag == "r":
+                    cmd = entity.renameAttribute
+                else:
+                    cmd = CE.InvalidFlagError(flag, command)
             else:
-                cmd = CE.InvalidFlagError(flag, command)
+                cmd = CE.EntityNotFoundError(name)
 
         elif "rel" == command:
             if  flag == "a":
