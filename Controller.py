@@ -1,5 +1,5 @@
-from Input import Input
-from Output import Output
+import Input
+import Output
 import Serializer
 from CustomExceptions import CustomExceptions as CE
 from Diagram import Diagram
@@ -8,14 +8,12 @@ from Help import basicHelp, cmdHelp
 
 class Controller:
     def __init__(self) -> None:
-        self._input = Input()
-        self._output = Output()
         self._shouldQuit = False
         self._diagram = Diagram()
 
     def run(self) -> None:
         while not self._shouldQuit:
-            s = self._input.readLine()
+            s = Input.readLine()
             input = self.parse(s)
 
             if not isinstance(input[0], Exception) and input != None:
@@ -25,22 +23,13 @@ class Controller:
                 try:
                     out = command(*args)
                 except Exception as e:
-                    self._output.write(str("hello"))
+                    Output.write(str("hello"))
 
                 if out != None:
-                    self._output.write(str(out))  
+                    Output.write(str(out))  
             else:
-                self._output.write(str(input[0]))
+                Output.write(str(input[0]))
             
-            #quit routine entrypoint 
-                #TODO: make quit method self contained, move to __findFunction so that all function calls go through command(*args) above
-            if s == 'quit' or s == 'exit':
-                exit_prep = self.quit()
-                if(exit_prep == True):
-                    self._shouldQuit = True
-                else:
-                    self._output.write(str(exit_prep))
-                    
     def quit(self):
         '''Basic Quit Routine. Prompts user to save, where to save, 
             validates input.
@@ -50,24 +39,22 @@ class Controller:
             If name is invalid, returns invalid filename exception
             If filepath is invalid, returns invalid filepath exception
         '''
+        self._shouldQuit = True
         while True:
-            answer = self._input.readLine('Would you like to save before quit? [Y]/n: ').strip()
+            answer = Input.readLine('Would you like to save before quit? [Y]/n: ').strip()
             if not answer or answer in ['Y', 'n']: # default or Y/n
                 break
         if answer == 'n':
             #user wants to quit without saving
-            return True
+            return
         else:
-            answer = self._input.readLine('Name of file to save: ')
+            answer = Input.readLine('Name of file to save: ')
 
-        if self.__checkArgs([answer]) == None:
-            #fp = self._input.readLine('Filepath to save to: ')
-            pass
-        else:
+        if isinstance(self.__checkArgs([answer]), Exception):
             return CE.IOFailedError("Save", "invalid filename")
 
         if self.save(answer):
-            return True
+            return
         return CE.IOFailedError("Save", "an unknown fatal error")
 
     def save(self, name: str) -> bool:

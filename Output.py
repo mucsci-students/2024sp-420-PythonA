@@ -1,6 +1,20 @@
-class Output:
-    def __init__(self) -> None:
-        pass
+def write(s: str) -> None:
+    print(s)
 
-    def write(self, s: str) -> None:
-        print(s)
+def write_file(path: str, content: str) -> None:
+    '''
+    Writes the specified content to a file at the given path.
+
+    # Parameters:
+    - `path` (str): The path to the file to be written.
+    - `content` (str): The content to be written to the file.
+
+    # Returns:
+    - None
+
+    # Raises:
+    - `FileNotFoundError`: If the specified file is not found.
+    - `IOError`: If there is an issue writing to the file.
+    - Other exceptions: Any other exceptions that may occur during the file writing process.
+    '''
+    open(path, 'w').write(content)

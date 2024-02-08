@@ -13,6 +13,8 @@ class CustomJSONEncoder(json.JSONEncoder):
             return list(obj)
         return json.JSONEncoder.default(self, obj)
 
+import Input
+import Output
 from Diagram import Diagram
 from Entity import Entity
 from Relation import Relation
@@ -38,7 +40,7 @@ def serialize(diagram: Diagram, path: str) -> bool:
                 properties[property_name] = property_val.getName()
         relations.append(properties)
     try:
-        __write(path=path, content=json.dumps(obj={'entities': entities, 'relations': relations}, cls=CustomJSONEncoder))
+        Output.write_file(path=path, content=json.dumps(obj={'entities': entities, 'relations': relations}, cls=CustomJSONEncoder))
     except Exception:
         return False
     return True
@@ -56,7 +58,7 @@ def deserialize(diagram: Diagram, path: str) -> bool:
     '''
     # TODO: Change error handling after error log is complete
     try:
-        diagram_attributes = json.loads(__read(path))
+        diagram_attributes = json.loads(Input.read_file(path))
     except Exception:
         return False
     for attr_name, attr_obj in diagram_attributes.items():
@@ -79,38 +81,3 @@ def deserialize(diagram: Diagram, path: str) -> bool:
                     setattr(relation, property_name, property_val)
                 diagram._relations.append(relation)
     return True
-
-def __read(path: str) -> str:
-    '''
-    Reads the contents of a file and returns the content as a string.
-
-    # Parameters:
-    - `path` (str): The path to the file to be read.
-
-    # Returns:
-    - (str): The content of the file as a string.
-
-    # Raises:
-    - `FileNotFoundError`: If the specified file is not found.
-    - `IOError`: If there is an issue reading the file.
-    - Other exceptions: Any other exceptions that may occur during the file reading process.
-    '''
-    return open(path, 'r').read()
-
-def __write(path: str, content: str) -> None:
-    '''
-    Writes the specified content to a file at the given path.
-
-    # Parameters:
-    - `path` (str): The path to the file to be written.
-    - `content` (str): The content to be written to the file.
-
-    # Returns:
-    - None
-
-    # Raises:
-    - `FileNotFoundError`: If the specified file is not found.
-    - `IOError`: If there is an issue writing to the file.
-    - Other exceptions: Any other exceptions that may occur during the file writing process.
-    '''
-    open(path, 'w').write(content)
