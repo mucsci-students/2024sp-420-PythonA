@@ -30,15 +30,6 @@ class Controller:
             else:
                 Output.write(str(input[0]))
             
-            #quit routine entrypoint 
-                #TODO: make quit method self contained, move to __findFunction so that all function calls go through command(*args) above
-            if s == 'quit' or s == 'exit':
-                exit_prep = self.quit()
-                if(exit_prep == True):
-                    self._shouldQuit = True
-                else:
-                    Output.write(str(exit_prep))
-                    
     def quit(self):
         '''Basic Quit Routine. Prompts user to save, where to save, 
             validates input.
@@ -48,24 +39,22 @@ class Controller:
             If name is invalid, returns invalid filename exception
             If filepath is invalid, returns invalid filepath exception
         '''
+        self._shouldQuit = True
         while True:
             answer = Input.readLine('Would you like to save before quit? [Y]/n: ').strip()
             if not answer or answer in ['Y', 'n']: # default or Y/n
                 break
         if answer == 'n':
             #user wants to quit without saving
-            return True
+            return
         else:
             answer = Input.readLine('Name of file to save: ')
 
-        if self.__checkArgs([answer]) == None:
-            #fp = Input.readLine('Filepath to save to: ')
-            pass
-        else:
+        if isinstance(self.__checkArgs([answer]), Exception):
             return CE.IOFailedError("Save", "invalid filename")
 
         if self.save(answer):
-            return True
+            return
         return CE.IOFailedError("Save", "an unknown fatal error")
 
     def save(self, name: str) -> bool:
