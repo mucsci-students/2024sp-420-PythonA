@@ -189,12 +189,12 @@ class Controller:
         elif "list" == command:
             if   flag == "a":
                 cmd = self._diagram.list_everything
-            elif flag == "c":
-                cmd = self._diagram.list_entities
+            elif flag == "c" and len(args) > 0:
+                cmd = self._diagram.list_entity_details
             elif flag == "r":
                 cmd = self._diagram.list_relations
-            elif flag == "cd" and len(args) > 0: 
-                cmd = self._diagram.list_entity_details
+            elif flag == "c": 
+                cmd = self._diagram.list_entities           
             else:
                 cmd = CE.InvalidFlagError(flag, command)
         
