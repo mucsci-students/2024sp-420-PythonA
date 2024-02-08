@@ -188,13 +188,13 @@ class Controller:
 
         elif "list" == command:
             if   flag == "a":
-                cmd = None #TODO - List all classes and their attributes and relationships
-            elif flag == "c":
-                cmd = self._diagram.listEntities
+                cmd = self._diagram.list_everything
+            elif flag == "c" and len(args) > 0:
+                cmd = self._diagram.list_entity_details
             elif flag == "r":
-                cmd = None #TODO - List all relationships
-            elif flag == "c" and len(args) > 0: 
-                cmd = None #TODO - List all data about a given class
+                cmd = self._diagram.list_relations
+            elif flag == "c": 
+                cmd = self._diagram.list_entities           
             else:
                 cmd = CE.InvalidFlagError(flag, command)
         
