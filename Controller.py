@@ -215,9 +215,9 @@ class Controller:
             if  flag == "a":
                 cmd = entity.addAttribute
             elif flag == "d":
-                cmd = entity.deleteAttributes
+                cmd = entity.deleteAttribute
             elif flag == "r":
-                cmd = entity.renameAttributes
+                cmd = entity.renameAttribute
             else:
                 cmd = CE.InvalidFlagError(flag, command)
 
