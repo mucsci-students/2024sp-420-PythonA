@@ -89,16 +89,10 @@ class Diagram:
         entity.setName(newName)
         self._entities[newName] = self._entities.pop(oldName)
         
-    def list_everything(self, opt):
+    def list_everything(self):
         """
         Returns a representation of the entire diagram.
-        
-        Args:
-            opt (str): The option that was passed by the controller. Unused.
-            
-        Raises:
-            None
-            
+
         Returns:
             A templated string containing all entities, their attributes, and
                 their relations.
@@ -121,6 +115,9 @@ class Diagram:
         Returns:
             A templated string containing the attributes and relations.
         """
+        if not self._entities.__contains__(entity_name):
+            raise CustomExceptions.EntityNotFoundError(entity_name)
+        
         entity = self._entities[entity_name]
         att = entity._attributes
         rels = [rel for rel in self._relations if rel.contains(entity)]
@@ -130,12 +127,9 @@ class Diagram:
         rel_string = ', '.join(str(rel) for rel in rels)
         return result + att_string + "\n" + result2 + rel_string
 
-    def list_entities(self, opt):
+    def list_entities(self):
         """
         Returns the attributes in the relation.
-        
-        Args:
-            opt (str): The option that was passed by the controller. Unused.
         
         Returns:
             str: String containing names of all existing entities.
@@ -143,12 +137,9 @@ class Diagram:
         entity_names = list(self._entities.keys())
         return ', '.join(entity_names)
     
-    def list_relations(self, opt):
+    def list_relations(self):
         """
         Lists all existing relations as a string.
-        
-        Args:
-            opt (str): The option that was passed by the controller. Unused.
 
         Returns:
             str: A string representation of all existing relations.
