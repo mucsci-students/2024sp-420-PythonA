@@ -210,13 +210,15 @@ class Controller:
             else:
                 cmd = CE.InvalidFlagError(flag, command)
 
-        elif "att" == command: 
+        elif "att" == command:
+            entityName = args[0]
+            entity = self._diagram.getEntity(entityName)
             if  flag == "a":
-                cmd = None #TODO: Command that creates an attribute
+                cmd = entity.addAttribute
             elif flag == "d":
-                cmd = None #TODO: Command that deletes an attribute
+                cmd = entity.deleteAttributes
             elif flag == "r":
-                cmd = None #TODO: Command that renames an attribute
+                cmd = entity.renameAttributes
             else:
                 cmd = CE.InvalidFlagError(flag, command)
 
