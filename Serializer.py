@@ -34,7 +34,7 @@ def serialize(diagram: Diagram, path: str) -> None:
         properties = vars(x)
         for property_name, property_val in properties.items():
             if isinstance(property_val, Entity):
-                properties[property_name] = property_val.getName()
+                properties[property_name] = property_val.get_name()
         relations.append(properties)
     try:
         content = json.dumps(obj={'entities': entities, 'relations': relations}, cls=CustomJSONEncoder)
