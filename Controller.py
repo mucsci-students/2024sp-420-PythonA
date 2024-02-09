@@ -165,11 +165,11 @@ class Controller:
         #sorting through by command, then flag, to figure out which method will be called.
         if "class" == command:
             if   flag == "a":
-                cmd = self._diagram.addEntity
+                cmd = self._diagram.add_entity
             elif flag == "d":
-                cmd = self._diagram.deleteEntity
+                cmd = self._diagram.delete_entity
             elif flag == "r":
-                cmd = self._diagram.renameEntity
+                cmd = self._diagram.rename_entity
             else:
                 cmd = CE.InvalidFlagError(flag, command)
 
@@ -199,14 +199,14 @@ class Controller:
 
         elif "att" == command:
             name = args.pop(0)
-            entity = self._diagram.getEntity(name)
+            entity = self._diagram.get_entity(name)
             if entity != None:
                 if  flag == "a":
-                    cmd = entity.addAttribute
+                    cmd = entity.add_attribute
                 elif flag == "d":
-                    cmd = entity.deleteAttribute
+                    cmd = entity.delete_attribute
                 elif flag == "r":
-                    cmd = entity.renameAttribute
+                    cmd = entity.rename_attribute
                 else:
                     cmd = CE.InvalidFlagError(flag, command)
             else:
@@ -231,5 +231,7 @@ class Controller:
                 cmd = CE.InvalidFlagError(flag, command)
             else:
                 cmd = Help.help
+
+
 
         return cmd
