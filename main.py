@@ -1,18 +1,25 @@
 from Controller import Controller
 
-def main():
+def debug_main():
     app = Controller()
     app.run()
 
-if __name__ == '__main__':
+def main():
     try:
-        main()
+        app = Controller()
+        app.run()
     except KeyboardInterrupt:
         # This handles ctrl+C
         pass
     except EOFError:
         # This handles ctrl+D
         pass
-    except Exception:
+    except Exception as e:
         # Never expect errors to be caught here
         print('Oh no! Unexpected Error!')
+
+if __name__ == '__main__':
+    if __debug__:
+        debug_main()
+    else:
+        main()
