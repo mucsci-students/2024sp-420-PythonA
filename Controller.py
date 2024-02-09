@@ -227,6 +227,9 @@ class Controller:
                 cmd = CE.InvalidFlagError(flag, command)
 
         elif "help" == command:
-            cmd = Help.help
+            if flag != None:
+                cmd = CE.InvalidFlagError(flag)
+            else:
+                cmd = Help.help
 
         return cmd
