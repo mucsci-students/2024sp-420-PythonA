@@ -1,3 +1,5 @@
+from CustomExceptions import CustomExceptions as CE
+
 def write(s: str) -> None:
     print(s)
 
@@ -17,4 +19,7 @@ def write_file(path: str, content: str) -> None:
     - `IOError`: If there is an issue writing to the file.
     - Other exceptions: Any other exceptions that may occur during the file writing process.
     '''
-    open(path, 'w').write(content)
+    try:
+        open(path, 'w').write(content)
+    except Exception:
+        raise CE.WriteFileError(path)
