@@ -23,7 +23,7 @@ class Controller:
             "help"  : []
         }
 
-        self.__functions = [
+        self._functions = [
             "add_entity",
             "delete_entity",
             "rename_entity",
