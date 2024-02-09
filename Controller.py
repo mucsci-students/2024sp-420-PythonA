@@ -6,59 +6,58 @@ from Diagram import Diagram
 import os
 import Help
 
+#Parser Includes. These will be moved out when the parser is moved.
+from Entity import Entity
+from Relation import Relation
+
+
+
+
 class Controller:
     def __init__(self) -> None:
         self._shouldQuit = False
         self._diagram = Diagram()
 
+        #map relating commands to the flags that can be passed to them
         self._command_flag_map = {
             "class" : ["a","d","r"],
             "list"  : ["a","c","r","d"],
-            "save"  : [],
-            "load"  : [],
             "att"   : ["a","d","r"],
             "rel"   : ["a","d"],
-            "exit"  : [],
-            "quit"  : [],
-            "help"  : []
+            "save"  : [""],
+            "load"  : [""],
+            "exit"  : [""],
+            "quit"  : [""],
+            "help"  : [""]
         }
-
-        self._functions = [
-            "add_entity",
-            "delete_entity",
-            "rename_entity",
-            "list_everything",
-            "list_entities",
-            "list_relations",
-            "list_entity_details",
-            "save",
-            "load",
-            "add_attribute",
-            "delete_attribute",
-            "rename_attribute",
-            "add_relation",
-            "delete_relation",
-            "quit",
-            "help"
-        ]
+        #map relating commands to the names of methods that can be called on them
+        self._command_function_map = {
+            "class" : ["add_entity","delete_entity","rename_entity"],
+            "list"  : ["list_everything","list_entities","list_relations","list_entity_details"],
+            "att"   : ["add_attribute","delete_attribute","rename_attribute"],
+            "rel"   : ["add_relation","delete_relation"],
+            "save"  : ["save"],
+            "load"  : ["load"],
+            "exit"  : ["quit"],
+            "quit"  : ["quit"],
+            "help"  : ["help"]
+        }
     def run(self) -> None:
         while not self._shouldQuit:
             s = Input.readLine()
-            input = self.parse(s)
 
-            if not isinstance(input[0], Exception) and input != None:
+            try:
+                #parse the command
+                input = self.parse(s)
+
+                #return from input is [function object, arg1,...,argn]
                 command = input[0]
                 args = input[1:]
-                out = ""
-                try:
-                    out = command(*args)
-                except Exception as e:
-                    Output.write(str(e))
-
-                if out != None:
-                    Output.write(str(out))  
-            else:
-                Output.write(str(input[0]))
+                
+                #execute the command
+                out = command(args)
+            except Exception as e:
+                Output.write(str(e))
             
     def quit(self):
         '''Basic Quit Routine. Prompts user to save, where to save, 
@@ -135,28 +134,36 @@ class Controller:
                 With invalid flag: CustomExceptions.InvalidFlagError
                 With invalid command: CustomExceptions.CommandNotFoundError
         '''
+        #actual input to be parsed, split on spaces
+        bits = input.split()
 
-        components = input.split()
-        args = components[2:]
+        #Get the command that will be run 
+        command_str = ""
+        #list slicing generates an empty list instead of an IndexError
+        command_str = self.__find_function(bits[0:1], bits[1:2])
 
-        if   len(components) < 1:
-            out = self.__findFunction("")
-        elif len(components) == 1:
-            out = self.__findFunction(command=components[0])
-        #this case only exists for help. It could be removed but the syntax of help would feel weird.
-        elif len(components) == 2:
-            out = self.__findFunction(command=components[0], flags=components[1])
-            
-            if not components[1].__contains__("-"):
-                args = components[1:]
+        #Get the args that will be passed to that command
+        args = []
+        if not str(bits[1:2]).__contains__("-"):
+            args = self.__check_args(bits[1:])
         else:
-            out = self.__checkArgs(args)
-            if not isinstance(out, Exception):
-                out = self.__findFunction(command=components[0], flags=components[1], args=args)
-            
-        return [out] + args
+            args = self.__check_args(bits[2:])
 
-    def __checkArgs(self, args:list):
+        #Get the class the command is in
+        command_class = self.__find_class(command_str)
+
+        #go from knowing which class to having a specific instance
+        #of the object that the method needs to be called on
+        obj = self._diagram
+        if command_class == Entity:
+            obj = self._diagram.get_entity(args[0])
+        elif command_class == Help:
+            obj = Help
+        
+        #build and return the callable + args
+        return [getattr(obj, command_str)] + args
+
+    def __check_args(self, args:list):
         '''Given a list of args, checks to make sure each one is valid. 
             Valid is defined as alphanumeric.
             
@@ -169,31 +176,64 @@ class Controller:
         '''
         for arg in args:
             if not(arg.isalnum()):
-                return CE.InvalidArgumentError(arg)
+                raise CE.InvalidArgumentError(arg)
         return args
 
-
+    def __find_function(self, command:list, flag:list = [""]):
+        '''Finds the name of the function that should be called
         
-    def __findFunction(self, command:str, flags:str = "", args:list = []):
-        '''Given a command and flags, finds and returns the appropriate function
+            Args:
+                command - the command that was given to the parser
+                flag - the flag that was given to the parser
             
-            Args: 
-                command(str): the command to be used (ex: class)
-                flags(str): the block after the command, begins with a hyphen
-                
-            Return: 
-                With proper input: a function object that should be called
-                With an invalid command: CustomExceptions.CommandNotFoundError
-                With an invalid flag: CustomExceptions.InvalidFlagError
+            Raises: 
+                CustomExceptions.CommandNotFoundError if the command entered is
+                    invalid
+                CustomExceptions.InvalidFlagError if the flag entered is invalid
+        
+            Returns:
+                The name of the function that needs to be called
         '''
-        while (True):
-            input_str = input("Call by name with args [ex: 'first_method eval gt 21], CTRL-C to quit: ")
-            parts = input_str.split()   #splitting string into list
-            method_name = parts[0]      #first element in list (python indexes are 0-based!)
-            args = parts[1:]            #rest of elements -- https://realpython.com/lessons/string-slicing/
+        #convert the params to strings
+        command = str(command[0])
+        flag = str(flag[0]) if len(flag) > 0 else ""
 
-            if hasattr(obj, method_name):               #we can check an object for a member by name, or combine args to generate names!
-                method = getattr(obj, method_name)      #we can grab an actual object - like a member function - by a name
-                method(*args)                           #we can call it, and pass in our args. https://hyperskill.org/learn/step/15401
-            else:
-                print("Method not found.")
+        #check if the list of keys in the commmand flag map contains the given command
+        command_list = list(self._command_flag_map.keys())
+ 
+        valid_command = command_list.__contains__(command)
+        if not valid_command:
+            raise CE.CommandNotFoundError(command)
+        
+        #pull the list of flags for the validated command
+        flag_list = self._command_flag_map[command]
+        
+        #Make sure that the flag is a flag (preceded with -)
+        #some commands are just "command arg" so this needs to be checked
+        prepped_flag = ""
+        valid_flag = True
+        if flag.__contains__("-"):
+            prepped_flag = flag.lstrip("-")
+            valid_flag = flag_list.__contains__(prepped_flag)
+        
+        if not valid_flag:
+            raise CE.InvalidFlagError(flag, command)
+        
+        #compiling the correct location to index into the function map for
+        flag_index = flag_list.index(prepped_flag)
+        flags = self._command_function_map.get(command)
+        return flags[flag_index]
+    
+    def __find_class(self, function:str):
+        '''Takes a function and locates the class that it exists in
+        
+            Args:
+                function - the function to locate in a class
+                
+            Returns:
+                the class the function originates in'''
+        classes = [Diagram, Entity, Relation, Help]
+        for cl in classes:
+            if hasattr(cl, function):
+                return cl
+        
