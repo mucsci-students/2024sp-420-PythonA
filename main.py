@@ -10,6 +10,9 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         # This handles ctrl+C
         pass
+    except EOFError:
+        # This handles ctrl+D
+        pass
     except Exception:
         # Never expect errors to be caught here
         print('Oh no! Unexpected Error!')
