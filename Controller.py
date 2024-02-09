@@ -19,6 +19,7 @@ class Controller:
         self._diagram = Diagram()
 
         #map relating commands to the flags that can be passed to them
+        #NOTE: These must be synched with the command_function_map based on idx
         self._command_flag_map = {
             "class" : ["a","d","r"],
             "list"  : ["a","c","r","d"],
@@ -30,7 +31,9 @@ class Controller:
             "quit"  : [""],
             "help"  : [""]
         }
+   
         #map relating commands to the names of methods that can be called on them
+        #NOTE: these must be synched with command_flag_map based on idx
         self._command_function_map = {
             "class" : ["add_entity","delete_entity","rename_entity"],
             "list"  : ["list_everything","list_entities","list_relations","list_entity_details"],
@@ -42,6 +45,7 @@ class Controller:
             "quit"  : ["quit"],
             "help"  : ["help"]
         }
+    
     def run(self) -> None:
         while not self._shouldQuit:
             s = Input.readLine()
