@@ -53,7 +53,7 @@ class Controller:
                 #return from input is [function object, arg1,...,argn]
                 command = input[0]
                 args = input[1:]
-                
+
                 #execute the command
                 out = command(args)
             except Exception as e:
@@ -156,6 +156,7 @@ class Controller:
         #of the object that the method needs to be called on
         obj = self._diagram
         if command_class == Entity:
+            #if the method is in entity, get entity that needs to be changed
             obj = self._diagram.get_entity(args[0])
         elif command_class == Help:
             obj = Help
@@ -219,7 +220,7 @@ class Controller:
         if not valid_flag:
             raise CE.InvalidFlagError(flag, command)
         
-        #compiling the correct location to index into the function map for
+        #compiling the correct location to index into the function map
         flag_index = flag_list.index(prepped_flag)
         flags = self._command_function_map.get(command)
         return flags[flag_index]
