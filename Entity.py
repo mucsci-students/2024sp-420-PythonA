@@ -3,49 +3,48 @@ from CustomExceptions import CustomExceptions
 class Entity:
     def __init__(self, name:str) -> None:
         """
-        Initialize a new Entity instance.
+        Constructs a new Entity object.
 
         Args:
             name (str): The name of the entity.
         """
-        self.setName(name)
+        self.set_name(name)
         self._attributes = set()
 
-    def getName(self) -> str:
+    def get_name(self) -> str:
         '''
-        Return entity name
+        Returns the name of the entity.
 
         # Returns:
-
-        - (str): The name of entity
-        
+            (str): The name of the entity
         '''
         return self._name
 
-    def setName(self, name: str) -> None:
+    def set_name(self, name: str) -> None:
         """
-        Update entity name
+        Update entity name.
 
         Args:
-            name (str): New name to be set
+            name (str): The new name for the entity.
         """
         self._name = name
     
-    def addAttribute(self, attr: str) -> None:
+    def add_attribute(self, attr: str) -> None:
         """
-        Adds a new attribute to the '_attributes' set.
+        Adds a new attribute to the to the entity.
 
         Args:
-            attr (str): The attribute name to be added. It should be an alphanumeric string.
+            attr (str): The attribute name to be added to the entity.
 
         Raises:
-            CustomExceptions.AttributeExistsError: If the attribute already exists in the set.
+            CustomExceptions.AttributeExistsError: If the attribute already
+                exists in the Entity.
         """
         if attr in self._attributes:
             raise CustomExceptions.AttributeExistsError(attr)
         self._attributes.add(attr)
 
-    def deleteAttribute(self, attr: str) -> None:
+    def delete_attribute(self, attr: str) -> None:
         """
         Deletes an attribute from this entity if it exists.
 
@@ -53,23 +52,26 @@ class Entity:
             attr (str): The name of the attribute to be deleted from the entity.
 
         Raises:
-            CustomExceptions.AttributeNotFoundError: If the specified attribute is not found in the entity's attributes.
+            CustomExceptions.AttributeNotFoundError: If the specified attribute
+                is not found in the entity's attributes.
         """
         if attr not in self._attributes:
             raise CustomExceptions.AttributeNotFoundError(attr)
         self._attributes.remove(attr)
 
-    def renameAttribute(self, oldAttribute: str, newAttribute: str) -> None:
+    def rename_attribute(self, oldAttribute: str, newAttribute: str) -> None:
         """
         Renames an attribute from its old name to a new name
 
         Args:
-            oldAttribute (str): The current name of the attribute to be renamed
+            oldAttribute (str): The current name of the attribute.
             newAttribute (str): The new name for the attribute
 
         Raises:
-            CustomExceptions.AttributeNotFoundError: If the old attribute name does not exits in the entity's attribute
-            CustomExceptions.AttributeExitsError: If the new name is already used for another attribute
+            CustomExceptions.AttributeNotFoundError: If the old attribute does 
+                not exist in the entity.
+            CustomExceptions.AttributeExistsError: If the new name is already 
+                used for another attribute in this entity.
         """
         if oldAttribute not in self._attributes:
             raise CustomExceptions.AttributeNotFoundError(oldAttribute)
