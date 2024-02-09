@@ -11,6 +11,36 @@ class Controller:
         self._shouldQuit = False
         self._diagram = Diagram()
 
+        self._command_flag_map = {
+            "class" : ["a","d","r"],
+            "list"  : ["a","c","r","d"],
+            "save"  : [],
+            "load"  : [],
+            "att"   : ["a","d","r"],
+            "rel"   : ["a","d"],
+            "exit"  : [],
+            "quit"  : [],
+            "help"  : []
+        }
+
+        self.__functions = [
+            "add_entity",
+            "delete_entity",
+            "rename_entity",
+            "list_everything",
+            "list_entities",
+            "list_relations",
+            "list_entity_details",
+            "save",
+            "load",
+            "add_attribute",
+            "delete_attribute",
+            "rename_attribute",
+            "add_relation",
+            "delete_relation",
+            "quit",
+            "help"
+        ]
     def run(self) -> None:
         while not self._shouldQuit:
             s = Input.readLine()
@@ -142,6 +172,8 @@ class Controller:
                 return CE.InvalidArgumentError(arg)
         return args
 
+
+        
     def __findFunction(self, command:str, flags:str = "", args:list = []):
         '''Given a command and flags, finds and returns the appropriate function
             
@@ -154,84 +186,14 @@ class Controller:
                 With an invalid command: CustomExceptions.CommandNotFoundError
                 With an invalid flag: CustomExceptions.InvalidFlagError
         '''
-        cmd = CE.CommandNotFoundError(command)
+        while (True):
+            input_str = input("Call by name with args [ex: 'first_method eval gt 21], CTRL-C to quit: ")
+            parts = input_str.split()   #splitting string into list
+            method_name = parts[0]      #first element in list (python indexes are 0-based!)
+            args = parts[1:]            #rest of elements -- https://realpython.com/lessons/string-slicing/
 
-        #if there is something in flags, chop a hyphen off the front.
-        if len(flags) > 1 and flags[0] == "-":
-            flag = flags[1:]
-        else:
-            flag = flags
-        
-        #sorting through by command, then flag, to figure out which method will be called.
-        if "class" == command:
-            if   flag == "a":
-                cmd = self._diagram.add_entity
-            elif flag == "d":
-                cmd = self._diagram.delete_entity
-            elif flag == "r":
-                cmd = self._diagram.rename_entity
+            if hasattr(obj, method_name):               #we can check an object for a member by name, or combine args to generate names!
+                method = getattr(obj, method_name)      #we can grab an actual object - like a member function - by a name
+                method(*args)                           #we can call it, and pass in our args. https://hyperskill.org/learn/step/15401
             else:
-                cmd = CE.InvalidFlagError(flag, command)
-
-        elif "list" == command:
-            if   flag == "a":
-                cmd = self._diagram.list_everything
-            elif flag == "c" and len(args) > 0:
-                cmd = self._diagram.list_entity_details
-            elif flag == "r":
-                cmd = self._diagram.list_relations
-            elif flag == "c": 
-                cmd = self._diagram.list_entities           
-            else:
-                cmd = CE.InvalidFlagError(flag, command)
-        
-        elif "save" == command:
-            if flag == "f":
-                cmd = self.save
-            else:
-                cmd = CE.InvalidFlagError(flag, command)
-
-        elif "load" == command: 
-            if flag == "f":
-                cmd = self.load
-            else:
-                cmd = CE.InvalidFlagError(flag, command)
-
-        elif "att" == command:
-            name = args.pop(0)
-            entity = self._diagram.get_entity(name)
-            if entity != None:
-                if  flag == "a":
-                    cmd = entity.add_attribute
-                elif flag == "d":
-                    cmd = entity.delete_attribute
-                elif flag == "r":
-                    cmd = entity.rename_attribute
-                else:
-                    cmd = CE.InvalidFlagError(flag, command)
-            else:
-                cmd = CE.EntityNotFoundError(name)
-
-        elif "rel" == command:
-            if  flag == "a":
-                cmd = self._diagram.add_relation
-            elif flag == "d":
-                cmd = self._diagram.delete_relation
-            else:
-                cmd = CE.InvalidFlagError(flag, command)
-
-        elif "exit" == command or "quit" == command:
-            if flag == "":
-                cmd = self.quit
-            else:
-                cmd = CE.InvalidFlagError(flag, command)
-
-        elif "help" == command:
-            if len(flag) != 0:
-                cmd = CE.InvalidFlagError(flag, command)
-            else:
-                cmd = Help.help
-
-
-
-        return cmd
+                print("Method not found.")
