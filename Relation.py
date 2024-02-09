@@ -3,7 +3,7 @@ from Entity import Entity
 class Relation:
     def __init__(self, source=None, destination=None):
         """
-        Creates a relation from source and destination.
+        Creates a relation between a source entity to a destination entity.
         
         Args:
             source (Entity): The entity at the start of the relation.
@@ -50,13 +50,14 @@ class Relation:
     
     def contains(self, entity: Entity):
         """
-        Checks if the given entity is part of the relation.
+        Checks if a given entity is part of the relation.
 
         Args:
-            entity (Entity): The entity to check for existence within the relation.
+            entity (Entity): The entity to be checked.
 
         Returns:
-            bool: True if the given entity is either the source or the destination of the relation, False otherwise.
+            bool: Returns True if the entity is the source or the destination
+                of the relation. Returns False if the entity is not in the relation.
         """
         if entity == self._source or entity == self._destination:
             return True
@@ -74,6 +75,6 @@ class Relation:
             None.
             
         Returns:
-            A string representation of the relation.
+            str: A string representation of the relation.
         """
         return f'{self._source} -> {self._destination}'
