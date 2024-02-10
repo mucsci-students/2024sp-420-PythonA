@@ -60,10 +60,13 @@ class Controller:
 
                 #execute the command
                 out = command(*args)
-                #write output if it was a string
+
+                #write output if it was something
                 if out != None:
                     Output.write(out)
-
+            
+            except TypeError as t:
+                Output.write(CE.InvalidArgCountError(t))
             except Exception as e:
                 Output.write(str(e))
             
@@ -132,43 +135,43 @@ class Controller:
                 With invalid flag: CustomExceptions.InvalidFlagError
                 With invalid command: CustomExceptions.CommandNotFoundError
         '''
-        try:
-            #actual input to be parsed, split on spaces
-            bits = input.split()
+        #actual input to be parsed, split on spaces
+        bits = input.split()
 
-            #Get the command that will be run 
-            command_str = ""
-            #list slicing generates an empty list instead of an IndexError
-            command_str = self.__find_function(bits[0:1], bits[1:2])
+        #Get the command that will be run 
+        command_str = ""
+        #list slicing generates an empty list instead of an IndexError
+        command_str = self.__find_function(bits[0:1], bits[1:2])
 
-            #Get the args that will be passed to that command
-            args = []
-            if not str(bits[1:2]).__contains__("-"):
-                args = self.__check_args(bits[1:])
-            else:
-                args = self.__check_args(bits[2:])
+        #Get the args that will be passed to that command
+        args = []
+        if not str(bits[1:2]).__contains__("-"):
+            args = self.__check_args(bits[1:])
+        else:
+            args = self.__check_args(bits[2:])
 
-            #Get the class the command is in
-            command_class = self.__find_class(command_str)
+        #Get the class the command is in
+        command_class = self.__find_class(command_str)
 
-            #go from knowing which class to having a specific instance
-            #of the object that the method needs to be called on
-            obj = self
-            if command_class == Diagram:
-                obj = self._diagram
-            elif command_class == Entity:
-                #if the method is in entity, get entity that needs to be changed
-                obj = self._diagram.get_entity(args.pop(0))
-            elif command_class == Help:
-                obj = Help
+        #go from knowing which class to having a specific instance
+        #of the class that the method needs to be called on
+        obj = self
+        if command_class == Diagram:
+            obj = self._diagram
+        elif command_class == Entity:
+            #if no args were provided, no entity can be found. Generate an error about invalid args
+            if not args:
+                raise CE.NoArgsGivenError()
             
-            #build and return the callable + args
-            return [getattr(obj, command_str)] + args
+            #if the method is in entity, get entity that needs to be changed
+                #pop the first element of args because it is the entity name, not a method param
+            obj = self._diagram.get_entity(args.pop(0))
+        elif command_class == Help:
+            obj = Help
         
-        #This exception should be unreachable, it is here as a safeguard 
-            #(and for easy testing)
-        except Exception as e:
-            return e
+        #build and return the callable + args
+        return [getattr(obj, command_str)] + args
+        
 
     def __check_args(self, args:list):
         '''Given a list of args, checks to make sure each one is valid. 
@@ -186,7 +189,7 @@ class Controller:
                 raise CE.InvalidArgumentError(arg)
         return args
 
-    def __find_function(self, command:list, flag:list = [""]):
+    def __find_function(self, command:list, flag:list):
         '''Finds the name of the function that should be called
         
             Args:
