@@ -42,13 +42,13 @@ def unit_tests(c:Controller):
     #Attribute tests
     d.add_entity("cl")
     e = d.get_entity("cl")
-    print(parseTest.exec("attribute add valid name", [e.add_attribute, "cl", "att1"], "att -a cl att1"))
+    print(parseTest.exec("attribute add valid name", [e.add_attribute, "att1"], "att -a cl att1"))
     print(parseTest.exec("attribute add invalid class", CE.InvalidArgumentError("'"), "att -a ' att1"))
     print(parseTest.exec("attribute add invalid att name", CE.InvalidArgumentError("%"), "att -a cl %"))
-    print(parseTest.exec("attribute delete valid target", [e.delete_attribute, "cl", "att1"], "att -d cl att1"))
+    print(parseTest.exec("attribute delete valid target", [e.delete_attribute,"att1"], "att -d cl att1"))
     print(parseTest.exec("attribute delete invalid class", CE.InvalidArgumentError("'"), "att -d ' att1"))
     print(parseTest.exec("attribute delete invalid att name", CE.InvalidArgumentError("'"), "att -a cl '"))
-    print(parseTest.exec("attribute rename valid", [e.rename_attribute, "cl","att1","att2"], "att -r cl att1 att2"))
+    print(parseTest.exec("attribute rename valid", [e.rename_attribute,"att1","att2"], "att -r cl att1 att2"))
     print(parseTest.exec("attribute rename invalid class", CE.InvalidArgumentError("'"), "att -r ' att1 att2"))
     print(parseTest.exec("attribute rename invalid old name", CE.InvalidArgumentError("'"), "att -r cl ' att2"))
     print(parseTest.exec("attribute rename invalid new name", CE.InvalidArgumentError("'"), "att -r cl att1 '"))
@@ -69,9 +69,6 @@ def unit_tests(c:Controller):
     print(parseTest.exec("quit", [c.quit], "quit"))
     print(parseTest.exec("help", [Help.help], "help"))
     print(parseTest.exec("command invalid", CE.CommandNotFoundError("z"), "z"))
-
-    #cleanup from attribute tests
-    d.delete_entity("c1")
 
 
 

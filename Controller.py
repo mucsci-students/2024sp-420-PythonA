@@ -59,7 +59,8 @@ class Controller:
                 args = input[1:]
 
                 #execute the command
-                out = command(args)
+                out = command(*args)
+                Output.write(out)
             except Exception as e:
                 Output.write(str(e))
             
@@ -86,11 +87,13 @@ class Controller:
         if isinstance(self.__checkArgs([answer]), Exception):
             return CE.IOFailedError("Save", "invalid filename")
 
-        self.save(answer)
+        if self.save(answer):
+            return
+        return CE.IOFailedError("Save", "an unknown fatal error")
 
     def save(self, name: str) -> bool:
         '''
-        Saves the current diagram using a Serializer with the given filename
+        Saves the current diagram using a serializer with the given filename
 
         #### Parameters:
         - `name` (str): The name of the file to be saved.
@@ -104,20 +107,25 @@ class Controller:
         path = os.path.join(path, name + '.json')
         return Serializer.serialize(diagram=self._diagram, path=path)
 
-    def load(self, name: str) -> None:
+    def load(self, name: str) -> bool:
         '''
-        Loads a diagram with the given filename using a Serializer.
+        Loads a diagram with the given filename using a deserializer.
 
         #### Parameters:
         - `path` (str): The name of the file to be loaded.
+
+        #### Returns:
+        - (bool): True if the load operation is successful, False otherwise.
         '''
         path = os.path.join(os.path.dirname(__file__), 'save')
         if not os.path.exists(path):
             os.makedirs(path)
         path = os.path.join(path, name + '.json')
         loadedDiagram = Diagram()
-        Serializer.deserialize(diagram=loadedDiagram, path=path)
+        if not Serializer.deserialize(diagram=loadedDiagram, path=path):
+            return False
         self._diagram = loadedDiagram
+        return True
     
     def parse (self, input:str) -> list:
         '''Parses a line of user input.
@@ -157,7 +165,7 @@ class Controller:
                 obj = self._diagram
             elif command_class == Entity:
                 #if the method is in entity, get entity that needs to be changed
-                obj = self._diagram.get_entity(args[0])
+                obj = self._diagram.get_entity(args.pop(0))
             elif command_class == Help:
                 obj = Help
             
@@ -227,8 +235,8 @@ class Controller:
         
         #compiling the correct location to index into the function map
         flag_index = flag_list.index(prepped_flag)
-        commands = self._command_function_map.get(command)
-        return commands[flag_index]
+        flags = self._command_function_map.get(command)
+        return flags[flag_index]
     
     def __find_class(self, function:str):
         '''Takes a function and locates the class that it exists in
