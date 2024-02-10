@@ -1,3 +1,5 @@
+from CustomExceptions import CustomExceptions as CE
+
 def readLine(s='Command: ') -> str:
     '''
     Print a message to cmd and get a line of input
@@ -14,15 +16,16 @@ def read_file(path: str) -> str:
     '''
     Reads the contents of a file and returns the content as a string.
 
-    # Parameters:
+    #### Parameters:
     - `path` (str): The path to the file to be read.
 
-    # Returns:
+    #### Returns:
     - (str): The content of the file as a string.
 
-    # Raises:
-    - `FileNotFoundError`: If the specified file is not found.
-    - `IOError`: If there is an issue reading the file.
-    - Other exceptions: Any other exceptions that may occur during the file reading process.
+    #### Raises:
+    - (CustomExceptions.ReadFileError): If failed to read the file
     '''
-    return open(path, 'r').read()
+    try:
+        return open(path, 'r').read()
+    except Exception:
+        raise CE.ReadFileError(filepath=path)

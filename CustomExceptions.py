@@ -116,6 +116,10 @@ class CustomExceptions:
         def __init__(self, name) -> None:
             super().__init__(f"Command '{name}' does not exist. Try again or type 'help' for help.")
     
+    #===============================================================================
+                                #I/O Exceptions
+    #===============================================================================
+
     class IOFailedError(Error):
         '''Exception raised when an I/O Operation fails (saving or loading)
         
@@ -125,3 +129,53 @@ class CustomExceptions:
         '''
         def __init__(self, opname, reason) -> None:
             super().__init__(f"{opname} failed due to {reason}. Please try again.")
+
+    class ReadFileError(Error):
+        '''Exception raised when failed to read a file
+        
+        #### Args:
+            `filepath` (str): the path of the file to read
+        '''
+        def __init__(self, filepath: str) -> None:
+            super().__init__('Can not read file: "{}".'.format(filepath))
+
+    class WriteFileError(Error):
+        '''Exception raised when failed to write a file
+        
+        #### Args:
+            `filepath` (str): the path of the file to write
+        '''
+        def __init__(self, filepath: str) -> None:
+            super().__init__('Can not write file: "{}".'.format(filepath))
+
+    #===============================================================================
+                                #Serializer Exceptions
+    #===============================================================================
+            
+    class JsonDecodeError(Error):
+        '''Exception raised when failed to decode a Json file
+        
+        #### Args:
+            `filepath` (str): the path of the Json file to decode
+        '''
+        def __init__(self, filepath: str) -> None:
+            super().__init__('Can not decode .json file: "{}".'.format(filepath))
+    
+    class JsonEncodeError(Error):
+        '''Exception raised when failed to encode a Json file
+        
+        #### Args:
+            `filepath` (str): the path of the Json file to encode
+        '''
+        def __init__(self, filepath: str) -> None:
+            super().__init__('Can not encode .json file: "{}".'.format(filepath))
+
+    class SavedDataError(Error):
+        '''Exception raised when the saved data is not consistent with the Diagram.
+        
+        #### Args:
+            `filepath` (str): the path of the save file
+        '''
+        def __init__(self, filepath: str) -> None:
+            fmt = 'Failed to load save data: "{}".(Data in this save is no longer valid)'
+            super().__init__(fmt.format(filepath))
