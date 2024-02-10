@@ -16,8 +16,6 @@ def main():
     c = Controller()
     print("----------------------------------------\nParser Unit Tests\n----------------------------------------")
     unit_tests(c)
-    print("----------------------------------------\nParser Integration Tests\n----------------------------------------")
-
 
 
 def unit_tests(c:Controller):
