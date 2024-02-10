@@ -227,8 +227,8 @@ class Controller:
         
         #compiling the correct location to index into the function map
         flag_index = flag_list.index(prepped_flag)
-        flags = self._command_function_map.get(command)
-        return flags[flag_index]
+        commands = self._command_function_map.get(command)
+        return commands[flag_index]
     
     def __find_class(self, function:str):
         '''Takes a function and locates the class that it exists in
