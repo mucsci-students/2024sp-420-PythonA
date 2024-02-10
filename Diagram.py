@@ -31,12 +31,19 @@ class Diagram:
 
         Args:
             name (str): The name of the entity to be retrieved.
-
+        
+        Raises:
+            CustomExceptions.EntityNotFoundError if the entity requested does not exist
+            
         Returns:
             Entity: If the entity exists.
             None: If the entity does not exist.
         """
-        return self._entities.get(name, None)
+        entity = self._entities.get(name, None)
+        if entity is None:
+            raise CustomExceptions.EntityNotFoundError(name)
+            
+        return entity
 
     
     def delete_entity(self, name: str):

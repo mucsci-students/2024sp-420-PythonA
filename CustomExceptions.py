@@ -1,3 +1,4 @@
+import re   #for argc errors
 class CustomExceptions:
     class Error(Exception):
         """Base class for other exceptions."""
@@ -116,6 +117,30 @@ class CustomExceptions:
         def __init__(self, name) -> None:
             super().__init__(f"Command '{name}' does not exist. Try again or type 'help' for help.")
     
+    class InvalidArgCountError(Error):
+        '''
+            Exception raised when a user enters too many or too few arguments to the command they want to call.
+        
+            NOTE: This method really just catches the TypeError python generates and makes the message mroe readable.
+            
+            Args:
+                error - the TypeError that needs to be replaced
+        '''
+        def __init__(self, error):
+            #matching the different syntaxes of TypeErrors
+            match = re.search(r".*(\d+).*(\d+).*", str(error))
+            if match == None:
+                match = re.search(r".*(\d+).*", str(error))
+                super().__init__(f"{match.group(1)} too few arguments given.")
+            else:
+                super().__init__(f"Expected {match.group(1)} arguments, but {match.group(2)} were given.")
+    
+    class NoArgsGivenError(Error):
+        '''
+            Exception raised when a user gives no args to a command that requires one to be parsed
+        '''
+        def __init__(self):
+            super().__init__(f"This command requires additional input. Type 'help' for command usage.")
     #===============================================================================
                                 #I/O Exceptions
     #===============================================================================
