@@ -87,27 +87,22 @@ class Controller:
         if isinstance(self.__checkArgs([answer]), Exception):
             return CE.IOFailedError("Save", "invalid filename")
 
-        if self.save(answer):
-            return
-        return CE.IOFailedError("Save", "an unknown fatal error")
+        self.save(answer)
 
-    def save(self, name: str) -> bool:
+    def save(self, name: str) -> None:
         '''
         Saves the current diagram using a serializer with the given filename
 
         #### Parameters:
         - `name` (str): The name of the file to be saved.
-
-        #### Returns:
-        - (bool): True if the save operation is successful, False otherwise.
         '''
         path = os.path.join(os.path.dirname(__file__), 'save')
         if not os.path.exists(path):
             os.makedirs(path)
         path = os.path.join(path, name + '.json')
-        return Serializer.serialize(diagram=self._diagram, path=path)
+        Serializer.serialize(diagram=self._diagram, path=path)
 
-    def load(self, name: str) -> bool:
+    def load(self, name: str) -> None:
         '''
         Loads a diagram with the given filename using a deserializer.
 
@@ -122,10 +117,8 @@ class Controller:
             os.makedirs(path)
         path = os.path.join(path, name + '.json')
         loadedDiagram = Diagram()
-        if not Serializer.deserialize(diagram=loadedDiagram, path=path):
-            return False
+        Serializer.deserialize(diagram=loadedDiagram, path=path)
         self._diagram = loadedDiagram
-        return True
     
     def parse (self, input:str) -> list:
         '''Parses a line of user input.
