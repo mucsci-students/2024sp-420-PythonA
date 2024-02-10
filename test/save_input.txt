@@ -1,0 +1,3 @@
+save -f autoTest
+quit
+n
