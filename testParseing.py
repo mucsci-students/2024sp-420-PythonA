@@ -14,7 +14,6 @@ from Relation import Relation
 
 def main():
     c = Controller()
-    print("----------------------------------------\nParser Unit Tests\n----------------------------------------")
     unit_tests(c)
 
 
@@ -74,8 +73,6 @@ def unit_tests(c:Controller):
     #cleanup from attribute tests
     d.delete_entity("c1")
 
-def integration_tests (c:Controller):
-    d = c._diagram
 
 
 
