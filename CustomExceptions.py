@@ -97,7 +97,7 @@ class CustomExceptions:
             command (str): The name of the command that was called with the invalid flag.
         """
         def __init__(self, flag, command) -> None:
-            super().__init__(f"Command '{command}' has no flag '-{flag}'.")
+            super().__init__(f"Command '{command}' has no flag '{flag}'.")
     
     class NoEntitySelected(Error):
         """

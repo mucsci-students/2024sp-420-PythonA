@@ -28,7 +28,7 @@ def help():
     menu += "-a   - list all classes and their contents in the UML Diagram\n\t"
     menu += "-c   - list all classes in the UML Diagram\n\t"
     menu += "-r   - list all relationships in the UML Diagram\n\t"
-    menu += "-c name - list all contents of class 'name'\n"
+    menu += "-d name - list all contents of class 'name'\n"
 
     #Save Commands
     menu += "Save Flags: \n\t"
