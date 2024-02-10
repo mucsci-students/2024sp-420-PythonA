@@ -60,7 +60,10 @@ class Controller:
 
                 #execute the command
                 out = command(*args)
-                Output.write(out)
+                #write output if it was a string
+                if type(out) == str:
+                    Output.write(out)
+
             except Exception as e:
                 Output.write(str(e))
             
