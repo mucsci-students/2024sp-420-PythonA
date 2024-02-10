@@ -61,7 +61,7 @@ class Controller:
                 #execute the command
                 out = command(*args)
                 #write output if it was a string
-                if type(out) == str:
+                if out != None:
                     Output.write(out)
 
             except Exception as e:
