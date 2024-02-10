@@ -108,9 +108,6 @@ class Controller:
 
         #### Parameters:
         - `path` (str): The name of the file to be loaded.
-
-        #### Returns:
-        - (bool): True if the load operation is successful, False otherwise.
         '''
         path = os.path.join(os.path.dirname(__file__), 'save')
         if not os.path.exists(path):
