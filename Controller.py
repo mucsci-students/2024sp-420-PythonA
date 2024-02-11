@@ -92,7 +92,7 @@ class Controller:
         else:
             answer = Input.read_line('Name of file to save: ')
 
-        if isinstance(self.__checkArgs([answer]), Exception):
+        if isinstance(self.__check_args([answer]), Exception):
             return CE.IOFailedError("Save", "invalid filename")
 
         self.save(answer)
