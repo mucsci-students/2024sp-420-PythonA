@@ -1,7 +1,7 @@
 from CustomExceptions import CustomExceptions as CE
 
-def readLine(s='Command: ') -> str:
-    '''
+def read_line(s='Command: ') -> str:
+    """
     Print a message to cmd and get a line of input
 
     ## Parameters:
@@ -9,11 +9,11 @@ def readLine(s='Command: ') -> str:
 
     ## Returns:
     - (str): A line of input
-    '''
+    """
     return input(s)
 
 def read_file(path: str) -> str:
-    '''
+    """
     Reads the contents of a file and returns the content as a string.
 
     #### Parameters:
@@ -24,8 +24,9 @@ def read_file(path: str) -> str:
 
     #### Raises:
     - (CustomExceptions.ReadFileError): If failed to read the file
-    '''
+    """
     try:
-        return open(path, 'r').read()
+        with open(path, 'r') as file:
+            return file.read()
     except Exception:
         raise CE.ReadFileError(filepath=path)
