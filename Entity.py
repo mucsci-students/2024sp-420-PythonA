@@ -1,7 +1,7 @@
 from CustomExceptions import CustomExceptions
 
 class Entity:
-    def __init__(self, name:str) -> None:
+    def __init__(self, name:str='') -> None:
         """
         Constructs a new Entity object.
 

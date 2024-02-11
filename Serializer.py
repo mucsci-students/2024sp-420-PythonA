@@ -63,7 +63,7 @@ def deserialize(diagram: Diagram, path: str) -> None:
         for attr_name, attr_obj in diagram_attributes.items():
             if attr_name == 'entities':
                 for name, properties in attr_obj.items():
-                    entity = Entity(name='dummy') # TODO: Need a default constructor without parameter
+                    entity = Entity()
                     for property_name, property_val in properties.items():
                         if isinstance(getattr(entity, property_name), set): # Because custom encoder save set as list
                             property_val = set(property_val)
