@@ -8,9 +8,12 @@ rel -a Class1 Class1
 att -a Class1 attr1
 att -a Class1 attr2
 att -a Class2 attr1
-list -a
 save AutoTest
 class -d Class1
 class -d Class2
 class -d Class3
+list -a
+load AutoTest
+list -a
+load NotExistAutoTest
 list -a

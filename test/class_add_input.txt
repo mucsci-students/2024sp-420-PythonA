@@ -1,0 +1,8 @@
+class -a GoodName
+list -a
+class -a GoodName123
+list -a
+class -a BadName^&
+list -a
+class -a Two Words
+list -a

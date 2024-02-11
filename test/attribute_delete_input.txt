@@ -1,0 +1,12 @@
+class -a Class1
+class -a Class2
+att -a Class1 attr1
+att -a Class1 attr2
+att -a Class2 attr1
+list -a
+att -d Class1 attr1
+list -a
+att -d Class1 attr2
+list -a
+att -d Class1 attr1
+list -a

@@ -1,0 +1,42 @@
+Command: Command: 
+GoodName's Attributes:
+
+GoodName's Relations:
+
+
+Command: Command: 
+GoodName's Attributes:
+
+GoodName's Relations:
+
+
+GoodName123's Attributes:
+
+GoodName123's Relations:
+
+
+Command: Argument 'BadName^&' is not alphanumeric.
+Command: 
+GoodName's Attributes:
+
+GoodName's Relations:
+
+
+GoodName123's Attributes:
+
+GoodName123's Relations:
+
+
+Command: Expected 2 arguments, but 3 were given.
+Command: 
+GoodName's Attributes:
+
+GoodName's Relations:
+
+
+GoodName123's Attributes:
+
+GoodName123's Relations:
+
+
+Command: 
