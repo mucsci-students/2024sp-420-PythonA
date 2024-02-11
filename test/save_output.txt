@@ -1,6 +1,6 @@
 Command: Command: Command: Command: Command: Command: Command: Command: Command: Command: Command: 
 Class1's Attributes:
-attr1, attr2
+attr2, attr1
 Class1's Relations:
 Class1 -> Class2, Class1 -> Class3, Class2 -> Class1, Class1 -> Class1
 

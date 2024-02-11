@@ -1,7 +1,7 @@
 from Entity import Entity
 
 class Relation:
-    def __init__(self, source=None, destination=None):
+    def __init__(self, source=Entity(), destination=Entity()):
         """
         Creates a relation between a source entity to a destination entity.
         
