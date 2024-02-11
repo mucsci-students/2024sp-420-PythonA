@@ -15,7 +15,7 @@ from Relation import Relation
 
 class Controller:
     def __init__(self) -> None:
-        self._shouldQuit = False
+        self._should_quit = False
         self._diagram = Diagram()
 
         #map relating commands to the flags that can be passed to them
@@ -47,8 +47,8 @@ class Controller:
         }
     
     def run(self) -> None:
-        while not self._shouldQuit:
-            s = Input.readLine()
+        while not self._should_quit:
+            s = Input.read_line()
 
             try:
                 #parse the command
@@ -81,16 +81,16 @@ class Controller:
             If name is invalid, returns invalid filename exception
             If filepath is invalid, returns invalid filepath exception
         '''
-        self._shouldQuit = True
+        self._should_quit = True
         while True:
-            answer = Input.readLine('Would you like to save before quit? [Y]/n: ').strip()
+            answer = Input.read_line('Would you like to save before quit? [Y]/n: ').strip()
             if not answer or answer in ['Y', 'n']: # default or Y/n
                 break
         if answer == 'n':
             #user wants to quit without saving
             return
         else:
-            answer = Input.readLine('Name of file to save: ')
+            answer = Input.read_line('Name of file to save: ')
 
         if isinstance(self.__checkArgs([answer]), Exception):
             return CE.IOFailedError("Save", "invalid filename")
