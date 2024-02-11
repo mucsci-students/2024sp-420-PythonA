@@ -141,6 +141,20 @@ class CustomExceptions:
         '''
         def __init__(self):
             super().__init__(f"This command requires additional input. Type 'help' for command usage.")
+
+    class NoInputError(Error):
+        '''
+            Exception raised when no input is given and enter is hit
+        '''
+        def __init__(self):
+            super().__init__(f"")
+
+    class NeedsMoreInput(Error):
+        '''
+            Exception raised when user gives only a command name
+        '''
+        def __init__(self):
+            super().__init__(f"This command requires more input. Please try again or type 'help' for command usage.")
     #===============================================================================
                                 #I/O Exceptions
     #===============================================================================

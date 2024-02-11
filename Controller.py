@@ -67,6 +67,8 @@ class Controller:
             
             except TypeError as t:
                 Output.write(CE.InvalidArgCountError(t))
+            except ValueError as v:
+                Output.write(CE.NeedsMoreInput())
             except Exception as e:
                 Output.write(str(e))
             
@@ -135,6 +137,10 @@ class Controller:
                 With invalid flag: CustomExceptions.InvalidFlagError
                 With invalid command: CustomExceptions.CommandNotFoundError
         '''
+        #guarding no input saves resources
+        if not input: 
+            raise CE.NoInputError()
+        
         #actual input to be parsed, split on spaces
         bits = input.split()
 
