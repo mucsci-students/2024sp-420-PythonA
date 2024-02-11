@@ -42,7 +42,8 @@ class Entity:
         """
         if attr in self._attributes:
             raise CustomExceptions.AttributeExistsError(attr)
-        self._attributes.add(attr)
+        else:
+            self._attributes.add(attr)
 
     def delete_attribute(self, attr: str) -> None:
         """
@@ -57,9 +58,10 @@ class Entity:
         """
         if attr not in self._attributes:
             raise CustomExceptions.AttributeNotFoundError(attr)
-        self._attributes.remove(attr)
+        else:
+            self._attributes.remove(attr)
 
-    def rename_attribute(self, oldAttribute: str, newAttribute: str) -> None:
+    def rename_attribute(self, old_attribute: str, new_attribute: str) -> None:
         """
         Renames an attribute from its old name to a new name
 
@@ -73,14 +75,15 @@ class Entity:
             CustomExceptions.AttributeExistsError: If the new name is already 
                 used for another attribute in this entity.
         """
-        if oldAttribute not in self._attributes:
-            raise CustomExceptions.AttributeNotFoundError(oldAttribute)
+        if old_attribute not in self._attributes:
+            raise CustomExceptions.AttributeNotFoundError(old_attribute)
         
-        if newAttribute in self._attributes:
-            raise CustomExceptions.AttributeExistsError(newAttribute)
+        elif new_attribute in self._attributes:
+            raise CustomExceptions.AttributeExistsError(new_attribute)
         # Remove the old attribute and add the new attribute name
-        self._attributes.remove(oldAttribute)
-        self._attributes.add(newAttribute)
+        else:
+            self._attributes.remove(old_attribute)
+            self._attributes.add(new_attribute)
 
     def __str__(self) -> str:
         """
