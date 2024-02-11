@@ -1,0 +1,47 @@
+Command: Command: Command: Command: Command: Command: 
+Class1's Attributes:
+attr1, attr2
+Class1's Relations:
+
+
+Class2's Attributes:
+attr1
+Class2's Relations:
+
+
+Command: Command: 
+Class1's Attributes:
+attr3, attr2
+Class1's Relations:
+
+
+Class2's Attributes:
+attr1
+Class2's Relations:
+
+
+Command: Attribute with name 'attr3' already exists.
+Command: 
+Class1's Attributes:
+attr3, attr2
+Class1's Relations:
+
+
+Class2's Attributes:
+attr1
+Class2's Relations:
+
+
+Command: Attribute with name 'attr1' does not exist.
+Command: 
+Class1's Attributes:
+attr3, attr2
+Class1's Relations:
+
+
+Class2's Attributes:
+attr1
+Class2's Relations:
+
+
+Command: 

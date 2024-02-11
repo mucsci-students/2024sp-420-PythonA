@@ -1,0 +1,11 @@
+class -a Class1
+class -a Class2
+list -a
+class -d Class1
+list -a
+class -d NotExist
+list -a
+class -d Two Words
+list -a
+class -d Class2
+list -a

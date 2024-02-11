@@ -1,0 +1,47 @@
+Command: Command: Command: 
+Class1's Attributes:
+
+Class1's Relations:
+
+
+Class2's Attributes:
+
+Class2's Relations:
+
+
+Command: Command: 
+Class2's Attributes:
+
+Class2's Relations:
+
+
+Class3's Attributes:
+
+Class3's Relations:
+
+
+Command: Entity with name 'Class1' does not exist.
+Command: 
+Class2's Attributes:
+
+Class2's Relations:
+
+
+Class3's Attributes:
+
+Class3's Relations:
+
+
+Command: Entity with name 'NotExist' does not exist.
+Command: 
+Class2's Attributes:
+
+Class2's Relations:
+
+
+Class3's Attributes:
+
+Class3's Relations:
+
+
+Command: 
