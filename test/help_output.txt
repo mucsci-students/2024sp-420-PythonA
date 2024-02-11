@@ -1,0 +1,35 @@
+Command: 
+Help menu:  For the best view, resize your window so that this message and the bar at the end are on one line.    |
+
+Below are the commands you can call and an explanation of what each does. Anything inside single quotes is decided
+by you! Enter the command, replacing anything in the single quotes, and the quotes themselves, with the name you
+want to use.
+
+A valid name is made up of any combination of letters and numbers.
+
+Class Commands: 
+	class -a 'name'  - adds a class with name 'name'. Cannot add classes with duplicate or invalid names
+	class -d 'name'  - deletes a class with name 'name'
+	class -r 'old' 'new' - renames class 'old' to 'new'. Cannot rename classes to duplicate or invalid names
+Attribute Commands: 
+	att -a class 'name' - adds an attribute with name 'name' to class 'class'
+	att -d class 'name' - deletes an attribute with name 'name' from class 'class' if one exists
+	att -r class 'old' 'new' - renames an attribute from name 'old' to name 'new' in class 'class'
+Relation Commands:
+	rel -a 'src' 'dest' - adds a relationship between class 'src' and class 'dest' assuming both are valid
+	rel -d 'src' 'dest' - deletes a relationship between class 'src' and class 'dest' if one exists
+List Flags: 
+	list -a   - list all classes and their contents in the UML Diagram
+	list -c   - list all classes in the UML Diagram
+	list -r   - list all relationships in the UML Diagram
+	list -d 'name' - list all contents of class 'name'
+Save Flags: 
+	save 'name' - saves the UML Diagram as a JSON file with name 'name'
+Load Flags: 
+	load 'name' - loads the file with name 'name.json' if one exists.
+
+Exit Commands: 
+	exit   - terminates the program.
+	quit   - terminates the program.
+
+Command: 
