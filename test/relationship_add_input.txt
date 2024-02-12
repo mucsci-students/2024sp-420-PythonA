@@ -1,0 +1,16 @@
+class -a Class1
+class -a Class2
+class -a Class3
+list -a
+rel -a Class1 Class2
+list -a
+rel -a Class1 Class3
+list -a
+rel -a Class2 Class1
+list -a
+rel -a Class1 Class2
+list -a
+rel -a Class1 Class1
+list -a
+rel -a NotExist Class1
+list -a

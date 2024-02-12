@@ -1,0 +1,35 @@
+Command: Command: Command: Command: Command: Command: Command: Command: Command: Command: Command: Command: Command: Command: Command: 
+Command: Command: 
+Class1's Attributes:
+attr2, attr1
+Class1's Relations:
+Class1 -> Class2, Class1 -> Class3, Class2 -> Class1, Class1 -> Class1
+
+Class2's Attributes:
+attr1
+Class2's Relations:
+Class1 -> Class2, Class2 -> Class1
+
+Class3's Attributes:
+
+Class3's Relations:
+Class1 -> Class3
+
+Command: Can not read file: "/home/Mars/2024sp-420-CWorld/save/NotExistAutoTest.json".
+Command: 
+Class1's Attributes:
+attr2, attr1
+Class1's Relations:
+Class1 -> Class2, Class1 -> Class3, Class2 -> Class1, Class1 -> Class1
+
+Class2's Attributes:
+attr1
+Class2's Relations:
+Class1 -> Class2, Class2 -> Class1
+
+Class3's Attributes:
+
+Class3's Relations:
+Class1 -> Class3
+
+Command: 
