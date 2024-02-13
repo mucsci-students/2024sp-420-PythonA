@@ -16,7 +16,7 @@ If you don't have python installed (tested on 3.12.2)[ follow the steps here!](h
 
 ## Step 1 Download Zip
 
-[Download Zip here!](https://github.com/mucsci-students/2024sp-420-CWorld/archive/refs/heads/develop.zip)
+[Download Zip here!](https://github.com/mucsci-students/2024sp-420-CWorld/archive/refs/heads/main.zip)
 
 
 ## Step 2 Extract and Locate
