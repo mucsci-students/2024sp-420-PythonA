@@ -1,14 +1,14 @@
-import Input
-import Output
-import Serializer
-from CustomExceptions import CustomExceptions as CE
-from Diagram import Diagram
+from .controller_input import read_file, read_line
+import umleditor.mvc_controller.controller_output as controller_output
+from .serializer import CustomJSONEncoder, serialize, deserialize
+from umleditor.mvc_model import CustomExceptions as CE
+from umleditor.mvc_model.diagram import Diagram
+from umleditor.mvc_model import help_menu
 import os
-import Help
 
 #Parser Includes. These will be moved out when the parser is moved.
-from Entity import Entity
-from Relation import Relation
+from umleditor.mvc_model.entity import Entity
+from umleditor.mvc_model.relation import Relation
 
 
 
@@ -43,12 +43,12 @@ class Controller:
             "load"  : ["load"],
             "exit"  : ["quit"],
             "quit"  : ["quit"],
-            "help"  : ["help"]
+            "help"  : ["help_menu"]
         }
     
     def run(self) -> None:
         while not self._should_quit:
-            s = Input.read_line()
+            s = read_line()
 
             try:
                 #parse the command
@@ -63,14 +63,14 @@ class Controller:
 
                 #write output if it was something
                 if out != None:
-                    Output.write(out)
+                    controller_output.write(out)
             
             except TypeError as t:
-                Output.write(CE.InvalidArgCountError(t))
+                controller_output.write(CE.InvalidArgCountError(t))
             except ValueError as v:
-                Output.write(CE.NeedsMoreInput())
+                controller_output.write(CE.NeedsMoreInput())
             except Exception as e:
-                Output.write(str(e))
+                controller_output.write(str(e))
             
     def quit(self):
         '''Basic Quit Routine. Prompts user to save, where to save, 
@@ -83,14 +83,14 @@ class Controller:
         '''
         self._should_quit = True
         while True:
-            answer = Input.read_line('Would you like to save before quit? [Y]/n: ').strip()
+            answer = read_line('Would you like to save before quit? [Y]/n: ').strip()
             if not answer or answer in ['Y', 'n']: # default or Y/n
                 break
         if answer == 'n':
             #user wants to quit without saving
             return
         else:
-            answer = Input.read_line('Name of file to save: ')
+            answer = read_line('Name of file to save: ')
 
         if isinstance(self.__check_args([answer]), Exception):
             return CE.IOFailedError("Save", "invalid filename")
@@ -108,7 +108,7 @@ class Controller:
         if not os.path.exists(path):
             os.makedirs(path)
         path = os.path.join(path, name + '.json')
-        Serializer.serialize(diagram=self._diagram, path=path)
+        serialize(diagram=self._diagram, path=path)
 
     def load(self, name: str) -> None:
         '''
@@ -122,7 +122,7 @@ class Controller:
             os.makedirs(path)
         path = os.path.join(path, name + '.json')
         loadedDiagram = Diagram()
-        Serializer.deserialize(diagram=loadedDiagram, path=path)
+        deserialize(diagram=loadedDiagram, path=path)
         self._diagram = loadedDiagram
     
     def parse (self, input:str) -> list:
@@ -172,8 +172,8 @@ class Controller:
             #if the method is in entity, get entity that needs to be changed
                 #pop the first element of args because it is the entity name, not a method param
             obj = self._diagram.get_entity(args.pop(0))
-        elif command_class == Help:
-            obj = Help
+        elif command_class == help_menu:
+            obj = help_menu
         
         #build and return the callable + args
         return [getattr(obj, command_str)] + args
@@ -248,7 +248,7 @@ class Controller:
                 
             Returns:
                 the class the function originates in'''
-        classes = [Diagram, Entity, Relation, Help]
+        classes = [Diagram, Entity, Relation, help_menu]
         for cl in classes:
             if hasattr(cl, function):
                 return cl

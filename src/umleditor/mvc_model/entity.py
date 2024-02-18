@@ -1,4 +1,4 @@
-from CustomExceptions import CustomExceptions
+from .custom_exceptions import CustomExceptions
 
 class Entity:
     def __init__(self, name:str='') -> None:

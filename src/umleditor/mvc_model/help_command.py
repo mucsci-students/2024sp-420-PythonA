@@ -1,5 +1,5 @@
 '''Application help menu, to be called when user asks for help.'''
-def help():
+def help_menu():
     """
     Returns a string that contains the menu.
     

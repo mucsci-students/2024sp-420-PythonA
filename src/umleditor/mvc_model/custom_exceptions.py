@@ -4,9 +4,9 @@ class CustomExceptions:
         """Base class for other exceptions."""
         pass
 
-    #===============================================================================
+    #===============================================================================#
                                 #Entity Exceptions
-    #===============================================================================
+    #===============================================================================#
     class EntityExistsError(Error):
         """Exception raised when an entity with a given name already exists.
 
@@ -26,9 +26,9 @@ class CustomExceptions:
         def __init__(self, name) -> None:
             super().__init__(f"Entity with name '{name}' does not exist.")
     
-    #===============================================================================
+    #===============================================================================#
                                 #Attribute Exceptions
-    #===============================================================================
+    #===============================================================================#
     class AttributeExistsError(Error):
         """Exception raised when an attribute with a given name already exists.
 
@@ -47,9 +47,9 @@ class CustomExceptions:
         def __init__(self, attr) -> None:
             super().__init__(f"Attribute with name '{attr}' does not exist.")
                         
-    #===============================================================================
+    #===============================================================================#
                                 #Relation Exceptions
-    #===============================================================================
+    #===============================================================================#
     class RelationExistsError(Error):
         """
         Exception raised when the relation being added already exists.
@@ -76,9 +76,9 @@ class CustomExceptions:
         def __init__(self, source, destination):
             super().__init__(f"Relation between '{source} -> {destination}' does not exist.")
 
-    #===============================================================================
+    #===============================================================================#
                                 #Parser/Controller Exceptions
-    #===============================================================================
+    #===============================================================================#
     class InvalidArgumentError(Error):
         """
         Exception raised when an input argument is not valid.
@@ -155,9 +155,9 @@ class CustomExceptions:
         '''
         def __init__(self):
             super().__init__(f"This command requires more input. Please try again or type 'help' for command usage.")
-    #===============================================================================
+    #===============================================================================#
                                 #I/O Exceptions
-    #===============================================================================
+    #===============================================================================#
 
     class IOFailedError(Error):
         '''Exception raised when an I/O Operation fails (saving or loading)
