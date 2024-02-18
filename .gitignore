@@ -1,5 +1,7 @@
 __pycache__
 *.test
+*.egg-info
+*.vscode
 
 Lib/
 Scripts/

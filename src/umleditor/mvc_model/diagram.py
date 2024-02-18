@@ -1,7 +1,7 @@
 from math import e
-from Entity import Entity
-from Relation import Relation
-from CustomExceptions import CustomExceptions
+from .entity import Entity
+from .relation import Relation
+from .custom_exceptions import CustomExceptions
 
 class Diagram:
     def __init__(self) -> None:

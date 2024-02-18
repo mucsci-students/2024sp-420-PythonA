@@ -1,4 +1,4 @@
-from CustomExceptions import CustomExceptions as CE
+from umleditor.mvc_model import CustomExceptions as CE
 
 def read_line(s='Command: ') -> str:
     """

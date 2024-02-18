@@ -5,7 +5,7 @@ class Test:
 
 
     def exec(self, detail:str, expected, *args):
-        '''
+        """
             Executes self.func, passing in all args in the order provided
 
             Args:
@@ -16,8 +16,7 @@ class Test:
             Return:
                 A string in the form "self.name detail - passed" if the test was passed
                 A string in the form "self.name detail - expected {} actual {}" if the test was failed
-
-        '''
+        """
         try:
             output = self.func(*args)
         except Exception as e:

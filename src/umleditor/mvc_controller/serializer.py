@@ -13,12 +13,12 @@ class CustomJSONEncoder(json.JSONEncoder):
             return list(obj)
         return json.JSONEncoder.default(self, obj)
 
-import Input
-import Output
-from Diagram import Diagram
-from Entity import Entity
-from Relation import Relation
-from CustomExceptions import CustomExceptions as CE
+from umleditor.mvc_controller.controller_input import read_file, read_line
+import umleditor.mvc_controller.controller_output as controller_output
+from umleditor.mvc_model.diagram import Diagram
+from umleditor.mvc_model.entity import Entity
+from umleditor.mvc_model.relation import Relation
+from umleditor.mvc_model.custom_exceptions import CustomExceptions as CE
 
 def serialize(diagram: Diagram, path: str) -> None:
     '''
@@ -40,7 +40,7 @@ def serialize(diagram: Diagram, path: str) -> None:
         content = json.dumps(obj={'entities': entities, 'relations': relations}, cls=CustomJSONEncoder)
     except Exception:
         raise CE.JsonEncodeError(filepath=path)
-    Output.write_file(path=path, content=content)
+    controller_output.write_file(path=path, content=content)
 
 def deserialize(diagram: Diagram, path: str) -> None:
     '''
@@ -54,7 +54,7 @@ def deserialize(diagram: Diagram, path: str) -> None:
     - (CustomExceptions.JsonDecodeError): If failed to decode the file
     - (CustomExceptions.SavedDataError): If file data is not consistent with the Diagram
     '''
-    content = Input.read_file(path)
+    content = read_file(path)
     try:
         diagram_attributes = json.loads(content)
     except Exception:

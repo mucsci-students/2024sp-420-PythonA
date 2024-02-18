@@ -1,4 +1,6 @@
-from Controller import Controller
+# from Controller import Controller
+# from umleditor.mvc_controller.controller import Controller
+from umleditor.mvc_controller import Controller
 
 def debug_main():
     app = Controller()
