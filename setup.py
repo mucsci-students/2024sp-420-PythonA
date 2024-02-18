@@ -1,7 +1,7 @@
 from setuptools import find_packages, setup
 
 setup(
-    name="umlplaceholdername",
+    name="CWorldUML",
     version="0.2",
     description="UML Editor",
     readme = "README.md",

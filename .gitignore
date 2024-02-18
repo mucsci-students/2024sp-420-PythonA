@@ -1,9 +1,16 @@
+#generic excludes
 __pycache__
 *.test
 *.egg-info
 *.vscode
 
+#Venv directories and files
 Lib/
 Scripts/
 Include/
 venv.cfg
+pyvenv.cfg
+
+#Build directories and files
+build/
+dist/
