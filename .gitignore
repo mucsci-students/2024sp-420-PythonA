@@ -14,3 +14,7 @@ pyvenv.cfg
 #Build directories and files
 build/
 dist/
+main.spec
+
+#pytest 
+.pytest_cache
