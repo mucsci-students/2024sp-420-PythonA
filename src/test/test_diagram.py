@@ -1,9 +1,9 @@
 import os
 
-from Test import Test
-from Diagram import Diagram
-import Serializer
-from Entity import Entity
+from umleditor.mvc_model.test import Test
+from umleditor.mvc_model.diagram import Diagram
+from umleditor.mvc_controller.serializer import CustomJSONEncoder, serialize, deserialize
+from umleditor.mvc_model.entity import Entity
 
 def main():
     """
@@ -79,9 +79,9 @@ def main():
     toSave.add_relation('First', 'Third')
     toSave.add_relation('Second', 'Third')
     dirname = os.path.dirname(__file__)
-    Serializer.serialize(diagram=toSave, path=os.path.join(dirname, 'save.test'))
+    serialize(diagram=toSave, path=os.path.join(dirname, 'save.test'))
     toLoad = Diagram()
-    Serializer.deserialize(diagram=toLoad, path=os.path.join(dirname, 'save.test'))
+    deserialize(diagram=toLoad, path=os.path.join(dirname, 'save.test'))
     res = 'Save/Load - {}'
     passed = toSave.list_entities() == toLoad.list_entities() and toSave.list_relations() == toLoad.list_relations()
     print(res.format('Passed' if passed else 'Failed'))

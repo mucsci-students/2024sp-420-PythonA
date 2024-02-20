@@ -1,5 +1,5 @@
 #Tests the class Test.py
-from Test import Test
+from umleditor.mvc_model.test import Test
 
 class Dummy: 
     def __init__(self, val):
@@ -27,7 +27,7 @@ def main():
 
     subtracting = Test("Test subtract", subtractOne)
     print(subtracting.exec("5 - 3", 2, 5, 3))
-    print(subtracting.exec("3 - 7", -4, 2, 7))
+    print(subtracting.exec("3 - 7", -4, 3, 7))
 
     stringmod = Test("fancyString", fancyString)
     print(stringmod.exec("idk", "idk according to all known laws of aviation", "idk"))
