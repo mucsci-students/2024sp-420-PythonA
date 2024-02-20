@@ -1,16 +1,16 @@
-import Input
-import Output
-import Serializer
-from CustomExceptions import CustomExceptions as CE
-from Controller import Controller
-from Diagram import Diagram
-from Test import Test
+from umleditor.mvc_controller.controller_input import read_file, read_line
+from umleditor.mvc_controller.controller_output import write, write_file
+from umleditor.mvc_controller.serializer import CustomJSONEncoder, serialize, deserialize
+from umleditor.mvc_model.custom_exceptions import CustomExceptions as CE
+from umleditor.mvc_controller.controller import Controller
+from umleditor.mvc_model.diagram import Diagram
+from umleditor.mvc_model.test import Test
 import os
-import Help
+# import Help
 
 #Parser Includes. These will be moved out when the parser is moved.
-from Entity import Entity
-from Relation import Relation
+from umleditor.mvc_model.entity import Entity
+from umleditor.mvc_model.relation import Relation
 
 def main():
     c = Controller()
@@ -67,7 +67,7 @@ def unit_tests(c:Controller):
     print(parseTest.exec("save", [c.save], "save"))
     print(parseTest.exec("load", [c.load], "load"))
     print(parseTest.exec("quit", [c.quit], "quit"))
-    print(parseTest.exec("help", [Help.help], "help"))
+    # print(parseTest.exec("help", [Help.help], "help"))
     print(parseTest.exec("command invalid", CE.CommandNotFoundError("z"), "z"))
 
 
