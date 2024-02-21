@@ -21,7 +21,7 @@ def main():
         print('Oh no! Unexpected Error!')
 
 if __name__ == '__main__':
-    if __debug__:
+    if not __debug__:
         debug_main()
     else:
         main()
