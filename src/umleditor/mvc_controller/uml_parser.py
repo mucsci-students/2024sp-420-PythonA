@@ -2,6 +2,8 @@ from umleditor.mvc_model import CustomExceptions as CE
 from umleditor.mvc_view.cli_lexer import lex_input as lex
 from umleditor.mvc_model import *
 
+import re
+
 class Parser:
     def __init__(self, diagram:Diagram):
         self._diagram = diagram
@@ -29,13 +31,12 @@ class Parser:
         command_str = ""
         #list slicing generates an empty list instead of an IndexError
         command_str = lex(bits[0:1], bits[1:2])
-
         #Get the args that will be passed to that command
         args = []
         if not str(bits[1:2]).__contains__("-"):
-            args = self.__check_args(bits[1:])
+            args = check_args(bits[1:])
         else:
-            args = self.__check_args(bits[2:])
+            args = check_args(bits[2:])
 
         #Get the class the command is in
         command_class = self.__find_class(command_str)
@@ -53,8 +54,8 @@ class Parser:
             #if the method is in entity, get entity that needs to be changed
                 #pop the first element of args because it is the entity name, not a method param
             obj = self._diagram.get_entity(args.pop(0))
-        elif command_class == help_menu:
-            obj = help_menu
+        elif command_class == help_command:
+            obj = help_command
         
         #build and return the callable + args
         return [getattr(obj, command_str)] + args
@@ -67,12 +68,12 @@ class Parser:
                 
             Returns:
                 the class the function originates in'''
-        classes = [Diagram, Entity, Relation, help_menu]
+        classes = [Diagram, Entity, Relation, help_command]
         for cl in classes:
             if hasattr(cl, function):
                 return cl
         
-def check_args(self, args:list):
+def check_args(args:list):
     '''Given a list of args, checks to make sure each one is valid. 
         Valid is defined as alphanumeric.
         
@@ -83,7 +84,8 @@ def check_args(self, args:list):
             CustomExceptions.InvalidArgumentError if an argument provided is invalid
             The list of args provided if all args are valid
     '''
+    exp = re.compile('[^a-zA-Z-_0-9]')
     for arg in args:
-        if not(arg.isalnum()):
+        if len(exp.findall(arg)) > 0:
             raise CE.InvalidArgumentError(arg)
     return args

@@ -22,9 +22,9 @@ class Controller:
 
     
     def run(self) -> None:
+        p = Parser(self._diagram)
         while not self._should_quit:
             s = read_line()
-            p = Parser(self._diagram)
             try:
                 #parse the command
                 input = p.parse(s)

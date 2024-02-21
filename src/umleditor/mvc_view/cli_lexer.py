@@ -28,7 +28,7 @@ _command_function_map = {
     "help"  : ["help_menu"]
 }
 
-def lex_input(self, command:list, flag:list):
+def lex_input(command:list, flag:list):
     '''Finds the name of the function that should be called
     
         Args:
