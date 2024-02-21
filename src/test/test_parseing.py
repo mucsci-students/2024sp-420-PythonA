@@ -5,6 +5,7 @@ from umleditor.mvc_model.custom_exceptions import CustomExceptions as CE
 from umleditor.mvc_controller.controller import Controller
 from umleditor.mvc_model.diagram import Diagram
 from umleditor.mvc_model.test import Test
+from umleditor.mvc_controller.uml_parser import Parser
 import os
 # import Help
 
@@ -13,11 +14,12 @@ from umleditor.mvc_model.entity import Entity
 from umleditor.mvc_model.relation import Relation
 
 def main():
-    c = Controller()
+    d = Diagram()
+    c = Parser(d)
     unit_tests(c)
 
 
-def unit_tests(c:Controller):
+def unit_tests(c:Parser):
     parseTest = Test("Parser Tests", c.parse)
     d = c._diagram
 
@@ -62,13 +64,6 @@ def unit_tests(c:Controller):
     print(parseTest.exec("relation delete invalid source", CE.InvalidArgumentError("'"), "rel -d ' c2"))
     print(parseTest.exec("relation add invalid destination", CE.InvalidArgumentError("'"), "rel -d c1 '"))
     print(parseTest.exec("relation invalid flag", CE.InvalidFlagError("-z", "rel"), "rel -z test"))
-
-    #Controller Method tests
-    print(parseTest.exec("save", [c.save], "save"))
-    print(parseTest.exec("load", [c.load], "load"))
-    print(parseTest.exec("quit", [c.quit], "quit"))
-    # print(parseTest.exec("help", [Help.help], "help"))
-    print(parseTest.exec("command invalid", CE.CommandNotFoundError("z"), "z"))
 
 
 
