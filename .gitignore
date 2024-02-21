@@ -11,6 +11,12 @@ Include/
 venv.cfg
 pyvenv.cfg
 
+#Linux venv directories
+bin/
+include/
+lib/
+lib64/
+
 #Build directories and files
 build/
 dist/
