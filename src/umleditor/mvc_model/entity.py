@@ -261,8 +261,8 @@ class UML_Method:
             new_params (list[str]): The list of new parameters to be added.
 
         Raises:
-            CustomExceptions.ParameterNotFoundError: If any of the parameter does not exist in the method.
-            CustomExceptions.ParameterExistsError: If any of the parameter already exists in the method.
+            CustomExceptions.ParameterNotFoundError: If any of the parameter to be removed does not exist in the method.
+            CustomExceptions.ParameterExistsError: If any of the parameter to be added already exists in the method.
 
         Returns:
             None.
