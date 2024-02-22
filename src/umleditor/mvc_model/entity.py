@@ -1,17 +1,18 @@
 from .custom_exceptions import CustomExceptions
 
 class Entity:
-    def __init__(self, name:str='') -> None:
+    def __init__(self, entity_name:str=''):
         """
         Constructs a new Entity object.
 
         Args:
-            name (str): The name of the entity.
+            entity_name (str): The name of the entity.
         """
-        self.set_name(name)
-        self._attributes = set()
+        self.set_name(entity_name)
+        self._fields = []
+        self._methods = []
 
-    def get_name(self) -> str:
+    def get_name(self):
         '''
         Returns the name of the entity.
 
@@ -20,70 +21,143 @@ class Entity:
         '''
         return self._name
 
-    def set_name(self, name: str) -> None:
+    def set_name(self, entity_name: str):
         """
         Update entity name.
 
         Args:
-            name (str): The new name for the entity.
+            entity_name (str): The new name for the entity.
         """
-        self._name = name
+        self._name = entity_name
     
-    def add_attribute(self, attr:str) -> None:
+    def add_field(self, field_name:str):
         """
-        Adds a new attribute to the to the entity.
+        Adds a new field to the to the list.
 
         Args:
-            attr (str): The attribute name to be added to the entity.
+            field_name (str): The field' name to be added to the entity.
 
         Raises:
-            CustomExceptions.AttributeExistsError: If the attribute already
+            CustomExceptions.FieldExistsError: If the field already
                 exists in the Entity.
-        """
-        if attr in self._attributes:
-            raise CustomExceptions.AttributeExistsError(attr)
-        else:
-            self._attributes.add(attr)
 
-    def delete_attribute(self, attr: str) -> None:
+        Returns:
+            None.
         """
-        Deletes an attribute from this entity if it exists.
+        if field_name in self._fields:
+            raise CustomExceptions.FieldExistsError(field_name)
+        else:
+            self._fields.append(field_name)
+
+    def delete_field(self, field_name: str):
+        """
+        Deletes a field from this entity if the field exists.
 
         Args:
-            attr (str): The name of the attribute to be deleted from the entity.
+            field_name (str): The name of the field to be deleted from the entity.
 
         Raises:
-            CustomExceptions.AttributeNotFoundError: If the specified attribute
-                is not found in the entity's attributes.
-        """
-        if attr not in self._attributes:
-            raise CustomExceptions.AttributeNotFoundError(attr)
-        else:
-            self._attributes.remove(attr)
+            CustomExceptions.FieldNotFoundError: If the specified field
+                is not found in the entity's field list.
 
-    def rename_attribute(self, old_attribute: str, new_attribute: str) -> None:
+        Returns:
+            None.
         """
-        Renames an attribute from its old name to a new name
+        if field_name not in self._fields:
+            raise CustomExceptions.FieldNotFoundError(field_name)
+        else:
+            self._fields.remove(field_name)
+
+    def rename_field(self, old_field: str, new_field: str):
+        """
+        Renames a field from its old name to a new name
 
         Args:
-            oldAttribute (str): The current name of the attribute.
-            newAttribute (str): The new name for the attribute
+            old_field(str): The current name of the field.
+            new_field (str): The new name for the field.
 
         Raises:
-            CustomExceptions.AttributeNotFoundError: If the old attribute does 
+            CustomExceptions.FieldNotFoundError: If the old field does 
                 not exist in the entity.
-            CustomExceptions.AttributeExistsError: If the new name is already 
-                used for another attribute in this entity.
+            CustomExceptions.FieldExistsError: If the new name is already 
+                used for another field in this entity.
+
+        Returns:
+            None.
         """
-        if old_attribute not in self._attributes:
-            raise CustomExceptions.AttributeNotFoundError(old_attribute)
+        if old_field not in self._fields:
+            raise CustomExceptions.FieldNotFoundError(old_field)
         
-        elif new_attribute in self._attributes:
-            raise CustomExceptions.AttributeExistsError(new_attribute)
-        # Remove the old attribute and add the new attribute name
+        elif new_field in self._fields:
+            raise CustomExceptions.FieldExistsError(new_field)
         else:
-            self._attributes.remove(old_attribute)
-            self._attributes.add(new_attribute)
+            self._fields.remove(old_field)
+            self._fields.append(new_field)
+
+    def add_method(self, method_name: str):
+        """
+        Adds a new method to the to the list.
+
+        Args:
+            method_name (str): The method's name to be added to the entity.
+
+        Raises:
+            CustomExceptions.MethodExistsError: If the method already
+                exists in the Entity.
+        Returns:
+            None.
+        """
+        if any(method_name == um.get_method_name() for um in self._methods):
+            raise CustomExceptions.MethodExistsError(method_name)
+        else:
+            new_method = UML_Method(method_name)
+            self._methods.append(new_method)
+
+    def delete_method(self, method_name: str):
+        """
+        Deletes a method from this entity if the method exists.
+
+        Args:
+            method_name (str): The name of the method to be deleted from the entity.
+
+        Raises:
+            CustomExceptions.MethodNotFoundError: If the specified method
+                is not found in the entity's method list.
+
+        Returns:
+            None.
+        """
+        if not any(method_name == um.get_method_name() for um in self._methods):
+            raise CustomExceptions.MethodNotFoundError(method_name)
+        for um in self._methods:
+            if um.get_method_name() == method_name:
+                self._methods.remove(um)
+
+    def rename_method(self, old_name: str, new_name: str):
+        """
+        Renames a method from its old name to a new name
+
+        Args:
+            old_name(str): The current name of the method.
+            new_name (str): The new name for the method.
+
+        Raises:
+            CustomExceptions.MethodNotFoundError: If the old method does 
+                not exist in the entity.
+            CustomExceptions.MethodExistsError: If the new name is already 
+                used for another method in this entity.
+
+        Returns:
+            None.
+        """
+        if not any(old_name == um.get_method_name() for um in self._methods):
+            raise CustomExceptions.MethodNotFoundError(old_name)
+        elif any(new_name == um.get_method_name() for um in self._methods):
+            raise CustomExceptions.MethodExistsError(new_name)
+        else:
+            for um in self._methods:
+                if (old_name == um.get_method_name()):
+                    um.set_method_name(new_name)
 
     def __str__(self) -> str:
         """
@@ -93,3 +167,65 @@ class Entity:
             str: The name of the entity.
         """
         return self._name
+
+class UML_Method:
+    def __init__(self, method_name):
+        """
+        Creates a UML_Method object.
+        
+        Args:
+            method_name (str): The name of the method.
+            
+        Raises:
+            None.
+            
+        Returns:
+            None.
+        """
+        self._name = method_name
+        self._params = []
+
+    def get_method_name(self):
+        """
+        Returns the name of the method.
+        
+        Args:
+            None.
+            
+        Raises:
+            None.
+        
+        Returns:
+            name (Entity): The name of the method.
+        """
+        return self._name
+    
+    def set_method_name(self, new_name):
+        """
+        Changes the name of the method.
+        
+        Args:
+            new_name (str): The new name of the method.
+            
+        Raises:
+            None.
+        
+        Returns:
+            None.
+        """
+        self._name = new_name
+
+    def __str__(self):
+        """
+        Returns the name of the method.
+        
+        Args:
+            None.
+            
+        Raises:
+            None.
+        
+        Returns:
+            name (str): A string to represent the method.
+        """
+        return self.get_method_name()
