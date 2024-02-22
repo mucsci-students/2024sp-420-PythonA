@@ -98,6 +98,30 @@ class CustomExceptions:
         """
         def __init__(self, method_name):
             super().__init__(f"Method named: '{method_name}' does not exist.")
+
+    #===============================================================================#
+                                #Parameter Exceptions
+    #===============================================================================#
+    class ParameterExistsError(Error):
+        """
+        Exception raised when the parameter already exists.
+
+        Args:
+            parameter_name (str): The name of the parameter that exists.
+        """
+        def __init__(self, parameter_name):
+            super().__init__(f"Parameter named: '{parameter_name}' already exists.")
+
+    class ParameterNotFoundError(Error):
+        """
+        Exception raised when the parameter was not found.
+
+        Args:
+            parameter_name (str): The name of the parameter that does not exist.
+        """
+        def __init__(self, parameter_name):
+            super().__init__(f"Parameter named: '{parameter_name}' does not exist.")
+
     #===============================================================================#
                                 #Parser/Controller Exceptions
     #===============================================================================#
