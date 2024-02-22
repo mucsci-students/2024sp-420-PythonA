@@ -9,8 +9,8 @@ class Entity:
             entity_name (str): The name of the entity.
         """
         self.set_name(entity_name)
-        self._fields = [str]
-        self._methods = [UML_Method]
+        self._fields = []
+        self._methods = []
 
     def get_name(self):
         '''
@@ -40,6 +40,9 @@ class Entity:
         Raises:
             CustomExceptions.FieldExistsError: If the field already
                 exists in the Entity.
+
+        Returns:
+            None.
         """
         if field_name in self._fields:
             raise CustomExceptions.FieldExistsError(field_name)
@@ -56,6 +59,9 @@ class Entity:
         Raises:
             CustomExceptions.FieldNotFoundError: If the specified field
                 is not found in the entity's field list.
+
+        Returns:
+            None.
         """
         if field_name not in self._fields:
             raise CustomExceptions.FieldNotFoundError(field_name)
@@ -75,6 +81,9 @@ class Entity:
                 not exist in the entity.
             CustomExceptions.FieldExistsError: If the new name is already 
                 used for another field in this entity.
+
+        Returns:
+            None.
         """
         if old_field not in self._fields:
             raise CustomExceptions.FieldNotFoundError(old_field)
@@ -86,30 +95,69 @@ class Entity:
             self._fields.append(new_field)
 
     def add_method(self, method_name: str):
-        if any(method_name == um.get_name() for um in self._methods):
+        """
+        Adds a new method to the to the list.
+
+        Args:
+            method_name (str): The method's name to be added to the entity.
+
+        Raises:
+            CustomExceptions.MethodExistsError: If the method already
+                exists in the Entity.
+        Returns:
+            None.
+        """
+        if any(method_name == um.get_method_name() for um in self._methods):
             raise CustomExceptions.MethodExistsError(method_name)
         else:
             new_method = UML_Method(method_name)
             self._methods.append(new_method)
 
     def delete_method(self, method_name: str):
+        """
+        Deletes a method from this entity if the method exists.
+
+        Args:
+            method_name (str): The name of the method to be deleted from the entity.
+
+        Raises:
+            CustomExceptions.MethodNotFoundError: If the specified method
+                is not found in the entity's method list.
+
+        Returns:
+            None.
+        """
+        if not any(method_name == um.get_method_name() for um in self._methods):
+            raise CustomExceptions.MethodNotFoundError(method_name)
         for um in self._methods:
-            if um.get_name == method_name:
+            if um.get_method_name() == method_name:
                 self._methods.remove(um)
-            else:
-                raise CustomExceptions.MethodNotFoundError(method_name)
 
     def rename_method(self, old_name: str, new_name: str):
-        if not any(old_name == um.get_name() for um in self._methods):
+        """
+        Renames a method from its old name to a new name
+
+        Args:
+            old_name(str): The current name of the method.
+            new_name (str): The new name for the method.
+
+        Raises:
+            CustomExceptions.MethodNotFoundError: If the old method does 
+                not exist in the entity.
+            CustomExceptions.MethodExistsError: If the new name is already 
+                used for another method in this entity.
+
+        Returns:
+            None.
+        """
+        if not any(old_name == um.get_method_name() for um in self._methods):
             raise CustomExceptions.MethodNotFoundError(old_name)
-        elif any(new_name == um.get_name() for um in self._methods):
+        elif any(new_name == um.get_method_name() for um in self._methods):
             raise CustomExceptions.MethodExistsError(new_name)
         else:
             for um in self._methods:
-                if (old_name == um.get_name()):
-                    self._methods.remove(um)
-            new_method = UML_Method(new_name)
-            self._methods.append(new_method)
+                if (old_name == um.get_method_name()):
+                    um.set_method_name(new_name)
 
     def __str__(self) -> str:
         """
@@ -122,11 +170,62 @@ class Entity:
 
 class UML_Method:
     def __init__(self, method_name):
+        """
+        Creates a UML_Method object.
+        
+        Args:
+            method_name (str): The name of the method.
+            
+        Raises:
+            None.
+            
+        Returns:
+            None.
+        """
         self._name = method_name
         self._params = []
 
-    def get_name(self):
+    def get_method_name(self):
+        """
+        Returns the name of the method.
+        
+        Args:
+            None.
+            
+        Raises:
+            None.
+        
+        Returns:
+            name (Entity): The name of the method.
+        """
         return self._name
     
-    def set_name(self, new_name):
+    def set_method_name(self, new_name):
+        """
+        Changes the name of the method.
+        
+        Args:
+            new_name (str): The new name of the method.
+            
+        Raises:
+            None.
+        
+        Returns:
+            None.
+        """
         self._name = new_name
+
+    def __str__(self):
+        """
+        Returns the name of the method.
+        
+        Args:
+            None.
+            
+        Raises:
+            None.
+        
+        Returns:
+            name (str): A string to represent the method.
+        """
+        return self.get_method_name()
