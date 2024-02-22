@@ -76,6 +76,19 @@ class CustomExceptions:
         def __init__(self, source, destination):
             super().__init__(f"Relation between '{source} -> {destination}' does not exist.")
 
+    class InvalidRelationTypeError(Error):
+        """
+        Exception raised when the relation being added has no types.
+        
+        Args:
+            source (Entity): The source of the relation that was being added.
+            destination (Entity): The destination of the relation that was
+                being added.
+
+        """
+        def __init__(self, source, destination):
+            super().__init__(f"Relation between '{source} -> {destination}' has no types.")
+
     #===============================================================================#
                                 #Parser/Controller Exceptions
     #===============================================================================#

@@ -166,20 +166,27 @@ class Diagram:
         return '\n'.join(relations_list)
 
         
-    def add_relation(self, source, destination):
+    def add_relation(self,source, destination, type):
         """
         Adds a relation between two Entities.
         
         Args:
             source (str): The name of the source entity.
             destination (str): The name of the destination entity.
+            type (str): The type of the relation.
             
         Raises:
             CustomExceptions.EntityNotFoundError: If either the source or the
                 destination entity are not found.
             CustomExceptions.RelationExistsError: If a relation already exists
                 between the source and destination entities.
+            CustomExceptions.InvalidRelationTypeError: If the relation type is
+                not valid.
         """
+        # Check for valid relationship type
+        if type not in Relation.RELATIONSHIP_TYPE:
+            raise CustomExceptions.InvalidRelationTypeError(type)
+        
         # Check for valid source and destination
         if source not in self._entities:
             raise CustomExceptions.EntityNotFoundError(source)
@@ -191,7 +198,7 @@ class Diagram:
                 if rel.get_source() == self._entities[source] and rel.get_destination() == self._entities[destination]:
                     raise CustomExceptions.RelationExistsError(source, destination)
             # Pass entity objects to relation and add relation to list of existing relations
-            relationship = Relation(self._entities[source], self._entities[destination])
+            relationship = Relation(type, self._entities[source], self._entities[destination])
             self._relations.append(relationship)
     
     def delete_relation(self, source, destination):
@@ -219,5 +226,32 @@ class Diagram:
                 if rel.get_source() == self._entities[source] and rel.get_destination() == self._entities[destination]:
                     del self._relations[i]
                     return
+        raise CustomExceptions.RelationDoesNotExistError(source, destination)
+    
+    def change_relation_type(self, source, destination, new_type):
+        """
+        Changes the type of a relation between two Entities.
+        
+        Args:
+            source (str): The name of the source entity.
+            destination (str): The name of the destination entity.
+            new_type (str): The new type of the relation.
+        
+        Raises:
+            CustomExceptions.EntityNotFoundError: If either the source or the
+                destination entity is not found.
+            CustomExceptions.RelationDoesNotExistError: If a relation does not
+                exist between the source and destination entities.
+            CustomExceptions.InvalidRelationTypeError: If the relation type is
+                not valid.
+        """
+        # Check for valid relationship type
+        if new_type not in Relation.RELATIONSHIP_TYPE:
+            raise CustomExceptions.InvalidRelationTypeError(new_type)
+        
+        for rel in self._relations:
+            if rel.get_source() == self._entities[source] and rel.get_destination() == self._entities[destination]:
+                rel._type = new_type
+                return
         raise CustomExceptions.RelationDoesNotExistError(source, destination)
     

@@ -1,7 +1,9 @@
 from .entity import Entity
 
 class Relation:
-    def __init__(self, source=Entity(), destination=Entity()):
+    RELATIONSHIP_TYPE = {'aggregation', 'composition', 'inheritance', 'realization'}
+
+    def __init__(self, type, source=Entity(), destination=Entity()):
         """
         Creates a relation between a source entity to a destination entity.
         
@@ -17,6 +19,7 @@ class Relation:
         """
         self._source = source
         self._destination = destination
+        self._type = type
     
     def get_source(self):
         """
@@ -77,4 +80,4 @@ class Relation:
         Returns:
             str: A string representation of the relation.
         """
-        return f'{self._source} -> {self._destination}'
+        return f'{self._source} -> {self._type} -> {self._destination}'
