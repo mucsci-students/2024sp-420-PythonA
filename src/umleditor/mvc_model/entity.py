@@ -273,11 +273,13 @@ class UML_Method:
         deleted_params = []
         for remove_param in old_params:
             idx = self._params.index(remove_param)
-            deleted_params.append(self._params[idx])
+            deleted_params.append([idx, self._params[idx]])
             del self._params[idx]
         for new_param in new_params:
             if new_param in self._params:
-                self._params.extend(deleted_params) # restore all deleted parameters if add operation should fail (Order not preserved)
+                # restore all deleted parameters if add operation should fail
+                for idx, deleted_param in reversed(deleted_params):
+                    self._params.insert(idx, deleted_param)
                 raise CustomExceptions.ParameterExistsError(new_param)
         self._params.extend(new_params)
         
