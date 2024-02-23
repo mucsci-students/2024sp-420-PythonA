@@ -15,6 +15,7 @@ class ViewGUI(QtWidgets.QMainWindow):
         print(os.path.dirname(__file__))
         self._ui = uic.loadUi(os.path.join(os.path.dirname(__file__),"uml.ui"), self)
         self.connect_menu()
+        self._x = 0
     
     def get_signal(self):
         return self._process_task_signal
@@ -42,4 +43,5 @@ class ViewGUI(QtWidgets.QMainWindow):
     def add_class_card(self):
         self._class_card = ClassCard() 
         # Add the custom widget to the central widget of the main window
-        self._ui.gridLayout.addWidget(self._class_card, 0, 0)
+        self._ui.gridLayout.addWidget(self._class_card, self._x, self._x)
+        self._x = self._x + 1
