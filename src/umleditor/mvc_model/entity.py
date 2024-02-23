@@ -215,6 +215,74 @@ class UML_Method:
         """
         self._name = new_name
 
+    def add_parameters(self, params: list[str]):
+        """
+        Adds a list of new parameters to the method.
+
+        Args:
+            params (list[str]): The list of new parameters to be added.
+
+        Raises:
+            CustomExceptions.ParameterExistsError: If any of the parameter already exists in the method.
+
+        Returns:
+            None.
+        """
+        for new_param in params:
+            if new_param in self._params:
+                raise CustomExceptions.ParameterExistsError(new_param)
+        self._params.extend(params)
+
+    def remove_parameters(self, params: list[str]):
+        """
+        Removes a list of parameters from the method.
+
+        Args:
+            params (list[str]): The list of parameters to be removed.
+
+        Raises:
+            CustomExceptions.ParameterNotFoundError: If any of the parameter does not exist in the method.
+
+        Returns:
+            None.
+        """
+        for remove_param in params:
+            if remove_param not in self._params:
+                raise CustomExceptions.ParameterNotFoundError(remove_param)
+        for remove_param in params:
+            del self._params[self._params.index(remove_param)]
+
+    def change_parameters(self, old_params: list[str], new_params: list[str]):
+        """
+        Changes a list of parameters to a new list of parameters to the method.
+
+        Args:
+            old_params (list[str]): The list of parameters to be removed.
+            new_params (list[str]): The list of new parameters to be added.
+
+        Raises:
+            CustomExceptions.ParameterNotFoundError: If any of the parameter to be removed does not exist in the method.
+            CustomExceptions.ParameterExistsError: If any of the parameter to be added already exists in the method.
+
+        Returns:
+            None.
+        """
+        for remove_param in old_params:
+            if remove_param not in self._params:
+                raise CustomExceptions.ParameterNotFoundError(remove_param)
+        deleted_params = []
+        for remove_param in old_params:
+            idx = self._params.index(remove_param)
+            deleted_params.append([idx, self._params[idx]])
+            del self._params[idx]
+        for new_param in new_params:
+            if new_param in self._params:
+                # restore all deleted parameters if add operation should fail
+                for idx, deleted_param in reversed(deleted_params):
+                    self._params.insert(idx, deleted_param)
+                raise CustomExceptions.ParameterExistsError(new_param)
+        self._params.extend(new_params)
+        
     def __str__(self):
         """
         Returns the name of the method.
