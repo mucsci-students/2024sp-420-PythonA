@@ -14,7 +14,6 @@ class ViewGUI(QtWidgets.QMainWindow):
         super().__init__(*args, **kwargs)
         print(os.path.dirname(__file__))
         self._ui = uic.loadUi(os.path.join(os.path.dirname(__file__),"uml.ui"), self)
-        print("Potato")
         self.connect_menu()
     
     def get_signal(self):
