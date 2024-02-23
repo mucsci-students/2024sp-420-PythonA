@@ -1,45 +1,37 @@
-from .controller_input import read_file, read_line
+from .controller_input import read_line
 import umleditor.mvc_controller.controller_output as controller_output
-from umleditor.mvc_controller.uml_parser import parse
 from .serializer import CustomJSONEncoder, serialize, deserialize
+from umleditor.mvc_controller.uml_parser import parse
 from umleditor.mvc_model import CustomExceptions as CE
 from umleditor.mvc_model.diagram import Diagram
-from umleditor.mvc_model import help_menu
 from umleditor.mvc_controller.uml_parser import check_args
 import os
 
 
 class Controller:
-    def __init__(self) -> None:
-        self._should_quit = False
-        self._diagram = Diagram()
+    def __init__(self, d:Diagram = Diagram(), q:bool = False) -> None:
+        self._should_quit = q
+        self._diagram = d
 
-    
-    def run(self) -> None:
-        while not self._should_quit:
-            s = read_line()
+    def run(self, line:str) -> str:
             try:
                 #parse the command
-                input = parse(self, s)
+                input = parse(self, line)
 
                 #return from input is [function object, arg1,...,argn]
                 command = input[0]
                 args = input[1:]
 
                 #execute the command
-                out = command(*args)
-
-                #write output if it was something
-                if out != None:
-                    controller_output.write(out)
+                return command(*args)
             
             except TypeError as t:
-                controller_output.write(CE.InvalidArgCountError(t))
+                return str(CE.InvalidArgCountError(t))
             except ValueError as v:
-                controller_output.write(CE.NeedsMoreInput())
+                return str(CE.NeedsMoreInput())
             except Exception as e:
-                controller_output.write(str(e))
-            
+                return str(e)
+
     def quit(self):
         '''Basic Quit Routine. Prompts user to save, where to save, 
             validates input.
