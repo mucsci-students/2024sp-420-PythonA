@@ -9,6 +9,9 @@ class CLI_Controller (Controller):
 
     def run(self):
         while self._should_quit == False:
-            out = super().run(read_line())
-            if out != None:
-                controller_output.write(out)
+            try:
+                out = super().run(read_line())
+                if out != None:
+                    controller_output.write(out)
+            except Exception as e: 
+                controller_output.write(e)

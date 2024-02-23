@@ -1,14 +1,14 @@
 from umleditor.mvc_view.gui_view.view_GUI import ViewGUI
 from umleditor.mvc_model.diagram import Diagram
-from umleditor.mvc_controller.uml_parser import parse
 from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QInputDialog, QLineEdit
 from PyQt6.QtCore import QDir
+from umleditor.mvc_controller.controller import Controller
 
-
-class ControllerGUI:
+class ControllerGUI (Controller):
     
     def __init__(self, window: ViewGUI) -> None:
+        super().__init__()
         self._window = window
         self._diagram = Diagram()
         # Used for detecting when tasks need run
@@ -16,13 +16,7 @@ class ControllerGUI:
 
     def run(self, task: str):
         try:
-            #parse the command
-            parsedTask = parse(self, task)
-            #return from input is [function object, arg1,...,argn]
-            command = parsedTask[0]
-            args = parsedTask[1:]
-            #execute the command
-            out = command(*args)
+            out = super().run(task)
         except Exception as e:
             self._window.invalid_input_message(str(e))
             return
