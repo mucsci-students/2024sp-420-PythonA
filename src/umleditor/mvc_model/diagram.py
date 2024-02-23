@@ -185,7 +185,7 @@ class Diagram:
         """
         # Check for valid relationship type
         if type not in Relation.RELATIONSHIP_TYPE:
-            raise CustomExceptions.InvalidRelationTypeError(type)
+            raise CustomExceptions.InvalidRelationTypeError(source, destination)
         
         # Check for valid source and destination
         if source not in self._entities:
@@ -247,7 +247,7 @@ class Diagram:
         """
         # Check for valid relationship type
         if new_type not in Relation.RELATIONSHIP_TYPE:
-            raise CustomExceptions.InvalidRelationTypeError(new_type)
+            raise CustomExceptions.InvalidRelationNewTypeError(source, destination)
         
         for rel in self._relations:
             if rel.get_source() == self._entities[source] and rel.get_destination() == self._entities[destination]:

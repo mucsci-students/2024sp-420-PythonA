@@ -17,6 +17,9 @@ class Relation:
         Returns:
             None.
         """
+        if type not in self.RELATIONSHIP_TYPE:
+            raise ValueError(f"Invalid relationship type: {type}")
+    
         self._source = source
         self._destination = destination
         self._type = type
