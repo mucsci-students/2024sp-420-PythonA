@@ -1,4 +1,5 @@
 from umleditor.mvc_view.gui_view.view_GUI import ViewGUI
+from umleditor.mvc_model.diagram import Diagram
 from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QInputDialog, QLineEdit
 from PyQt6.QtCore import QDir
@@ -8,6 +9,7 @@ class ControllerGUI:
     
     def __init__(self, window: ViewGUI) -> None:
         self._window = window
+        self._diagram = Diagram()
         # Used for detecting when tasks need run
         self._window.get_signal().connect(self.run)
 
@@ -20,7 +22,7 @@ class ControllerGUI:
     
     def run_add_class(self, task):
         #TODO Parse
-        success = True
+        success = False
         warning = "Invalid class name!" 
         print(task)
         if success:
