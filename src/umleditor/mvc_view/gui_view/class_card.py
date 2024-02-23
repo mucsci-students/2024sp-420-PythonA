@@ -1,8 +1,11 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QListWidget, QMenu, QLineEdit, QLabel, QListWidgetItem
 from PyQt6.QtGui import QAction
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, pyqtSignal
+
 
 class ClassCard(QWidget):
+    # Signal triggered for task processing
+    _process_task_signal = pyqtSignal(str)
     def __init__(self, name: str):
         super().__init__()
         self.set_name(name)
@@ -77,13 +80,15 @@ class ClassCard(QWidget):
         item = QListWidgetItem()
         self._list_field.addItem(item)
         field_text = QLineEdit()
-        field_text.returnPressed.connect(self.verify_input)
+        # lambda ensures text is only evaluated on enter
+        field_text.returnPressed.connect(lambda: self.verify_input(field_text.text()))
         self._list_field.setItemWidget(item, field_text)
         field_text.setPlaceholderText("Enter Field Here")
         field_text.setFocus()
         print("Add field action clicked")
 
-    def verify_input(self):
+    def verify_input(self, input):
+        self._process_task_signal.emit(input)
         print("Return key pressed")
 
 '''

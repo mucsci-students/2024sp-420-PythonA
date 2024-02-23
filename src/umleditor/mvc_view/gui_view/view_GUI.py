@@ -8,7 +8,7 @@ from umleditor.mvc_view.gui_view.class_card import ClassCard
 
 class ViewGUI(QtWidgets.QMainWindow):
     # Signal triggered for task processing
-    _process_task_signal = pyqtSignal(str)
+    _process_task_signal = pyqtSignal(str, QWidget)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -35,10 +35,7 @@ class ViewGUI(QtWidgets.QMainWindow):
     def confirm_class_clicked(self):
         task = 'class -a ' + self._dialog.input_text.text()
         # Emit signal to controller to handle task
-        self._process_task_signal.emit(task)
-
-    def close_class_dialog(self):
-        self._dialog.reject()
+        self._process_task_signal.emit(task, self._dialog)
     
     def add_class_card(self, name: str):
         self._class_card = ClassCard(name) 
