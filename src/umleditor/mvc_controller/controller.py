@@ -26,11 +26,11 @@ class Controller:
                 return command(*args)
             
             except TypeError as t:
-                return str(CE.InvalidArgCountError(t))
-            except ValueError as v:
-                return str(CE.NeedsMoreInput())
+                raise CE.InvalidArgCountError(t)
+            except ValueError:
+                raise CE.NeedsMoreInput()
             except Exception as e:
-                return str(e)
+                raise e
 
     def quit(self):
         '''Basic Quit Routine. Prompts user to save, where to save, 

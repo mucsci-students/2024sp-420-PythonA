@@ -2,7 +2,7 @@ from umleditor.mvc_controller import Controller
 
 from umleditor.mvc_controller.cli_controller import CLI_Controller
 from umleditor.mvc_view.gui_view.view_GUI import ViewGUI
-from umleditor.mvc_controller.controller_GUI import ControllerGUI
+from umleditor.mvc_controller.gui_controller import ControllerGUI
 import sys
 from PyQt6 import QtWidgets
 
