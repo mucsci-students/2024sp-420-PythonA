@@ -1,16 +1,19 @@
 from umleditor.mvc_controller import Controller
+
+from umleditor.mvc_controller.cli_controller import CLI_Controller
 from umleditor.mvc_view.gui_view.view_GUI import ViewGUI
 from umleditor.mvc_controller.controller_GUI import ControllerGUI
 import sys
 from PyQt6 import QtWidgets
 
+
 def debug_main():
-    app = Controller()
+    app = CLI_Controller()
     app.run()
 
 def main():
     try:
-        app = Controller()
+        app = CLI_Controller()
         app.run()
     except KeyboardInterrupt:
         # This handles ctrl+C
