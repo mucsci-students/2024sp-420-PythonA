@@ -40,8 +40,8 @@ class ViewGUI(QtWidgets.QMainWindow):
     def close_class_dialog(self):
         self._dialog.reject()
     
-    def add_class_card(self):
-        self._class_card = ClassCard() 
+    def add_class_card(self, name: str):
+        self._class_card = ClassCard(name) 
         # Add the custom widget to the central widget of the main window
         self._ui.gridLayout.addWidget(self._class_card, self._x, self._x)
         self._x = self._x + 1

@@ -49,5 +49,5 @@ if __name__ == '__main__':
     if not __debug__:
         debug_main()
     else:
-        main()
-        #mainGUI()
+        #main()
+        mainGUI()

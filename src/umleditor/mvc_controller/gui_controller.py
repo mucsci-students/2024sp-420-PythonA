@@ -29,8 +29,7 @@ class ControllerGUI (Controller):
         # Else, create error messagebox and return false
     
     def add_class(self, task):
+        entity_name = task.split()[-1]
         self._window.close_class_dialog()
-        self._window.add_class_card()
-        #else:
-        #   self._window.invalid_input_message(warning)
+        self._window.add_class_card(entity_name)
         
