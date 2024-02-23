@@ -35,8 +35,8 @@ def test_serialzer_imports():
     assert deserialize
  
 def test_import_parser():
-    from umleditor.mvc_controller.uml_parser import Parser
-    assert Parser
+    from umleditor.mvc_controller.uml_parser import parse
+    assert parse
 
 def test_custom_exceptions_import():
     from umleditor.mvc_model.custom_exceptions import CustomExceptions
@@ -47,6 +47,6 @@ def test_help_import():
     assert help_menu
 
 def test_cli_lexer_import():
-    from umleditor.mvc_view.cli_lexer import _command_flag_map, _command_function_map
+    from umleditor.mvc_controller.uml_lexer import _command_flag_map, _command_function_map
     assert _command_flag_map
     assert _command_function_map
