@@ -1,5 +1,5 @@
 from math import e
-from .entity import Entity
+from .entity import Entity, UML_Method
 from .relation import Relation
 from .custom_exceptions import CustomExceptions
 

@@ -5,8 +5,9 @@ from umleditor.mvc_model import CustomExceptions as CE
 _command_flag_map = {
     "class" : ["a","d","r"],
     "list"  : ["a","c","r","d"],
-    "att"   : ["a","d","r"],
-    "rel"   : ["a","t", "d"],
+    "fld"   : ["a","d","r"],
+    "mthd"  : ["a","d","r"],
+    "rel"   : ["a","d"],
     "save"  : [""],
     "load"  : [""],
     "exit"  : [""],
@@ -19,8 +20,9 @@ _command_flag_map = {
 _command_function_map = {
     "class" : ["add_entity","delete_entity","rename_entity"],
     "list"  : ["list_everything","list_entities","list_relations","list_entity_details"],
-    "att"   : ["add_attribute","delete_attribute","rename_attribute"],
-    "rel"   : ["add_relation", "change_relation_type", "delete_relation"],
+    "fld"   : ["add_field","delete_field","rename_field"],
+    "mthd"  : ["add_method","delete_method","rename_method"],
+    "rel"   : ["add_relation","delete_relation"],
     "save"  : ["save"],
     "load"  : ["load"],
     "exit"  : ["quit"],

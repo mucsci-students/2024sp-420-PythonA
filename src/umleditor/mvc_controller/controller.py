@@ -1,52 +1,37 @@
-from .controller_input import read_file, read_line
+from .controller_input import read_line
 import umleditor.mvc_controller.controller_output as controller_output
-from umleditor.mvc_controller.uml_parser import Parser
 from .serializer import CustomJSONEncoder, serialize, deserialize
+from umleditor.mvc_controller.uml_parser import parse
 from umleditor.mvc_model import CustomExceptions as CE
 from umleditor.mvc_model.diagram import Diagram
-from umleditor.mvc_model import help_menu
 from umleditor.mvc_controller.uml_parser import check_args
 import os
 
-#Parser Includes. These will be moved out when the parser is moved.
-from umleditor.mvc_model.entity import Entity
-from umleditor.mvc_model.relation import Relation
-
-
-
 
 class Controller:
-    def __init__(self) -> None:
-        self._should_quit = False
-        self._diagram = Diagram()
+    def __init__(self, d:Diagram = Diagram(), q:bool = False) -> None:
+        self._should_quit = q
+        self._diagram = d
 
-    
-    def run(self) -> None:
-        p = Parser(self._diagram)
-        while not self._should_quit:
-            s = read_line()
+    def run(self, line:str) -> str:
             try:
                 #parse the command
-                input = p.parse(s)
+                input = parse(self, line)
 
                 #return from input is [function object, arg1,...,argn]
                 command = input[0]
                 args = input[1:]
 
                 #execute the command
-                out = command(*args)
-
-                #write output if it was something
-                if out != None:
-                    controller_output.write(out)
+                return command(*args)
             
             except TypeError as t:
-                controller_output.write(CE.InvalidArgCountError(t))
-            except ValueError as v:
-                controller_output.write(CE.NeedsMoreInput())
+                raise CE.InvalidArgCountError(t)
+            except ValueError:
+                raise CE.NeedsMoreInput()
             except Exception as e:
-                controller_output.write(str(e))
-            
+                raise e
+
     def quit(self):
         '''Basic Quit Routine. Prompts user to save, where to save, 
             validates input.

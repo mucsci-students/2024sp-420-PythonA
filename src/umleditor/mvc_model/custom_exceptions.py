@@ -27,25 +27,25 @@ class CustomExceptions:
             super().__init__(f"Entity with name '{name}' does not exist.")
     
     #===============================================================================#
-                                #Attribute Exceptions
+                                #Field Exceptions
     #===============================================================================#
-    class AttributeExistsError(Error):
-        """Exception raised when an attribute with a given name already exists.
+    class FieldExistsError(Error):
+        """Exception raised when a field with a given name already exists.
 
         Args:
-            attr (str): The name of the existing attribute.
+            field_name (str): The name of the existing field.
         """
-        def __init__(self, attr) -> None:
-            super().__init__(f"Attribute with name '{attr}' already exists.")
+        def __init__(self, field_name):
+            super().__init__(f"Field with name '{field_name}' already exists.")
     
-    class AttributeNotFoundError(Error):
-        """Exception raised when an attribute with a given name is not found.
+    class FieldNotFoundError(Error):
+        """Exception raised when a field with a given name is not found.
 
         Args:
-            attr (str): The name of the attribute not found.
+            field_name (str): The name of the field not found.
         """
-        def __init__(self, attr) -> None:
-            super().__init__(f"Attribute with name '{attr}' does not exist.")
+        def __init__(self, field_name):
+            super().__init__(f"Field with name '{field_name}' does not exist.")
                         
     #===============================================================================#
                                 #Relation Exceptions
@@ -101,6 +101,52 @@ class CustomExceptions:
         """
         def __init__(self, source, destination):
             super().__init__(f"Relation between '{source} -> {destination}' has invalid new type.")
+
+    #===============================================================================#
+                                #Method Exceptions
+    #===============================================================================#
+    class MethodExistsError(Error):
+        """
+        Exception raised when the method already exists.
+
+        Args:
+            method_name (str): The name of the method that exists.
+        """
+        def __init__(self, method_name):
+            super().__init__(f"Method named: '{method_name}' already exists.")
+
+    class MethodNotFoundError(Error):
+        """
+        Exception raised when the method was not found.
+
+        Args:
+            method_name (str): The name of the method that does not exist.
+        """
+        def __init__(self, method_name):
+            super().__init__(f"Method named: '{method_name}' does not exist.")
+
+    #===============================================================================#
+                                #Parameter Exceptions
+    #===============================================================================#
+    class ParameterExistsError(Error):
+        """
+        Exception raised when the parameter already exists.
+
+        Args:
+            parameter_name (str): The name of the parameter that exists.
+        """
+        def __init__(self, parameter_name):
+            super().__init__(f"Parameter named: '{parameter_name}' already exists.")
+
+    class ParameterNotFoundError(Error):
+        """
+        Exception raised when the parameter was not found.
+
+        Args:
+            parameter_name (str): The name of the parameter that does not exist.
+        """
+        def __init__(self, parameter_name):
+            super().__init__(f"Parameter named: '{parameter_name}' does not exist.")
 
     #===============================================================================#
                                 #Parser/Controller Exceptions
