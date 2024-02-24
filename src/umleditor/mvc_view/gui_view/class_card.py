@@ -1,7 +1,6 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QListWidget, QMenu, QLineEdit, QLabel, QListWidgetItem
 from PyQt6.QtGui import QAction
 from PyQt6.QtCore import Qt, pyqtSignal
-from umleditor.mvc_view.gui_view.custom_line_edit import CustomLineEdit
 
 class ClassCard(QWidget):
     # Signal triggered for task processing
