@@ -86,7 +86,7 @@ class ViewGUI(QtWidgets.QMainWindow):
         """
         class_card = ClassCard(name) 
         class_card.get_task_signal().connect(self.forward_signal)
-        class_card.get_disable_signal().connect(self.enable_widgets)
+        class_card.get_enable_signal().connect(self.enable_widgets)
         self._ui.gridLayout.addWidget(class_card, self._x, self._x)
         self._x = self._x + 1
 
@@ -104,5 +104,6 @@ class ViewGUI(QtWidgets.QMainWindow):
                     child_widget.setEnabled(True)
                 else:
                     child_widget.setEnabled(False)
-        active_widget.disable_unselected_items()
+        if isinstance(child_widget, ClassCard):
+            active_widget.disable_unselected_items()
 
