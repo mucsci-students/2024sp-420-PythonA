@@ -1,11 +1,13 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QListWidget, QMenu, QLineEdit, QLabel, QListWidgetItem
 from PyQt6.QtGui import QAction
 from PyQt6.QtCore import Qt, pyqtSignal
-
+from umleditor.mvc_view.gui_view.custom_line_edit import CustomLineEdit
 
 class ClassCard(QWidget):
     # Signal triggered for task processing
-    _process_task_signal = pyqtSignal(str)
+    _process_task_signal = pyqtSignal(str, QWidget)
+    _enable_widgets_signal = pyqtSignal(bool, QWidget)
+
     def __init__(self, name: str):
         super().__init__()
         self.set_name(name)
@@ -59,7 +61,7 @@ class ClassCard(QWidget):
         self._list_method.setStyleSheet("border: 1px solid black; border-bottom: none; border-top: none;")
         self._list_relation.setStyleSheet("border: 1px solid black;")
         # Set style for class label
-        self._class_label.setStyleSheet("background-color: powderblue; border: 1px solid black;")
+        self._class_label.setStyleSheet("background-color: #6495ED; border: 1px solid black;")
         self._class_label.setMinimumHeight(30)
         # Set style for entire widget
         self.setStyleSheet("background-color: white;")
@@ -76,32 +78,42 @@ class ClassCard(QWidget):
         print("Field List selected")
     
     def add_field_clicked(self):
+        self._enable_widgets_signal.emit(False, self)
         # Create new field 
         item = QListWidgetItem()
         self._list_field.addItem(item)
         field_text = QLineEdit()
+        self._selected_line = field_text
+        field_text.setStyleSheet("background-color: #ADD8E6;")
         # lambda ensures text is only evaluated on enter
-        field_text.returnPressed.connect(lambda: self.verify_input(field_text.text()))
+        field_text.returnPressed.connect(lambda: self.verify_input(field_text.text(), field_text))
         self._list_field.setItemWidget(item, field_text)
         field_text.setPlaceholderText("Enter Field Here")
+        field_text.setAlignment(Qt.AlignmentFlag.AlignCenter)
         field_text.setFocus()
-        print("Add field action clicked")
+    
+    def disable_unselected_items(self):
+        self._class_label.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
+        self._list_field.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
+        self._list_method.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
+        self._list_relation.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
 
-    def verify_input(self, input):
-        self._process_task_signal.emit(input)
-        print("Return key pressed")
+    def enable_all_items(self):
+        self._class_label.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        self._list_field.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        self._list_method.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        self._list_relation.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
 
-'''
-    def showContextMenu(self, position):
-        item = self.list_widget.itemAt(position)
-        if item is not None:
-            menu = QMenu()
-            edit_action = QAction("Edit", self)
-            edit_action.triggered.connect(lambda: self.editItem(item))
-            menu.addAction(edit_action)
-            menu.exec(self.list_widget.mapToGlobal(position))
+    def verify_input(self, input: str, widget: QWidget):
+        task = "fld -a " + self._class_label.text() + " " + input
+        self._process_task_signal.emit(task, self)
 
-    def editItem(self, item):
-        index = self.list_widget.row(item)
-        print(item.text())
-'''
+    def get_selected_line(self):
+        return self._selected_line
+
+
+    def get_task_signal(self):
+        return self._process_task_signal
+    
+    def get_disable_signal(self):
+        return self._enable_widgets_signal
