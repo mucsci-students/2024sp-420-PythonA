@@ -120,28 +120,35 @@ class Diagram:
         
     def list_entity_details(self, entity_name):
         """
-        Returns the attributes and relations of the entity.
+        Returns the fields, methods, params, and relations of the entity.
         
         Args:
             entity_name (str): The name of the entity to get details of.
             
         Raises:
-            None
+            CustomExceptions.EntityNotFoundError: If an entity with the old name
+                does not exist.
             
         Returns:
-            str: A templated string containing the attributes and relations.
+            str: A templated string containing the fields, methods, params
+                and relations of an entity.
         """
         if not self._entities.__contains__(entity_name):
             raise CustomExceptions.EntityNotFoundError(entity_name)
         else:
-            entity = self._entities[entity_name]
-            att = entity._attributes
-            rels = [rel for rel in self._relations if rel.contains(entity)]
-            result ="\n" + entity_name + "'s Attributes:\n"
-            att_string = ', '.join(att)
-            result2 = entity_name + "'s Relations:\n"
+            ent = self._entities[entity_name]
+            fld = ent._fields
+            rels = [rel for rel in self._relations if rel.contains(ent)]
+            result = entity_name +":\n" + entity_name + "'s Fields:\n"
+            fld_string = ', '.join(fld)
+            result2 = entity_name + "'s Methods:\n"
+            mthd_string = ""
+            for m in ent._methods:
+                mthd_string += ', '.join(str(m) for m in ent._methods)
+                mthd_string += "\n"
+            result3 = entity_name + "'s Relations:\n"
             rel_string = ', '.join(str(rel) for rel in rels)
-            return result + att_string + "\n" + result2 + rel_string
+            return result + fld_string + "\n" + result2 + mthd_string + result3 + rel_string
 
     def list_entities(self):
         """
