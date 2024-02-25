@@ -24,3 +24,6 @@ main.spec
 
 #pytest 
 .pytest_cache
+
+#Macos specifics
+.DS_Store
