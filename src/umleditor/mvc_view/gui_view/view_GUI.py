@@ -104,6 +104,4 @@ class ViewGUI(QtWidgets.QMainWindow):
                     child_widget.setEnabled(True)
                 else:
                     child_widget.setEnabled(False)
-        #if isinstance(active_widget, ClassCard):
-        #    active_widget.disable_context_menus()
 

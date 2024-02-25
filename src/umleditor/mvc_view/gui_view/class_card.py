@@ -99,10 +99,16 @@ class ClassCard(QWidget):
         Args:
             position: The position of the context menu.
         """
+        # Create menu & Actions
         menu = QMenu()
         field_action = QAction("Add Field", self)
-        field_action.triggered.connect(lambda: self.menu_action_clicked(self._list_field))
+        # TODO method_action = QAction("Add Method", self)
         menu.addAction(field_action)
+        # TODO menu.addAction(method_action)
+        # Add button functionality
+        field_action.triggered.connect(lambda: self.menu_action_clicked(self._list_field, "Enter Field"))
+        # TODO method_action.triggered.connect(lambda: self.menu_action_clicked(self._list_method, "e.g. add(int, int)"))
+        # Create Menu
         menu.exec(self._class_label.mapToGlobal(position))
 
     def show_field_menu(self, position):
@@ -114,7 +120,7 @@ class ClassCard(QWidget):
         """
         pass
     
-    def menu_action_clicked(self, list: QListWidget):
+    def menu_action_clicked(self, list: QListWidget, placeholder: str):
         """
         Adds a field when the "Add Field" action is clicked.
         """
@@ -126,16 +132,15 @@ class ClassCard(QWidget):
         item = QListWidgetItem()
         list.addItem(item) #!!!
 
-        field_text = QLineEdit()
-        self._selected_line = field_text
+        text = QLineEdit()
+        self._selected_line = text
         # lambda ensures text is only evaluated on enter
-        field_text.returnPressed.connect(lambda: self.verify_input(field_text.text(), list))
+        text.returnPressed.connect(lambda: self.verify_input(text.text(), list))
         # Formatting / Style
-        field_text.setStyleSheet("background-color: #ADD8E6;")
-        self._list_field.setItemWidget(item, field_text)
-        field_text.setPlaceholderText("Enter Field Here")
-        field_text.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        field_text.setFocus()
+        text.setStyleSheet("background-color: #ADD8E6;")
+        list.setItemWidget(item, text)
+        text.setPlaceholderText(placeholder)
+        text.setAlignment(Qt.AlignmentFlag.AlignCenter)
     
     def disable_context_menus(self):
         """
@@ -165,6 +170,9 @@ class ClassCard(QWidget):
         """
         if list == self._list_field:
             task = "fld -a " + self._class_label.text() + " " + input
+        elif list == self._list_method:
+            # TODO given e.g. class add(one, two) run this command
+            pass
         self._process_task_signal.emit(task, self)
 
     def get_selected_line(self):
