@@ -12,6 +12,7 @@ venv.cfg
 pyvenv.cfg
 
 #Linux venv directories
+.venv/
 bin/
 include/
 lib/
