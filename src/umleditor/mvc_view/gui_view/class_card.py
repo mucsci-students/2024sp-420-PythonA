@@ -101,7 +101,7 @@ class ClassCard(QWidget):
         """
         menu = QMenu()
         field_action = QAction("Add Field", self)
-        field_action.triggered.connect(self.add_field_clicked)
+        field_action.triggered.connect(lambda: self.menu_action_clicked(self._list_field))
         menu.addAction(field_action)
         menu.exec(self._class_label.mapToGlobal(position))
 
@@ -114,19 +114,22 @@ class ClassCard(QWidget):
         """
         pass
     
-    def add_field_clicked(self):
+    def menu_action_clicked(self, list: QListWidget):
         """
         Adds a field when the "Add Field" action is clicked.
         """
         # Disables unselected interactions
-        self._enable_widgets_signal.emit(False, self)
+        self._enable_widgets_signal.emit(False, self)   
+        self.disable_context_menus()
+
         # Create field and add to list
         item = QListWidgetItem()
-        self._list_field.addItem(item)
+        list.addItem(item) #!!!
+
         field_text = QLineEdit()
         self._selected_line = field_text
         # lambda ensures text is only evaluated on enter
-        field_text.returnPressed.connect(lambda: self.verify_input(field_text.text(), field_text))
+        field_text.returnPressed.connect(lambda: self.verify_input(field_text.text(), list))
         # Formatting / Style
         field_text.setStyleSheet("background-color: #ADD8E6;")
         self._list_field.setItemWidget(item, field_text)
@@ -134,7 +137,7 @@ class ClassCard(QWidget):
         field_text.setAlignment(Qt.AlignmentFlag.AlignCenter)
         field_text.setFocus()
     
-    def disable_unselected_items(self):
+    def disable_context_menus(self):
         """
         Disables context menus for all items within the ClassCard
         """
@@ -152,7 +155,7 @@ class ClassCard(QWidget):
         self._list_method.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self._list_relation.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
 
-    def verify_input(self, input: str, widget: QWidget):
+    def verify_input(self, input: str, list: QListWidget):
         """
         Sends a signal for the task to be processed.
 
@@ -160,7 +163,8 @@ class ClassCard(QWidget):
             input (str): The input text.
             widget (QWidget): The associated ClassCard widget.
         """
-        task = "fld -a " + self._class_label.text() + " " + input
+        if list == self._list_field:
+            task = "fld -a " + self._class_label.text() + " " + input
         self._process_task_signal.emit(task, self)
 
     def get_selected_line(self):
