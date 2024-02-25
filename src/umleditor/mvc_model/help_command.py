@@ -14,21 +14,29 @@ def help_menu():
     """
     menu = (
         #A general description
-        "\nHelp menu:  For the best view, resize your window so that this message and the bar at the end are on one line.    |\n\n"
+        "\nHelp menu:  For the best view, resize your window so that this message and the bar at the end are on one line.        |\n\n"
         "Below are the commands you can call and an explanation of what each does. Anything inside single quotes is decided\n"
         "by you! Enter the command, replacing anything in the single quotes, and the quotes themselves, with the name you\n"
         "want to use.\n\n"
         "A valid name is made up of any combination of letters and numbers.\n\n"
         #Class Commands
-        "Class Commands: \n\t"
-        "class -a 'name'  - adds a class with name 'name'. Cannot add classes with duplicate or invalid names\n\t"
-        "class -d 'name'  - deletes a class with name 'name'\n\t"
+        "Class Commands:\n\t"
+        "class -a 'name' - adds a class with name 'name'. Cannot add classes with duplicate or invalid names\n\t"
+        "class -d 'name' - deletes a class with name 'name'\n\t"
         "class -r 'old' 'new' - renames class 'old' to 'new'. Cannot rename classes to duplicate or invalid names\n"
-        #Attribute Commands
-        "Attribute Commands: \n\t"
-        "att -a class 'name' - adds an attribute with name 'name' to class 'class'\n\t"
-        "att -d class 'name' - deletes an attribute with name 'name' from class 'class' if one exists\n\t"
-        "att -r class 'old' 'new' - renames an attribute from name 'old' to name 'new' in class 'class'\n"
+        #Field Commands
+        "Field Commands: \n\t"
+        "fld -a 'class' 'name' - adds a field with name 'name' to class 'class'\n\t"
+        "fld -d 'class' 'name' - deletes a field with name 'name' from class 'class' if one exists\n\t"
+        "fld -r 'class' 'old' 'new' - renames a field from name 'old' to name 'new' in class 'class'\n"
+        #Method Commands
+        "Method Commands:\n\t"
+        "mthd -a 'class' 'name' - adds a method with the name 'name' to the class 'class'\n\t"
+        "mthd -d 'class' 'name' - deletes a method with name 'name' from class 'class' if one exists\n\t"
+        "mthd -r 'class' 'old 'new' - reames a method form name 'old' to name 'new' in class 'class'\n"
+        #Paramater Commands
+        "Parameter Commands:\n\t"
+        "???\n"
         #Relation Commands
         "Relation Commands:\n\t"
         "rel -a 'src' 'dest' 'type' - adds a relationship between class 'src' and class 'dest' of type 'type'\n\t"
