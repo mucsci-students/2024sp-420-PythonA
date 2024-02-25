@@ -31,7 +31,8 @@ def help_menu():
         "att -r class 'old' 'new' - renames an attribute from name 'old' to name 'new' in class 'class'\n"
         #Relation Commands
         "Relation Commands:\n\t"
-        "rel -a 'src' 'dest' - adds a relationship between class 'src' and class 'dest' assuming both are valid\n\t"
+        "rel -a 'src' 'dest' 'type' - adds a relationship between class 'src' and class 'dest' of type 'type'\n\t"
+        "rel -t 'src' 'dest' 'type' - changes the type of the relationship between class 'src' and class 'dest' to 'new type'\n\t"
         "rel -d 'src' 'dest' - deletes a relationship between class 'src' and class 'dest' if one exists\n"
         #List Commands
         "List Flags: \n\t"
