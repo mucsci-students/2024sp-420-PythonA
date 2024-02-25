@@ -4,17 +4,39 @@ from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QInputDialog, QLineEdit
 from PyQt6.QtCore import QDir
 from umleditor.mvc_controller.controller import Controller
+from umleditor.mvc_view.gui_view.class_input_dialog import ClassInputDialog
 
 class ControllerGUI (Controller):
-    
+    """
+    ControllerGui - Runs tasks signaled by ViewGui
+        Run commands require updates to the gui e.g. methods found
+        in run() 
+
+    Parameters:
+        window (ViewGUI): The window instance of ViewGUI.
+    """
+
     def __init__(self, window: ViewGUI) -> None:
+        """
+        Initializes Diagram, sets the view as a class variable,
+        Connects signal that runs tasks
+
+        Parameters:
+            window (ViewGUI): The window instance of ViewGUI.
+        """
         super().__init__()
         self._window = window
         self._diagram = Diagram()
-        # Used for detecting when tasks need run
         self._window.get_signal().connect(self.run)
 
-    def run(self, task: str):
+    def run(self, task: str, widget: QtWidgets):
+        """
+        Runs the specified task.
+
+        Parameters:
+            task (str): The task to run.
+            widget (QtWidgets): Used to set particular widget to its completed state
+        """
         try:
             out = super().run(task)
         except Exception as e:
@@ -22,15 +44,31 @@ class ControllerGUI (Controller):
             return
         # Successful task
         if "class -a" in task:
-            self.add_class(task)
-
-        # Parse / Run Command
-        # If success, return true
-        # Else, create error messagebox and return false
+            self.add_class(task, widget)
+        elif "fld -a" in task:
+            self.add_field(widget)
     
-    def add_class(self, task):
-        self._window.close_class_dialog()
-        self._window.add_class_card()
-        #else:
-        #   self._window.invalid_input_message(warning)
+    def add_class(self, task: str, widget: QtWidgets):
+        """
+        Closes dialog and creates class card.
+
+        Parameters:
+            task (str): Used for class name.
+            widget: ClassInputDialog.
+        """
+        widget.reject()
+        entity_name = task.split()[-1]
+        self._window.add_class_card(entity_name)
+    
+    def add_field(self, widget):
+        """
+        Makes text read-only and returns diagram to original state
+
+        Parameters:
+            widget: The widget instance.
+        """
+        widget.get_selected_line().setReadOnly(True)
+        widget.get_selected_line().setStyleSheet("background-color: white;")
+        widget.enable_all_items()
+        self._window.enable_widgets(True, self)
         
