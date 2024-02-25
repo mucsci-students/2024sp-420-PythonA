@@ -21,9 +21,6 @@ def parse (c, input:str) -> list:
             With invalid flag: CustomExceptions.InvalidFlagError
             With invalid command: CustomExceptions.CommandNotFoundError
     '''
-    #guarding no input saves resources
-    if not input: 
-        raise CE.NoInputError()
     
     #actual input to be parsed, split on spaces
     bits = input.split()
@@ -50,7 +47,7 @@ def parse (c, input:str) -> list:
     elif command_class == Entity:
         #if no args were provided, no entity can be found. Generate an error about invalid args
         if not args:
-            raise CE.NoArgsGivenError()
+            raise CE.NeedsMoreInput()
         
         #if the method is in entity, get entity that needs to be changed
             #pop the first element of args because it is the entity name, not a method param
