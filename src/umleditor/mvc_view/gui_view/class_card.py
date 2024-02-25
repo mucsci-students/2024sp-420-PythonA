@@ -103,11 +103,16 @@ class ClassCard(QWidget):
         menu = QMenu()
         field_action = QAction("Add Field", self)
         # TODO method_action = QAction("Add Method", self)
+        # TODO relation_action = QAction("Add Relation", self)
+
         menu.addAction(field_action)
         # TODO menu.addAction(method_action)
+        # TODO menu.addAction(relation_action)
+
         # Add button functionality
         field_action.triggered.connect(lambda: self.menu_action_clicked(self._list_field, "Enter Field"))
         # TODO method_action.triggered.connect(lambda: self.menu_action_clicked(self._list_method, "e.g. add(int, int)"))
+        # TODO relation_action.triggered.connect(lambda: self.menu_action_clicked(self._list_field, "Enter Field"))
         # Create Menu
         menu.exec(self._class_label.mapToGlobal(position))
 
