@@ -185,7 +185,7 @@ class Diagram:
         """
         # Check for valid relationship type
         if type not in Relation.RELATIONSHIP_TYPE:
-            raise CustomExceptions.InvalidRelationTypeError(source, destination)
+            raise CustomExceptions.InvalidRelationTypeError(type)
         
         # Check for valid source and destination
         if source not in self._entities:
@@ -235,20 +235,21 @@ class Diagram:
         Args:
             source (str): The name of the source entity.
             destination (str): The name of the destination entity.
-            new_type (str): The new type of the relation.
+            new_type (str): The new type of the relation to change.
         
         Raises:
             CustomExceptions.EntityNotFoundError: If either the source or the
                 destination entity is not found.
             CustomExceptions.RelationDoesNotExistError: If a relation does not
                 exist between the source and destination entities.
-            CustomExceptions.InvalidRelationTypeError: If the relation type is
-                not valid.
+            CustomExceptions.InvalidRelationTypeError: If the relation type to 
+            is change not valid.
         """
         # Check for valid relationship type
         if new_type not in Relation.RELATIONSHIP_TYPE:
-            raise CustomExceptions.InvalidRelationNewTypeError(source, destination)
+            raise CustomExceptions.InvalidRelationTypeError(new_type)
         
+        # Check for valid source and destination
         for rel in self._relations:
             if rel.get_source() == self._entities[source] and rel.get_destination() == self._entities[destination]:
                 rel._type = new_type

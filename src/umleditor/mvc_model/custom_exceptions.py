@@ -86,21 +86,8 @@ class CustomExceptions:
                 being added.
 
         """
-        def __init__(self, source, destination):
-            super().__init__(f"Relation between '{source} -> {destination}' has invalid type.")
-
-    class InvalidRelationNewTypeError(Error):
-        """
-        Exception raised when the relation being added has invalid new type.
-        
-        Args:
-            source (Entity): The source of the relation that was being added.
-            destination (Entity): The destination of the relation that was
-                being added.
-
-        """
-        def __init__(self, source, destination):
-            super().__init__(f"Relation between '{source} -> {destination}' has invalid new type.")
+        def __init__(self, invalid_type):
+            super().__init__(f"{invalid_type} is not a valid relation type.")
 
     #===============================================================================#
                                 #Method Exceptions

@@ -1,4 +1,5 @@
 from .entity import Entity
+from .custom_exceptions import CustomExceptions
 
 class Relation:
     RELATIONSHIP_TYPE = {'aggregation', 'composition', 'inheritance', 'realization'}
@@ -10,15 +11,18 @@ class Relation:
         Args:
             source (Entity): The entity at the start of the relation.
             destination (Entity): The entity at the end of the relation.
+            type (str): The type of the relation.
             
         Raises:
-            None.
+            CustomExceptions.InvalidRelationTypeError: If the type of the relation is 
+                not valid.
             
         Returns:
             None.
         """
+        # check if the type is valid
         if type not in self.RELATIONSHIP_TYPE:
-            raise ValueError(f"Invalid relationship type: {type}")
+            raise CustomExceptions.InvalidRelationTypeError(type)
     
         self._source = source
         self._destination = destination
