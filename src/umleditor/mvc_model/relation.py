@@ -4,7 +4,7 @@ from .custom_exceptions import CustomExceptions
 class Relation:
     RELATIONSHIP_TYPE = {'aggregation', 'composition', 'inheritance', 'realization'}
 
-    def __init__(self, type, source=Entity(), destination=Entity()):
+    def __init__(self, type=next(iter(RELATIONSHIP_TYPE)), source=Entity(), destination=Entity()):
         """
         Creates a relation between a source entity to a destination entity.
         

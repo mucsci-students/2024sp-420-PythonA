@@ -65,7 +65,7 @@ class Controller:
         #### Parameters:
         - `name` (str): The name of the file to be saved.
         '''
-        path = os.path.join(os.path.dirname(__file__), 'save')
+        path = os.path.join(os.path.dirname(__file__), '../', '../', '../', 'save')
         if not os.path.exists(path):
             os.makedirs(path)
         path = os.path.join(path, name + '.json')
@@ -78,7 +78,7 @@ class Controller:
         #### Parameters:
         - `path` (str): The name of the file to be loaded.
         '''
-        path = os.path.join(os.path.dirname(__file__), 'save')
+        path = os.path.join(os.path.dirname(__file__), '../', '../', '../', 'save')
         if not os.path.exists(path):
             os.makedirs(path)
         path = os.path.join(path, name + '.json')
