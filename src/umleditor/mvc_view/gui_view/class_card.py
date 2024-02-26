@@ -116,6 +116,25 @@ class ClassCard(QWidget):
         # Create Menu
         menu.exec(self._class_label.mapToGlobal(position))
 
+    def show_edit_menu(self, position):
+        """
+        Shows the context menu for the class label.
+
+        Args:
+            position: The position of the context menu.
+        """
+        # Create menu & Actions
+        menu = QMenu()
+        edit_action = QAction("Edit", self)
+
+        menu.addAction(edit_action)
+
+        # Add button functionality
+        edit_action.triggered.connect(self.edit_action_clicked)
+
+        # Create Menu
+        menu.exec(self._selected_line.mapToGlobal(position))
+
     def show_field_menu(self, position):
         """
         Shows the context menu for the field list.
@@ -125,9 +144,12 @@ class ClassCard(QWidget):
         """
         pass
     
+    def edit_action_clicked(self):
+        print("Edit action clicked")
+
     def menu_action_clicked(self, list: QListWidget, placeholder: str):
         """
-        Adds a field when the "Add Field" action is clicked.
+        Adds a field when the "Add ____" action is clicked.
         """
         # Disables unselected interactions
         self._enable_widgets_signal.emit(False, self)   
@@ -139,6 +161,8 @@ class ClassCard(QWidget):
 
         text = QLineEdit()
         self._selected_line = text
+        text.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        text.customContextMenuRequested.connect(self.show_edit_menu)
         # lambda ensures text is only evaluated on enter
         text.returnPressed.connect(lambda: self.verify_input(text.text(), list))
         # Formatting / Style
