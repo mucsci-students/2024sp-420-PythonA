@@ -14,6 +14,7 @@ class Controller:
         self._diagram = d
 
     def run(self, line:str) -> str:
+        if len(line.strip()) > 0:
             try:
                 #parse the command
                 input = parse(self, line)
