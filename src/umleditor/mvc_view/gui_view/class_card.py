@@ -153,16 +153,15 @@ class ClassCard(QWidget):
         """
         # Disables unselected interactions
         self._enable_widgets_signal.emit(False, self)   
-        self.disable_context_menus()
 
         # Create field and add to list
         item = QListWidgetItem()
         list.addItem(item) #!!!
-
         text = QLineEdit()
         self._selected_line = text
         text.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         text.customContextMenuRequested.connect(self.show_edit_menu)
+
         # lambda ensures text is only evaluated on enter
         text.returnPressed.connect(lambda: self.verify_input(text.text(), list))
         # Formatting / Style
@@ -170,15 +169,24 @@ class ClassCard(QWidget):
         list.setItemWidget(item, text)
         text.setPlaceholderText(placeholder)
         text.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        # Disable all context menus while actively editing
+        self.enable_context_menus(False)
     
-    def disable_context_menus(self):
+    def enable_context_menus(self, enable: bool):
         """
-        Disables context menus for all items within the ClassCard
+        Enable/disable context menus for all items within the ClassCard
         """
-        self._class_label.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
-        self._list_field.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
-        self._list_method.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
-        self._list_relation.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
+        stack = [self]
+        while stack:
+            current_widget = stack.pop()
+            if enable:
+                current_widget.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)  
+            else:
+                current_widget.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)  
+            if isinstance(current_widget, QWidget):
+                stack.extend(current_widget.findChildren(QWidget))
+
 
     def enable_all_items(self):
         """

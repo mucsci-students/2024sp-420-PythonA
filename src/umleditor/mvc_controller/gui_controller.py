@@ -69,6 +69,6 @@ class ControllerGUI (Controller):
         """
         widget.get_selected_line().setReadOnly(True)
         widget.get_selected_line().setStyleSheet("background-color: white;")
-        widget.enable_all_items()
+        widget.enable_context_menus(True)
         self._window.enable_widgets(True, self)
         
