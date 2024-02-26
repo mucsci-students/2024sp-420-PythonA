@@ -2,7 +2,7 @@ from .entity import Entity
 from .custom_exceptions import CustomExceptions
 
 class Relation:
-    RELATIONSHIP_TYPE = {'aggregation', 'composition', 'inheritance', 'realization'}
+    RELATIONSHIP_TYPE = ['aggregation', 'composition', 'inheritance', 'realization']
 
     def __init__(self, type=next(iter(RELATIONSHIP_TYPE)), source=Entity(), destination=Entity()):
         """
@@ -23,7 +23,6 @@ class Relation:
         # check if the type is valid
         if type not in self.RELATIONSHIP_TYPE:
             raise CustomExceptions.InvalidRelationTypeError(type)
-    
         self._source = source
         self._destination = destination
         self._type = type
@@ -59,7 +58,7 @@ class Relation:
         return self._destination
     
     def set_type(self, new_type:str):
-        if type not in self.RELATIONSHIP_TYPE:
+        if new_type not in self.RELATIONSHIP_TYPE:
             raise CustomExceptions.InvalidRelationTypeError(type)
 
         self._type = new_type

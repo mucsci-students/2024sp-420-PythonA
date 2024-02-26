@@ -8,6 +8,10 @@ class Diagram:
         self._entities:list[Entity] = []
         self._relations:list[Relation] = []
 
+    #===============================================================================#
+                                #Entity Methods
+    #===============================================================================#
+
     def add_entity(self, name: str):
         """
         Adds an entity with the given name to the Diagram.
@@ -106,6 +110,10 @@ class Diagram:
             raise CustomExceptions.EntityExistsError(new_name)        
         ent.set_name(new_name)   
 
+    #===============================================================================#
+                                #List Methods
+    #===============================================================================#
+
     def list_everything(self):
         """
         Returns a representation of the entire diagram.
@@ -149,7 +157,7 @@ class Diagram:
         Returns:
             str: String containing names of all existing entities.
         """
-        entity_names = list(self._entities.keys())
+        entity_names = list(str(e) for e in self._entities)
         return '\n' + ', '.join(entity_names)
     
     def list_relations(self):
@@ -175,7 +183,9 @@ class Diagram:
                 relations_list.append(str(rel))
         return '\n'.join(relations_list)
 
-
+    #===============================================================================#
+                                #Relation Methods
+    #===============================================================================#
         
     def add_relation(self,source:str, destination:str, type:str):
         """
@@ -196,11 +206,8 @@ class Diagram:
         """
         src = self.get_entity(source)
         dst = self.get_entity(destination)
-        # Check for valid relationship type
-        if type not in Relation.RELATIONSHIP_TYPE:
-            raise CustomExceptions.InvalidRelationTypeError(type)
         
-        to_add = Relation(src, dst, type)
+        to_add = Relation(type, src, dst)
         for rel in self._relations:
             if rel == to_add:
                 raise CustomExceptions.RelationExistsError(source, destination)
@@ -232,7 +239,7 @@ class Diagram:
                 return
         raise CustomExceptions.RelationDoesNotExistError(source, destination)
 
-    def change_relation_type(self, source, destination, new_type):
+    def change_relation_type(self, source:str, destination:str, new_type:str):
         """
         Changes the type of a relation between two Entities.
         
