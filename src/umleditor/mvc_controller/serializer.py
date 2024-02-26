@@ -95,7 +95,6 @@ def deserialize(diagram: Diagram, path: str) -> None:
     - (CustomExceptions.JsonDecodeError): If failed to decode the file
     - (CustomExceptions.SavedDataError): If file data is not consistent with the Diagram
     '''
-    import traceback
     content = read_file(path)
     try:
         obj = json.loads(content)
@@ -153,6 +152,4 @@ def deserialize(diagram: Diagram, path: str) -> None:
             loaded_relationships.append(loaded_relationship)
         diagram._relations = loaded_relationships
     except Exception:
-        traceback.print_exc()
-        traceback.print_exception()
         raise CE.SavedDataError(filepath=path)
