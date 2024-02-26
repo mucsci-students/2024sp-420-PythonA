@@ -74,9 +74,6 @@ class ClassCard(QWidget):
         # Connect class label
         self._class_label.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self._class_label.customContextMenuRequested.connect(self.show_class_menu)
-        # Connect field list
-        self._list_field.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-        self._list_field.customContextMenuRequested.connect(self.show_field_menu)
 
     def set_styles(self):
         """
@@ -114,11 +111,11 @@ class ClassCard(QWidget):
         # TODO method_action.triggered.connect(lambda: self.menu_action_clicked(self._list_method, "e.g. add(int, int)"))
         # TODO relation_action.triggered.connect(lambda: self.menu_action_clicked(self._list_field, "Enter Field"))
         # Create Menu
-        menu.exec(self._class_label.mapToGlobal(position))
+        menu.exec(self.mapToGlobal(position))
 
-    def show_edit_menu(self, position):
+    def show_row_menu(self, position, widget: QLineEdit):
         """
-        Shows the context menu for the class label.
+        Shows the edit/delete menu for QLineEdit based selections
 
         Args:
             position: The position of the context menu.
@@ -126,26 +123,21 @@ class ClassCard(QWidget):
         # Create menu & Actions
         menu = QMenu()
         edit_action = QAction("Edit", self)
-
+        delete_action = QAction("Delete", self)
         menu.addAction(edit_action)
+        menu.addAction(delete_action)
 
         # Add button functionality
-        edit_action.triggered.connect(self.edit_action_clicked)
+        edit_action.triggered.connect(lambda: self.edit_action_clicked(widget))
 
         # Create Menu
-        menu.exec(self._selected_line.mapToGlobal(position))
-
-    def show_field_menu(self, position):
-        """
-        Shows the context menu for the field list.
-
-        Args:
-            position: The position of the context menu.
-        """
-        pass
+        menu.exec(self.mapToGlobal(position))
     
-    def edit_action_clicked(self):
-        print("Edit action clicked")
+    def edit_action_clicked(self, widget: QLineEdit):
+        self._old_text = widget.text()
+        widget.setStyleSheet("background-color: #ADD8E6;")
+        widget.setReadOnly(False)
+        widget.setFocus()
 
     def menu_action_clicked(self, list: QListWidget, placeholder: str):
         """
@@ -160,10 +152,12 @@ class ClassCard(QWidget):
         text = QLineEdit()
         self._selected_line = text
         text.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-        text.customContextMenuRequested.connect(self.show_edit_menu)
+        # Pass the QLineEdit instance 
+        text.customContextMenuRequested.connect(lambda pos: self.show_row_menu(pos, text))
 
         # lambda ensures text is only evaluated on enter
         text.returnPressed.connect(lambda: self.verify_input(text.text(), list))
+
         # Formatting / Style
         text.setStyleSheet("background-color: #ADD8E6;")
         list.setItemWidget(item, text)
