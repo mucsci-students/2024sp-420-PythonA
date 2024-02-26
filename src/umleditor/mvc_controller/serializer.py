@@ -16,7 +16,7 @@ class CustomJSONEncoder(json.JSONEncoder):
 from umleditor.mvc_controller.controller_input import read_file, read_line
 import umleditor.mvc_controller.controller_output as controller_output
 from umleditor.mvc_model.diagram import Diagram
-from umleditor.mvc_model.entity import Entity
+from umleditor.mvc_model.entity import Entity, UML_Method
 from umleditor.mvc_model.relation import Relation
 from umleditor.mvc_model.custom_exceptions import CustomExceptions as CE
 
@@ -28,16 +28,57 @@ def serialize(diagram: Diagram, path: str) -> None:
     - `diagram` (Diagram): The diagram object containing entities and relations to be serialized.
     - `path` (str): The file path where the JSON file will be saved.
     '''
-    entities = {name: vars(obj) for name, obj in diagram._entities.items()}
-    relations = []
-    for x in diagram._relations:
-        properties = vars(x)
-        for property_name, property_val in properties.items():
-            if isinstance(property_val, Entity):
-                properties[property_name] = property_val.get_name()
-        relations.append(properties)
+    # classes
+    saved_classes = []
+    for entity in diagram._entities.values():
+        saved_class = {}
+        # class name
+        saved_class['name'] = entity._name
+        # class fields
+        saved_fields = []
+        for field in entity._fields:
+            saved_field = {}
+            # class field name
+            saved_field['name'] = field
+            # class field type
+            saved_field['type'] = 'undefined' #TODO
+            saved_fields.append(saved_field)
+        saved_class['fields'] = saved_fields
+        # class method
+        saved_methods = []
+        for method in entity._methods:
+            saved_method = {}
+            # class method name
+            saved_method['name'] = method._name
+            # class method return_type
+            saved_method['return_type'] = 'undefined' #TODO
+            # class method params
+            saved_params = []
+            for param in method._params:
+                saved_param = {}
+                # class method param name
+                saved_param['name'] = param
+                # class method param type
+                saved_param['type'] = 'undefined' # TODO
+                saved_params.append(saved_param)
+            saved_method['params'] = saved_params
+            saved_methods.append(saved_method)
+        saved_class['methods'] = saved_method
+        saved_classes.append(saved_class)
+    # relationships
+    saved_relationships = []
+    for relation in diagram._relations:
+        saved_relationship = {}
+        # relationship source
+        saved_relationship['source'] = relation._source
+        # relationship destination
+        saved_relationship['destination'] = relation._destination
+        # relationship type
+        saved_relationship['type'] = relation._type
+        saved_relationships.append(saved_relationship)
     try:
-        content = json.dumps(obj={'entities': entities, 'relations': relations}, cls=CustomJSONEncoder)
+        obj = {'classes': saved_classes, 'relationships': saved_relationships}
+        content = json.dumps(obj=obj, cls=CustomJSONEncoder)
     except Exception:
         raise CE.JsonEncodeError(filepath=path)
     controller_output.write_file(path=path, content=content)
