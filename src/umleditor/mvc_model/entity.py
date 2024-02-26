@@ -169,7 +169,7 @@ class Entity:
         return self._name
 
 class UML_Method:
-    def __init__(self, method_name):
+    def __init__(self, method_name=''):
         """
         Creates a UML_Method object.
         
