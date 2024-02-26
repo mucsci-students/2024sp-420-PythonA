@@ -8,9 +8,9 @@ class Entity:
         Args:
             entity_name (str): The name of the entity.
         """
-        self.set_name(entity_name)
-        self._fields:list[str] = []
-        self._methods:list[UML_Method] = []
+        self._name:str = entity_name
+        self._fields: list[str] = []
+        self._methods: list[UML_Method] = []
 
     def get_name(self):
         '''

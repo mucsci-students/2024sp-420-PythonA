@@ -24,7 +24,7 @@ class Diagram:
         """
         if self.has_entity(name):
                 raise CustomExceptions.EntityExistsError(name)
-        self._entities[name] = Entity(name)
+        self._entities.append(Entity(name))
 
     def get_entity(self, name: str):
         """
@@ -40,7 +40,8 @@ class Diagram:
             Entity: If the entity exists.
             None: If the entity does not exist.
         """
-        entity = self._entities[self._entities.index(name)] if self.has_entity(name) else None
+        dummy = Entity(name)
+        entity = self._entities[self._entities.index(dummy)] if self.has_entity(name) else None
         if entity is None:
             raise CustomExceptions.EntityNotFoundError(name)    
         return entity
@@ -75,6 +76,7 @@ class Diagram:
 
     def has_entity(self, name:str) -> bool:
         '''Returns true if the entity exists in this diagram, false otherwise'''
+
         for e in self._entities:
             if e.get_name() == name:
                 return True
@@ -175,7 +177,7 @@ class Diagram:
 
 
         
-    def add_relation(self,source, destination, type):
+    def add_relation(self,source:str, destination:str, type:str):
         """
         Adds a relation between two Entities.
         
@@ -198,8 +200,8 @@ class Diagram:
         if type not in Relation.RELATIONSHIP_TYPE:
             raise CustomExceptions.InvalidRelationTypeError(type)
         
+        to_add = Relation(src, dst, type)
         for rel in self._relations:
-            to_add = Relation(src, dst, type)
             if rel == to_add:
                 raise CustomExceptions.RelationExistsError(source, destination)
         # Pass entity objects to relation and add relation to list of existing relations
