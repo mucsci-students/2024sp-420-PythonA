@@ -185,7 +185,7 @@ class Entity:
         return self._name
 
 class UML_Method:
-    def __init__(self, method_name):
+    def __init__(self, method_name=''):
         """
         Creates a UML_Method object.
         
@@ -301,7 +301,7 @@ class UML_Method:
         
     def __str__(self):
         """
-        Returns the name of the method.
+        Returns the name of the method and a list of it's parameters.
         
         Args:
             None.
@@ -310,6 +310,10 @@ class UML_Method:
             None.
         
         Returns:
-            name (str): A string to represent the method.
+            name (str): A templated string to represent a method and
+                its list of parameters.
         """
-        return self.get_method_name()
+        result = self.get_method_name()
+        result += "\n\t" + self.get_method_name() + "'s Params:\n\t\t"
+        param_results = ', '.join(p for p in self._params)
+        return result + param_results

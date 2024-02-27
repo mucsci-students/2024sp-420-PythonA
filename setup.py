@@ -13,4 +13,9 @@ setup(
     packages=find_packages(where='src'),
     include_package_data=True,
     package_dir={'': 'src'},
+    install_requires = [
+        "pyinstaller",
+        "pyqt6",
+        "pytest",
+    ]
 )

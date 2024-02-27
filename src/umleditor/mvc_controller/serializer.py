@@ -16,7 +16,7 @@ class CustomJSONEncoder(json.JSONEncoder):
 from umleditor.mvc_controller.controller_input import read_file, read_line
 import umleditor.mvc_controller.controller_output as controller_output
 from umleditor.mvc_model.diagram import Diagram
-from umleditor.mvc_model.entity import Entity
+from umleditor.mvc_model.entity import Entity, UML_Method
 from umleditor.mvc_model.relation import Relation
 from umleditor.mvc_model.custom_exceptions import CustomExceptions as CE
 
@@ -28,16 +28,57 @@ def serialize(diagram: Diagram, path: str) -> None:
     - `diagram` (Diagram): The diagram object containing entities and relations to be serialized.
     - `path` (str): The file path where the JSON file will be saved.
     '''
-    entities = {name: vars(obj) for name, obj in diagram._entities.items()}
-    relations = []
-    for x in diagram._relations:
-        properties = vars(x)
-        for property_name, property_val in properties.items():
-            if isinstance(property_val, Entity):
-                properties[property_name] = property_val.get_name()
-        relations.append(properties)
+    # classes
+    saved_classes = []
+    for entity in diagram._entities.values():
+        saved_class = {}
+        # class name
+        saved_class['name'] = entity._name
+        # class fields
+        saved_fields = []
+        for field in entity._fields:
+            saved_field = {}
+            # class field name
+            saved_field['name'] = field
+            # class field type
+            saved_field['type'] = 'undefined' #TODO
+            saved_fields.append(saved_field)
+        saved_class['fields'] = saved_fields
+        # class methods
+        saved_methods = []
+        for method in entity._methods:
+            saved_method = {}
+            # class method name
+            saved_method['name'] = method._name
+            # class method return_type
+            saved_method['return_type'] = 'undefined' #TODO
+            # class method params
+            saved_params = []
+            for param in method._params:
+                saved_param = {}
+                # class method param name
+                saved_param['name'] = param
+                # class method param type
+                saved_param['type'] = 'undefined' # TODO
+                saved_params.append(saved_param)
+            saved_method['params'] = saved_params
+            saved_methods.append(saved_method)
+        saved_class['methods'] = saved_methods
+        saved_classes.append(saved_class)
+    # relationships
+    saved_relationships = []
+    for relation in diagram._relations:
+        saved_relationship = {}
+        # relationship source
+        saved_relationship['source'] = relation._source
+        # relationship destination
+        saved_relationship['destination'] = relation._destination
+        # relationship type
+        saved_relationship['type'] = relation._type
+        saved_relationships.append(saved_relationship)
     try:
-        content = json.dumps(obj={'entities': entities, 'relations': relations}, cls=CustomJSONEncoder)
+        obj = {'classes': saved_classes, 'relationships': saved_relationships}
+        content = json.dumps(obj=obj, cls=CustomJSONEncoder)
     except Exception:
         raise CE.JsonEncodeError(filepath=path)
     controller_output.write_file(path=path, content=content)
@@ -56,28 +97,59 @@ def deserialize(diagram: Diagram, path: str) -> None:
     '''
     content = read_file(path)
     try:
-        diagram_attributes = json.loads(content)
+        obj = json.loads(content)
     except Exception:
         raise CE.JsonDecodeError(filepath=path)
     try:
-        for attr_name, attr_obj in diagram_attributes.items():
-            if attr_name == 'entities':
-                for name, properties in attr_obj.items():
-                    entity = Entity()
-                    for property_name, property_val in properties.items():
-                        if isinstance(getattr(entity, property_name), set): # Because custom encoder save set as list
-                            property_val = set(property_val)
-                        setattr(entity, property_name, property_val)
-                    diagram._entities[name] = entity
-            elif attr_name == 'relations':
-                for properties in attr_obj:
-                    relation = Relation()
-                    for property_name, property_val in properties.items():
-                        if isinstance(getattr(relation, property_name), Entity):
-                            property_val = diagram._entities[property_val]
-                        if isinstance(getattr(relation, property_name), set): # Because custom encoder save set as list
-                            property_val = set(property_val)
-                        setattr(relation, property_name, property_val)
-                    diagram._relations.append(relation)
+        # classes
+        loaded_classes = {}
+        for saved_class in obj['classes']:
+            loaded_class = Entity()
+            # class name
+            loaded_class._name = saved_class['name']
+            # class fields
+            loaded_fields = []
+            for saved_field in saved_class['fields']:
+                loaded_field = str() # str is the type of field
+                # class field name
+                loaded_field = saved_field['name']
+                # class field type
+                # TODO: field type unused
+                loaded_fields.append(loaded_field)
+            loaded_class._fields = loaded_fields
+            # class methods
+            loaded_methods = []
+            for saved_method in saved_class['methods']:
+                loaded_method = UML_Method()
+                # class method name
+                loaded_method._name = saved_method['name']
+                # class method return_type
+                # TODO: return_type unused
+                # class method params
+                loaded_params = []
+                for saved_param in saved_method['params']:
+                    loaded_param = str() # str is the type of param
+                    # class method param name
+                    loaded_param = saved_param['name']
+                    # class method param type
+                    # TODO: type unused
+                    loaded_params.append(loaded_param)
+                loaded_method._params = loaded_params
+                loaded_methods.append(loaded_method)
+            loaded_class._methods = loaded_methods
+            loaded_classes[loaded_class._name] = loaded_class
+        diagram._entities = loaded_classes
+        # relationships
+        loaded_relationships = []
+        for saved_relationship in obj['relationships']:
+            loaded_relationship = Relation()
+            # relationship source
+            loaded_relationship._source = loaded_classes[saved_relationship['source']]
+            # relationship destination
+            loaded_relationship._destination = loaded_classes[saved_relationship['destination']]
+            # relationship type
+            loaded_relationship._type = saved_relationship['type']
+            loaded_relationships.append(loaded_relationship)
+        diagram._relations = loaded_relationships
     except Exception:
         raise CE.SavedDataError(filepath=path)

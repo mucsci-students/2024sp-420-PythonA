@@ -1,22 +1,32 @@
 from .entity import Entity
+from .custom_exceptions import CustomExceptions
 
 class Relation:
-    def __init__(self, source=Entity(), destination=Entity()):
+    RELATIONSHIP_TYPE = {'aggregation', 'composition', 'inheritance', 'realization'}
+
+    def __init__(self, type=next(iter(RELATIONSHIP_TYPE)), source=Entity(), destination=Entity()):
         """
         Creates a relation between a source entity to a destination entity.
         
         Args:
             source (Entity): The entity at the start of the relation.
             destination (Entity): The entity at the end of the relation.
+            type (str): The type of the relation.
             
         Raises:
-            None.
+            CustomExceptions.InvalidRelationTypeError: If the type of the relation is 
+                not valid.
             
         Returns:
             None.
         """
+        # check if the type is valid
+        if type not in self.RELATIONSHIP_TYPE:
+            raise CustomExceptions.InvalidRelationTypeError(type)
+    
         self._source = source
         self._destination = destination
+        self._type = type
     
     def get_source(self):
         """
@@ -77,4 +87,4 @@ class Relation:
         Returns:
             str: A string representation of the relation.
         """
-        return f'{self._source} -> {self._destination}'
+        return f'{self._source} -> {self._type} -> {self._destination}'
