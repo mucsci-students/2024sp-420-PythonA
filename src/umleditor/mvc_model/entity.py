@@ -157,13 +157,6 @@ class Entity:
             for um in self._methods:
                 if (old_name == um.get_method_name()):
                     um.set_method_name(new_name)
-
-    def list_methods(self):
-        '''Lists all the methods of this entity
-            
-            Return: a comma separated list of all methods in this entity
-        '''
-        return ", ".join(str(m) for m in self._methods) + '\n'
     
     def list_fields(self):
         '''Lists all the fields of this entity
