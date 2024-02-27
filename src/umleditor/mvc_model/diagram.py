@@ -5,8 +5,12 @@ from .custom_exceptions import CustomExceptions
 
 class Diagram:
     def __init__(self) -> None:
-        self._entities = {}
-        self._relations = []
+        self._entities:list[Entity] = []
+        self._relations:list[Relation] = []
+
+    #===============================================================================#
+                                #Entity Methods
+    #===============================================================================#
 
     def add_entity(self, name: str):
         """
@@ -22,10 +26,9 @@ class Diagram:
         Returns:
             None
         """
-        if name in self._entities:
-            raise CustomExceptions.EntityExistsError(name)
-        else:
-            self._entities[name] = Entity(name)
+        if self.has_entity(name):
+                raise CustomExceptions.EntityExistsError(name)
+        self._entities.append(Entity(name))
 
     def get_entity(self, name: str):
         """
@@ -41,11 +44,11 @@ class Diagram:
             Entity: If the entity exists.
             None: If the entity does not exist.
         """
-        entity = self._entities.get(name, None)
+        dummy = Entity(name)
+        entity = self._entities[self._entities.index(dummy)] if self.has_entity(name) else None
         if entity is None:
-            raise CustomExceptions.EntityNotFoundError(name)
-        else:    
-            return entity
+            raise CustomExceptions.EntityNotFoundError(name)    
+        return entity
 
     
     def delete_entity(self, name: str):
@@ -62,21 +65,27 @@ class Diagram:
         Returns:
             None
         """
-        if name not in self._entities:
-            raise CustomExceptions.EntityNotFoundError(name)
+        entity = self.get_entity(name)
         
         # Check for relations involving the entity and remove them
-        else:
-            relations_to_remove = []
-            for rel in self._relations:
-                if rel.contains(self._entities[name]):
-                    relations_to_remove.append(rel)
-            for rel in relations_to_remove:
-                self._relations.remove(rel)
-        
-            # Remove the entity from the dictionary
-            del self._entities[name]
+        relations_to_remove = []
+        for rel in self._relations:
+            if rel.contains(name):
+                relations_to_remove.append(rel)
+        for rel in relations_to_remove:
+            self._relations.remove(rel)
+    
+        self._entities.remove(entity)
 
+
+    def has_entity(self, name:str) -> bool:
+        '''Returns true if the entity exists in this diagram, false otherwise'''
+
+        for e in self._entities:
+            if e.get_name() == name:
+                return True
+        return False
+    
 
     def rename_entity(self, old_name: str, new_name: str):
         """
@@ -95,16 +104,16 @@ class Diagram:
         Returns:
             None
         """
-        if old_name not in self._entities:
-            raise CustomExceptions.EntityNotFoundError(old_name)
-        elif new_name in self._entities:
-            raise CustomExceptions.EntityExistsError(new_name)
-        # Update key
-        else:
-            entity = self._entities[old_name]
-            entity.set_name(new_name)
-            self._entities[new_name] = self._entities.pop(old_name)
-        
+        ent = self.get_entity(old_name)
+
+        if self.has_entity(new_name):
+            raise CustomExceptions.EntityExistsError(new_name)        
+        ent.set_name(new_name)   
+
+    #===============================================================================#
+                                #List Methods
+    #===============================================================================#
+
     def list_everything(self):
         """
         Returns a representation of the entire diagram.
@@ -114,43 +123,41 @@ class Diagram:
                 and their relations.
         """
         result = ""
-        for entity in self._entities.values():
+        for entity in self._entities:
             result += self.list_entity_details(entity.get_name()) + "\n"
         return result
         
     def list_entity_details(self, entity_name):
         """
-        Returns the attributes and relations of the entity.
+        Returns the fields, methods, params, and relations of the entity.
         
         Args:
             entity_name (str): The name of the entity to get details of.
             
         Raises:
-            None
+            CustomExceptions.EntityNotFoundError: If an entity with the old name
+                does not exist.
             
         Returns:
-            str: A templated string containing the attributes and relations.
+            str: A templated string containing the fields, methods, params
+                and relations of an entity.
         """
-        if not self._entities.__contains__(entity_name):
-            raise CustomExceptions.EntityNotFoundError(entity_name)
-        else:
-            entity = self._entities[entity_name]
-            att = entity._attributes
-            rels = [rel for rel in self._relations if rel.contains(entity)]
-            result ="\n" + entity_name + "'s Attributes:\n"
-            att_string = ', '.join(att)
-            result2 = entity_name + "'s Relations:\n"
-            rel_string = ', '.join(str(rel) for rel in rels)
-            return result + att_string + "\n" + result2 + rel_string
+       
+        ent = self.get_entity(entity_name)
+        fields = entity_name +":\n" + entity_name + "'s Fields:\n" + ent.list_fields() + '\n'
+        methods = entity_name + "'s Methods:\n" + ent.list_methods()
+        relations = entity_name + "'s Relations:\n" + self.list_entity_relations(entity_name)
+        return fields + methods + relations
 
     def list_entities(self):
         """
+
         Returns the entities in the relation.
         
         Returns:
             str: String containing names of all existing entities.
         """
-        entity_names = list(self._entities.keys())
+        entity_names = list(str(e) for e in self._entities)
         return '\n' + ', '.join(entity_names)
     
     def list_relations(self):
@@ -164,35 +171,48 @@ class Diagram:
         for rel in self._relations:
             relations_list.append(str(rel))
         return '\n'.join(relations_list)
-
+    
+    def list_entity_relations(self, name:str):
+        ''' Lists all relations that contain a specific entity
         
-    def add_relation(self, source, destination):
+            Return: A string containing all relations
+        '''
+        relations_list = []
+        for rel in self._relations:
+            if(rel.contains(name)):
+                relations_list.append(str(rel))
+        return '\n'.join(relations_list)
+
+    #===============================================================================#
+                                #Relation Methods
+    #===============================================================================#
+        
+    def add_relation(self,source:str, destination:str, type:str):
         """
         Adds a relation between two Entities.
         
         Args:
             source (str): The name of the source entity.
             destination (str): The name of the destination entity.
+            type (str): The type of the relation.
             
         Raises:
             CustomExceptions.EntityNotFoundError: If either the source or the
                 destination entity are not found.
             CustomExceptions.RelationExistsError: If a relation already exists
                 between the source and destination entities.
+            CustomExceptions.InvalidRelationTypeError: If the relation type is
+                not valid.
         """
-        # Check for valid source and destination
-        if source not in self._entities:
-            raise CustomExceptions.EntityNotFoundError(source)
-        elif destination not in self._entities:
-            raise CustomExceptions.EntityNotFoundError(destination)
-        # Check for duplicate relationship containing same source and destination
-        else:
-            for rel in self._relations:
-                if rel.get_source() == self._entities[source] and rel.get_destination() == self._entities[destination]:
-                    raise CustomExceptions.RelationExistsError(source, destination)
-            # Pass entity objects to relation and add relation to list of existing relations
-            relationship = Relation(self._entities[source], self._entities[destination])
-            self._relations.append(relationship)
+        src = self.get_entity(source)
+        dst = self.get_entity(destination)
+        
+        to_add = Relation(type, src, dst)
+        for rel in self._relations:
+            if rel == to_add:
+                raise CustomExceptions.RelationExistsError(source, destination)
+        # Pass entity objects to relation and add relation to list of existing relations
+        self._relations.append(to_add)
     
     def delete_relation(self, source, destination):
         """
@@ -209,15 +229,40 @@ class Diagram:
                 exist between the source and destination entities.
         """
         # Check for valid source and destination
-        if source not in self._entities:
-            raise CustomExceptions.EntityNotFoundError(source)
-        elif destination not in self._entities:
-            raise CustomExceptions.EntityNotFoundError(destination)
+        src = self.get_entity(source)
+        dst = self.get_entity(destination)
         # Look for matching relation to delete
-        else:
-            for i, rel in enumerate(self._relations):
-                if rel.get_source() == self._entities[source] and rel.get_destination() == self._entities[destination]:
-                    del self._relations[i]
-                    return
+
+        for i, rel in enumerate(self._relations):
+            if rel.get_source() == src and rel.get_destination() == dst:
+                del self._relations[i]
+                return
+        raise CustomExceptions.RelationDoesNotExistError(source, destination)
+
+    def change_relation_type(self, source:str, destination:str, new_type:str):
+        """
+        Changes the type of a relation between two Entities.
+        
+        Args:
+            source (str): The name of the source entity.
+            destination (str): The name of the destination entity.
+            new_type (str): The new type of the relation to change.
+        
+        Raises:
+            CustomExceptions.EntityNotFoundError: If either the source or the
+                destination entity is not found.
+            CustomExceptions.RelationDoesNotExistError: If a relation does not
+                exist between the source and destination entities.
+            CustomExceptions.InvalidRelationTypeError: If the relation type to 
+            is change not valid.
+        """
+        src = self.get_entity(source)
+        dst = self.get_entity(destination)
+
+        # Check for valid source and destination
+        for rel in self._relations:
+            if rel.get_source() == src and rel.get_destination() == dst:
+                rel.set_type(new_type)
+                return
         raise CustomExceptions.RelationDoesNotExistError(source, destination)
     

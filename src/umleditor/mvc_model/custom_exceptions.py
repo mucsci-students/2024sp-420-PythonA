@@ -76,6 +76,17 @@ class CustomExceptions:
         def __init__(self, source, destination):
             super().__init__(f"Relation between '{source} -> {destination}' does not exist.")
 
+    class InvalidRelationTypeError(Error):
+        """
+        Exception raised when the relation being added has no types.
+        
+        Args:
+            invalid_type (str): The type of the relation that was being added.
+
+        """
+        def __init__(self, invalid_type):
+            super().__init__(f"{invalid_type} is not a valid relation type.")
+
     #===============================================================================#
                                 #Method Exceptions
     #===============================================================================#
@@ -155,13 +166,13 @@ class CustomExceptions:
             command (str): The name of the command that was called with the invalid flag.
         """
         def __init__(self) -> None:
-            super().__init__(f"No class selected. Use 'class -s name' to select a class.")
+            super().__init__(f"No class selected.")
 
     class CommandNotFoundError(Error):
         """Exception raised when an invalid command is entered"""
 
         def __init__(self, name) -> None:
-            super().__init__(f"Command '{name}' does not exist. Try again or type 'help' for help.")
+            super().__init__(f"Command '{name}' does not exist.")
     
     class InvalidArgCountError(Error):
         '''
@@ -180,27 +191,13 @@ class CustomExceptions:
                 super().__init__(f"{match.group(1)} too few arguments given.")
             else:
                 super().__init__(f"Expected {match.group(1)} arguments, but {match.group(2)} were given.")
-    
-    class NoArgsGivenError(Error):
-        '''
-            Exception raised when a user gives no args to a command that requires one to be parsed
-        '''
-        def __init__(self):
-            super().__init__(f"This command requires additional input. Type 'help' for command usage.")
-
-    class NoInputError(Error):
-        '''
-            Exception raised when no input is given and enter is hit
-        '''
-        def __init__(self):
-            super().__init__(f"")
 
     class NeedsMoreInput(Error):
         '''
             Exception raised when user gives only a command name
         '''
         def __init__(self):
-            super().__init__(f"This command requires more input. Please try again or type 'help' for command usage.")
+            super().__init__(f"This command requires more input.")
     #===============================================================================#
                                 #I/O Exceptions
     #===============================================================================#

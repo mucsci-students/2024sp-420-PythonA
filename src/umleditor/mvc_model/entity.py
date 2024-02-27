@@ -8,9 +8,9 @@ class Entity:
         Args:
             entity_name (str): The name of the entity.
         """
-        self.set_name(entity_name)
-        self._fields = []
-        self._methods = []
+        self._name:str = entity_name
+        self._fields: list[str] = []
+        self._methods: list[UML_Method] = []
 
     def get_name(self):
         '''
@@ -93,8 +93,7 @@ class Entity:
         elif new_field in self._fields:
             raise CustomExceptions.FieldExistsError(new_field)
         else:
-            self._fields.remove(old_field)
-            self._fields.append(new_field)
+            self._fields[self._fields.index(old_field)] = new_field
 
     def add_method(self, method_name: str):
         """
@@ -160,6 +159,20 @@ class Entity:
             for um in self._methods:
                 if (old_name == um.get_method_name()):
                     um.set_method_name(new_name)
+    
+    def list_fields(self):
+        '''Lists all the fields of this entity
+        
+            Return: a comma separated list of all methods in this entity
+        '''
+        return ", ".join(str(f) for f in self._fields) + '\n'
+    
+    def list_methods(self):
+        '''Lists all the methods of this entity
+        
+            Return: a comma separated list of all methods and their params in this entity
+        '''
+        return ", ".join(str(m) for m in self._methods) + '\n'
 
     def __str__(self) -> str:
         """
@@ -169,9 +182,18 @@ class Entity:
             str: The name of the entity.
         """
         return self._name
+    
+    def __eq__ (self, other):
+        '''Equality operator for entities
+            
+            Return:
+            True - this and other have the same name
+            False - this and other do not have the same name
+        '''
+        return self._name == other._name
 
 class UML_Method:
-    def __init__(self, method_name):
+    def __init__(self, method_name=''):
         """
         Creates a UML_Method object.
         
@@ -184,8 +206,8 @@ class UML_Method:
         Returns:
             None.
         """
-        self._name = method_name
-        self._params = []
+        self._name:str = method_name
+        self._params:list[str] = []
 
     def get_method_name(self):
         """
@@ -287,7 +309,7 @@ class UML_Method:
         
     def __str__(self):
         """
-        Returns the name of the method.
+        Returns the name of the method and a list of it's parameters.
         
         Args:
             None.
@@ -296,6 +318,10 @@ class UML_Method:
             None.
         
         Returns:
-            name (str): A string to represent the method.
+            name (str): A templated string to represent a method and
+                its list of parameters.
         """
-        return self.get_method_name()
+        result = self.get_method_name()
+        result += "\n\t" + self.get_method_name() + "'s Params:\n\t\t"
+        param_results = ', '.join(p for p in self._params)
+        return result + param_results
