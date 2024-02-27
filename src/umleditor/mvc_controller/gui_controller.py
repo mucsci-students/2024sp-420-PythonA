@@ -50,7 +50,7 @@ class ControllerGUI (Controller):
         # Successful task
         if "class -a" in task:
             self.add_class(task, widget)
-        elif "fld" in task:
+        elif "fld -a" in task or "fld -e" in task:
             self.add_field(widget)
     
     def add_class(self, task: str, widget: QtWidgets):
@@ -72,7 +72,6 @@ class ControllerGUI (Controller):
         Parameters:
             widget: The widget instance.
         """
-        print("Add Field Called")
         print(widget.get_selected_line().text())
         widget.get_selected_line().setReadOnly(True)
         widget.get_selected_line().setStyleSheet("background-color: white;")

@@ -129,11 +129,21 @@ class ClassCard(QWidget):
 
         # Add button functionality
         edit_action.triggered.connect(lambda: self.edit_action_clicked(widget))
+        delete_action.triggered.connect(lambda: self.delete_action_clicked(widget))
 
         # Create Menu
         menu.exec(self.mapToGlobal(position))
     
     def edit_action_clicked(self, widget: QLineEdit):
+        """
+        Prepares a QLineEdit widget for editing.
+
+        Args:
+            widget (QLineEdit): The QLineEdit widget to be edited.
+
+        Returns:
+            None
+        """
         # Update selected widget
         self._selected_line = widget
         # Disables unselected interactions
@@ -144,7 +154,37 @@ class ClassCard(QWidget):
         widget.setReadOnly(False)
         widget.setFocus()
     
+    def delete_action_clicked(self, widget: QLineEdit):
+        """
+        Removes the given QLineEdit widget from its parent QListWidget.
+
+        Args:
+            widget (QLineEdit): The QLineEdit widget to be removed.
+        """
+        # Delete field from diagram
+        self._process_task_signal.emit("fld -d " + self._class_label.text() + " " + widget.text(), self)
+
+        lists = [(self._list_field, self._list_field.count()),
+                (self._list_relation, self._list_relation.count()),
+                (self._list_method, self._list_method.count())]
+
+        for list_widget, count in lists:
+            for index in range(count):
+                item = list_widget.item(index)
+                if item is not None:
+                    line_edit = list_widget.itemWidget(item)
+                    if line_edit == widget:
+                        list_widget.removeItemWidget(item)
+                        list_widget.takeItem(index)
+                        return
+        
+
+
+    
     def unselected_state(self):
+        """
+        Returns the Class Card and all widgets to an unselected state
+        """
         self._enable_widgets_signal.emit(True, self) 
         self.enable_context_menus(True)
         self._selected_line.setReadOnly(True)
@@ -217,15 +257,6 @@ class ClassCard(QWidget):
         """
         print(input, self._old_text)
         if list == self._list_field:
-            '''
-            if input == self._old_text:
-                self.unselected_state()
-            elif self._old_text == "":
-                self._process_task_signal.emit("fld -a " + self._class_label.text() + " " + input, self)
-            else:
-                self._process_task_signal.emit("fld -d " + self._class_label.text() + " " + self._old_text, self)
-                self._process_task_signal.emit("fld -a " + self._class_label.text() + " " + input, self)
-            '''
             if self._old_text == "":
                 self._process_task_signal.emit("fld -a " + self._class_label.text() + " " + input, self)
             else:
