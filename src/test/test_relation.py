@@ -28,9 +28,9 @@ def test_contains():
     destination = Entity("ent2")
     type = next(iter(Relation.RELATIONSHIP_TYPE))
     rel = Relation(type, source, destination)
-    assert rel.contains(source) == True
-    assert rel.contains(destination) == True
-    assert rel.contains(Entity("ent3")) == False
+    assert rel.contains(source.get_name()) == True
+    assert rel.contains(destination.get_name()) == True
+    assert rel.contains("ent3") == False
 
 def test_to_string():
     source = Entity("ent1")
