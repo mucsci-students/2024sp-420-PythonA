@@ -5,7 +5,7 @@ from umleditor.mvc_model import *
 import re
 
 #list of all classes that need to be searched for commands
-classes = [Diagram, Entity, Relation, help_command]
+classes = [Diagram, Entity, Relation, UML_Method, help_command]
 
 
 def parse (c, input:str) -> list:
@@ -48,10 +48,13 @@ def parse (c, input:str) -> list:
         #if no args were provided, no entity can be found. Generate an error about invalid args
         if not args:
             raise CE.NeedsMoreInput()
-        
         #if the method is in entity, get entity that needs to be changed
             #pop the first element of args because it is the entity name, not a method param
         obj = c._diagram.get_entity(args.pop(0))
+    elif command_class == UML_Method:
+        if not args:
+            raise CE.NeedsMoreInput()
+        obj = c._diagram.get_entity(args.pop(0)).get_method(args.pop(0))
     elif command_class == help_command:
         obj = help_command
     
