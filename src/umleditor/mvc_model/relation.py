@@ -108,7 +108,4 @@ class Relation:
         if self._destination != other._destination:
             return False
         
-        if self._type != other._type:
-            return False
-        
         return True
