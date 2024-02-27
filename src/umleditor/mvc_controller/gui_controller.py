@@ -50,7 +50,7 @@ class ControllerGUI (Controller):
         # Successful task
         if "class -a" in task:
             self.add_class(task, widget)
-        elif "fld -a" in task or "fld -e" in task:
+        elif "fld -a" in task or "fld -r" in task:
             self.add_field(widget)
     
     def add_class(self, task: str, widget: QtWidgets):

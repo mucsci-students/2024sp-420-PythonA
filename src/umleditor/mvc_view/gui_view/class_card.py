@@ -260,7 +260,7 @@ class ClassCard(QWidget):
             if self._old_text == "":
                 self._process_task_signal.emit("fld -a " + self._class_label.text() + " " + input, self)
             else:
-                self._process_task_signal.emit("fld -e " + self._class_label.text() + " " + self._old_text + " " + input, self)
+                self._process_task_signal.emit("fld -r " + self._class_label.text() + " " + self._old_text + " " + input, self)
 
         elif list == self._list_method:
             # TODO given e.g. class add(one, two) run this command
