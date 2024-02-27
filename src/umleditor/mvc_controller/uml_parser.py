@@ -1,6 +1,6 @@
 from umleditor.mvc_model import CustomExceptions as CE
 from .uml_lexer import lex_input as lex
-from umleditor.mvc_model import *
+from umleditor.mvc_model import Diagram, Entity, Relation, UML_Method, help_command
 
 import re
 
@@ -29,19 +29,34 @@ def parse (c, input:str) -> list:
     command_str = ""
     #list slicing generates an empty list instead of an IndexError
     command_str = lex(bits[0:1], bits[1:2])
-    #Get the args that will be passed to that command
+ 
+    #Get the class the command is in
+    command_class = __find_class(command_str)
+
+    obj = c
+    #UML_Method has enough extra work that needs to be done for it that it's just its own case.
+    if command_class == UML_Method:
+        bits = bits[2:]
+        print("in UML_Method")
+        #get the object and prep the list for splitting
+        ent = c._diagram.get_entity(bits.pop(0))
+        obj = ent.get_method(bits.pop(0))
+        print("before split")
+        args = __split_list(bits[2:])
+        print("past split")
+        for arg in args:
+            check_args(arg)
+        print("above return")
+        return [getattr(obj, command_str)] + args
+    
+    #if the args aren't a list, check them as normal
     args = []
     if not str(bits[1:2]).__contains__("-"):
         args = check_args(bits[1:])
     else:
         args = check_args(bits[2:])
 
-    #Get the class the command is in
-    command_class = __find_class(command_str)
-
     #go from knowing which class to having a specific instance
-    #of the class that the method needs to be called on
-    obj = c
     if command_class == Diagram:
         obj = c._diagram
     elif command_class == Entity:
@@ -51,15 +66,32 @@ def parse (c, input:str) -> list:
         #if the method is in entity, get entity that needs to be changed
             #pop the first element of args because it is the entity name, not a method param
         obj = c._diagram.get_entity(args.pop(0))
-    elif command_class == UML_Method:
-        if not args:
-            raise CE.NeedsMoreInput()
-        obj = c._diagram.get_entity(args.pop(0)).get_method(args.pop(0))
     elif command_class == help_command:
         obj = help_command
     
     #build and return the callable + args
     return [getattr(obj, command_str)] + args
+
+def __split_list(args:list[str]) -> list[list[str]]:
+    '''Splits a list on the delimiter "|" 
+        
+        Returns
+            A list of lists containing the lhs and rhs of the "|"
+    '''
+    lhs = []
+    rhs = []
+    seen_bar = False
+    for arg in args: 
+        if arg == '|':
+            seen_bar = True
+            continue
+
+        rhs.append(arg) if seen_bar else lhs.append(arg)
+
+    if len(rhs) == 0:
+        return [lhs]
+    else:
+        return [lhs, rhs]
 
 def __find_class(function:str):
     '''Takes a function and locates the class that it exists in
@@ -75,7 +107,7 @@ def __find_class(function:str):
         
 def check_args(args:list):
     '''Given a list of args, checks to make sure each one is valid. 
-        Valid is defined as alphanumeric.
+        Valid is defined as containing alphanumeric chars, underscore, and hyphen.
         
         Args: 
             args(list): a list of strings to be checked
