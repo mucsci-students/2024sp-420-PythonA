@@ -20,7 +20,6 @@ class ViewGUI(QtWidgets.QMainWindow):
         Initializes the ViewGUI instance and connect menu buttons
         """
         super().__init__(*args, **kwargs)
-        print(os.path.dirname(__file__))
         self._ui = uic.loadUi(os.path.join(os.path.dirname(__file__),"uml.ui"), self)
         self.connect_menu()
         self._x = 0

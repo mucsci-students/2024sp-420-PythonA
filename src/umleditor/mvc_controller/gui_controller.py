@@ -72,7 +72,6 @@ class ControllerGUI (Controller):
         Parameters:
             widget: The widget instance.
         """
-        print(widget.get_selected_line().text())
         widget.get_selected_line().setReadOnly(True)
         widget.get_selected_line().setStyleSheet("background-color: white;")
         widget.enable_context_menus(True)

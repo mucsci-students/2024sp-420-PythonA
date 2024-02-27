@@ -255,7 +255,6 @@ class ClassCard(QWidget):
             input (str): The input text.
             widget (QWidget): The associated ClassCard widget.
         """
-        print(input, self._old_text)
         if list == self._list_field:
             if self._old_text == "":
                 self._process_task_signal.emit("fld -a " + self._class_label.text() + " " + input, self)
