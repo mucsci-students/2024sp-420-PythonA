@@ -48,6 +48,22 @@ class Entity:
             raise CustomExceptions.FieldExistsError(field_name)
         else:
             self._fields.append(field_name)
+    
+    def edit_field(self, old_field: str, new_field: str):
+        """
+        GUI specific command for editing fields
+
+        Args:
+            old_field (str): The field' name to be removed
+            new_field (str): The field' name to be added
+        """
+        if old_field == new_field:
+            return
+        else:
+            self.delete_field(old_field)
+            self.add_field(new_field)
+            
+
 
     def delete_field(self, field_name: str):
         """

@@ -134,10 +134,22 @@ class ClassCard(QWidget):
         menu.exec(self.mapToGlobal(position))
     
     def edit_action_clicked(self, widget: QLineEdit):
+        # Update selected widget
+        self._selected_line = widget
+        # Disables unselected interactions
+        self._enable_widgets_signal.emit(False, self) 
         self._old_text = widget.text()
+        self.enable_context_menus(False)
         widget.setStyleSheet("background-color: #ADD8E6;")
         widget.setReadOnly(False)
         widget.setFocus()
+    
+    def unselected_state(self):
+        self._enable_widgets_signal.emit(True, self) 
+        self.enable_context_menus(True)
+        self._selected_line.setReadOnly(True)
+        self._selected_line.setStyleSheet("background-color: white;")
+
 
     def menu_action_clicked(self, list: QListWidget, placeholder: str):
         """
@@ -152,6 +164,10 @@ class ClassCard(QWidget):
         text = QLineEdit()
         self._selected_line = text
         text.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+
+        # Set old_text as blank
+        self._old_text = ""
+
         # Pass the QLineEdit instance 
         text.customContextMenuRequested.connect(lambda pos: self.show_row_menu(pos, text))
 
@@ -199,12 +215,25 @@ class ClassCard(QWidget):
             input (str): The input text.
             widget (QWidget): The associated ClassCard widget.
         """
+        print(input, self._old_text)
         if list == self._list_field:
-            task = "fld -a " + self._class_label.text() + " " + input
+            '''
+            if input == self._old_text:
+                self.unselected_state()
+            elif self._old_text == "":
+                self._process_task_signal.emit("fld -a " + self._class_label.text() + " " + input, self)
+            else:
+                self._process_task_signal.emit("fld -d " + self._class_label.text() + " " + self._old_text, self)
+                self._process_task_signal.emit("fld -a " + self._class_label.text() + " " + input, self)
+            '''
+            if self._old_text == "":
+                self._process_task_signal.emit("fld -a " + self._class_label.text() + " " + input, self)
+            else:
+                self._process_task_signal.emit("fld -e " + self._class_label.text() + " " + self._old_text + " " + input, self)
+
         elif list == self._list_method:
             # TODO given e.g. class add(one, two) run this command
             pass
-        self._process_task_signal.emit(task, self)
 
     def get_selected_line(self):
         """
