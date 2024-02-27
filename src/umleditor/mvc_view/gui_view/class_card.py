@@ -100,16 +100,16 @@ class ClassCard(QWidget):
         menu = QMenu()
         field_action = QAction("Add Field", self)
         # TODO method_action = QAction("Add Method", self)
-        # TODO relation_action = QAction("Add Relation", self)
+        relation_action = QAction("Add Relation", self)
 
         menu.addAction(field_action)
         # TODO menu.addAction(method_action)
-        # TODO menu.addAction(relation_action)
+        menu.addAction(relation_action)
 
         # Add button functionality
         field_action.triggered.connect(lambda: self.menu_action_clicked(self._list_field, "Enter Field"))
         # TODO method_action.triggered.connect(lambda: self.menu_action_clicked(self._list_method, "e.g. add(int, int)"))
-        # TODO relation_action.triggered.connect(lambda: self.menu_action_clicked(self._list_field, "Enter Field"))
+        relation_action.triggered.connect(lambda: self.menu_action_clicked(self._list_relation, "e.g. src dst type"))
         # Create Menu
         menu.exec(self.mapToGlobal(position))
 
@@ -237,17 +237,7 @@ class ClassCard(QWidget):
             if isinstance(current_widget, QWidget):
                 stack.extend(current_widget.findChildren(QWidget))
 
-
-    def enable_all_items(self):
-        """
-        Enables context menus for all items within the ClassCard
-        """
-        self._class_label.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-        self._list_field.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-        self._list_method.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-        self._list_relation.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-
-    def verify_input(self, input: str, list: QListWidget):
+    def verify_input(self, new_text: str, list: QListWidget):
         """
         Sends a signal for the task to be processed.
 
@@ -257,13 +247,21 @@ class ClassCard(QWidget):
         """
         if list == self._list_field:
             if self._old_text == "":
-                self._process_task_signal.emit("fld -a " + self._class_label.text() + " " + input, self)
+                self._process_task_signal.emit("fld -a " + self._class_label.text() + " " + new_text, self)
             else:
-                self._process_task_signal.emit("fld -r " + self._class_label.text() + " " + self._old_text + " " + input, self)
+                self._process_task_signal.emit("fld -r " + self._class_label.text() + " " + self._old_text + " " + new_text, self)
 
-        elif list == self._list_method:
-            # TODO given e.g. class add(one, two) run this command
+        elif list == self._list_relation:
+            if self._old_text == "":
+                words = self.split_relation(new_text)
+                self._process_task_signal.emit("rel -a " + words[0] + " " + words[1] + " " + words[2], self)
             pass
+    
+    def split_relation(self, text: str):
+        words = text.split()
+        while len(words) < 3:
+            words.append("")  
+        return words
 
     def get_selected_line(self):
         """

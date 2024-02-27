@@ -50,8 +50,8 @@ class ControllerGUI (Controller):
         # Successful task
         if "class -a" in task:
             self.add_class(task, widget)
-        elif "fld -a" in task or "fld -r" in task:
-            self.add_field(widget)
+        elif "fld -a" in task or "fld -r" in task or "rel -a" in task:
+            self.acceptance_state(widget)
     
     def add_class(self, task: str, widget: QtWidgets):
         """
@@ -65,7 +65,7 @@ class ControllerGUI (Controller):
         entity_name = task.split()[-1]
         self._window.add_class_card(entity_name)
     
-    def add_field(self, widget):
+    def acceptance_state(self, widget):
         """
         Makes text read-only and returns diagram to original state
 
