@@ -81,9 +81,7 @@ class CustomExceptions:
         Exception raised when the relation being added has no types.
         
         Args:
-            source (Entity): The source of the relation that was being added.
-            destination (Entity): The destination of the relation that was
-                being added.
+            invalid_type (str): The type of the relation that was being added.
 
         """
         def __init__(self, invalid_type):
