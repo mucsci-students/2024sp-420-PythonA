@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QListWidget, QMenu, QLineEdit, QLabel, QListWidgetItem
 from PyQt6.QtGui import QAction
-from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtCore import Qt, pyqtSignal, QEvent
 
 class ClassCard(QWidget):
     """
@@ -23,6 +23,8 @@ class ClassCard(QWidget):
         super().__init__()
         self.set_name(name)
         self.initUI()
+        # Used for capturing escape key
+        self.installEventFilter(self)
     
     def set_name(self, name: str):
         """
@@ -167,6 +169,10 @@ class ClassCard(QWidget):
         # Delete field from diagram
         self._process_task_signal.emit("fld -d " + self._class_label.text() + " " + widget.text(), self)
 
+        # Enable widgets/menus
+        self._enable_widgets_signal.emit(True, self) 
+        self.enable_context_menus(True)
+
         lists = [(self._list_field, self._list_field.count()),
                 (self._list_relation, self._list_relation.count()),
                 (self._list_method, self._list_method.count())]
@@ -180,18 +186,6 @@ class ClassCard(QWidget):
                         list_widget.removeItemWidget(item)
                         list_widget.takeItem(index)
                         return
-        
-
-
-    
-    def unselected_state(self):
-        """
-        Returns the Class Card and all widgets to an unselected state
-        """
-        self._enable_widgets_signal.emit(True, self) 
-        self.enable_context_menus(True)
-        self._selected_line.setReadOnly(True)
-        self._selected_line.setStyleSheet("background-color: white;")
 
 
     def menu_action_clicked(self, list: QListWidget, placeholder: str):
@@ -225,6 +219,15 @@ class ClassCard(QWidget):
 
         # Disable all context menus while actively editing
         self.enable_context_menus(False)
+
+    def eventFilter(self, obj, event: QEvent):
+        if event.type() == QEvent.Type.KeyPress:
+            if event.key() == Qt.Key.Key_Escape:
+                # Handle the escape key press here
+                if self._selected_line != None:
+                    self.delete_action_clicked(self._selected_line)
+                return True
+        return super().eventFilter(obj, event)
     
     def enable_context_menus(self, enable: bool):
         """
@@ -262,10 +265,26 @@ class ClassCard(QWidget):
                 self._process_task_signal.emit("rel -e " +  self._old_text + " " + new_text, self)
     
     def split_relation(self, text: str):
+        """
+        Splits a string into three words.
+
+        Args:
+            text (str): The input string to be split.
+
+        Returns:
+            list: A list containing three words. If the input string has fewer than three words,
+                  the remaining elements in the list will be empty strings.
+        """
         words = text.split()
         while len(words) < 3:
             words.append("")  
         return words
+
+    def deselect_line(self):
+        """
+        Deselects the currently selected QLineEdit.
+        """
+        self._selected_line = None
 
     def get_selected_line(self):
         """
