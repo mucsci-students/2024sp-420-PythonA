@@ -167,7 +167,7 @@ class ClassCard(QWidget):
             widget (QLineEdit): The QLineEdit widget to be removed.
         """
         # Delete field from diagram
-        self._process_task_signal.emit("fld -d " + self._class_label.text() + " " + widget.text(), self)
+        #self._process_task_signal.emit("fld -d " + self._class_label.text() + " " + widget.text(), self)
 
         # Enable widgets/menus
         self._enable_widgets_signal.emit(True, self) 
@@ -183,6 +183,12 @@ class ClassCard(QWidget):
                 if item is not None:
                     line_edit = list_widget.itemWidget(item)
                     if line_edit == widget:
+                        # Call specific delete based on list field
+                        if list_widget is self._list_field:
+                            self._process_task_signal.emit("fld -d " + self._class_label.text() + " " + widget.text(), self)
+                        elif list_widget is self._list_relation:
+                            relation = widget.text().split()
+                            self._process_task_signal.emit("rel -d " + relation[0] + " " + relation[1], self)
                         list_widget.removeItemWidget(item)
                         list_widget.takeItem(index)
                         return
