@@ -50,7 +50,10 @@ class ControllerGUI (Controller):
         # Successful task
         if "class -a" in task:
             self.add_class(task, widget)
-        elif "fld -a" in task or "fld -r" in task or "rel -a" in task:
+        # No action required after deleting
+        elif "-d" in task:
+            return
+        else:
             self.acceptance_state(widget)
     
     def add_class(self, task: str, widget: QtWidgets):

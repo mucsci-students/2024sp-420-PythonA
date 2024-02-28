@@ -266,3 +266,21 @@ class Diagram:
                 return
         raise CustomExceptions.RelationDoesNotExistError(source, destination)
     
+    def edit_relation(self, old_src: str, old_dst: str, old_type: str,
+                      new_src:str, new_dst:str, new_type:str):
+        src = self.get_entity(new_src)
+        dst = self.get_entity(new_dst)
+        # If input unchanged, return
+        if old_src == new_src and old_dst == new_dst and old_type == new_type:
+            return
+        # If src, dst same attempt to change relation type
+        elif old_src == new_src and old_dst == new_dst:
+            self.change_relation_type(new_src, new_dst, new_type)
+        # Otherwise new relation T.F. add then delete
+        else:
+            self.add_relation(new_src, new_dst, new_type)
+            self.delete_relation(old_src, old_dst)
+
+
+
+    

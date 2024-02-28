@@ -131,8 +131,11 @@ class ClassCard(QWidget):
         edit_action.triggered.connect(lambda: self.edit_action_clicked(widget))
         delete_action.triggered.connect(lambda: self.delete_action_clicked(widget))
 
+        # Map the position to global coordinates
+        global_position = widget.mapToGlobal(position)
+
         # Create Menu
-        menu.exec(self.mapToGlobal(position))
+        menu.exec(global_position)
     
     def edit_action_clicked(self, widget: QLineEdit):
         """
@@ -255,7 +258,8 @@ class ClassCard(QWidget):
             if self._old_text == "":
                 words = self.split_relation(new_text)
                 self._process_task_signal.emit("rel -a " + words[0] + " " + words[1] + " " + words[2], self)
-            pass
+            else:
+                self._process_task_signal.emit("rel -e " +  self._old_text + " " + new_text, self)
     
     def split_relation(self, text: str):
         words = text.split()
