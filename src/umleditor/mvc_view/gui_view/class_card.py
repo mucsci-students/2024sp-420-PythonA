@@ -101,16 +101,16 @@ class ClassCard(QWidget):
         # Create menu & Actions
         menu = QMenu()
         field_action = QAction("Add Field", self)
-        # TODO method_action = QAction("Add Method", self)
+        method_action = QAction("Add Method", self)
         relation_action = QAction("Add Relation", self)
 
         menu.addAction(field_action)
-        # TODO menu.addAction(method_action)
+        menu.addAction(method_action)
         menu.addAction(relation_action)
 
         # Add button functionality
         field_action.triggered.connect(lambda: self.menu_action_clicked(self._list_field, "Enter Field"))
-        # TODO method_action.triggered.connect(lambda: self.menu_action_clicked(self._list_method, "e.g. add(int, int)"))
+        method_action.triggered.connect(lambda: self.menu_action_clicked(self._list_method, "e.g. method param1 param2..."))
         relation_action.triggered.connect(lambda: self.menu_action_clicked(self._list_relation, "e.g. dst type"))
         # Create Menu
         menu.exec(self.mapToGlobal(position))
@@ -229,7 +229,7 @@ class ClassCard(QWidget):
 
     def eventFilter(self, obj, event: QEvent):
         """
-        Captures escape key inputs and deletes a row if a selected row exists
+        Captures escape key inputs and escapes from a selected row
 
         Args:
             obj: The object for which events are being filtered.
@@ -318,6 +318,10 @@ class ClassCard(QWidget):
             else:
                 self._process_task_signal.emit("rel -e " + class_name + " " + self._old_text + " " +
                                                class_name + " " + new_text, self)
+        # Method task signals - methodName param1 param2      
+        else:
+            pass
+
     
     def split_relation(self, text: str):
         """
