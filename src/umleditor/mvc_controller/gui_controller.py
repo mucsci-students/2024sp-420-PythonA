@@ -43,15 +43,18 @@ class ControllerGUI (Controller):
             out = super().run(task)
         except Exception as e:
             # Ignore attempting to delete things that don't exist
-            if isinstance(e, CE.FieldNotFoundError):
-                pass
+            #if isinstance(e, CE.FieldNotFoundError) or isinstance(e, CE.RelationDoesNotExistError):
+            #    return
             self._window.invalid_input_message(str(e))
             return
         # Successful task
         if "class -a" in task:
             self.add_class(task, widget)
-        elif "fld -a" in task or "fld -r" in task:
-            self.add_field(widget)
+        # No action required after deleting
+        elif "-d" in task:
+            return
+        else:
+            self.acceptance_state(widget)
     
     def add_class(self, task: str, widget: QtWidgets):
         """
@@ -65,16 +68,16 @@ class ControllerGUI (Controller):
         entity_name = task.split()[-1]
         self._window.add_class_card(entity_name)
     
-    def add_field(self, widget):
+    def acceptance_state(self, widget):
         """
         Makes text read-only and returns diagram to original state
 
         Parameters:
             widget: The widget instance.
         """
-        print(widget.get_selected_line().text())
         widget.get_selected_line().setReadOnly(True)
         widget.get_selected_line().setStyleSheet("background-color: white;")
         widget.enable_context_menus(True)
+        widget.deselect_line()
         self._window.enable_widgets(True, self)
         

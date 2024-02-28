@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QListWidget, QMenu, QLineEdit, QLabel, QListWidgetItem
 from PyQt6.QtGui import QAction
-from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtCore import Qt, pyqtSignal, QEvent
 
 class ClassCard(QWidget):
     """
@@ -23,6 +23,8 @@ class ClassCard(QWidget):
         super().__init__()
         self.set_name(name)
         self.initUI()
+        # Used for capturing escape key
+        self.installEventFilter(self)
     
     def set_name(self, name: str):
         """
@@ -100,16 +102,16 @@ class ClassCard(QWidget):
         menu = QMenu()
         field_action = QAction("Add Field", self)
         # TODO method_action = QAction("Add Method", self)
-        # TODO relation_action = QAction("Add Relation", self)
+        relation_action = QAction("Add Relation", self)
 
         menu.addAction(field_action)
         # TODO menu.addAction(method_action)
-        # TODO menu.addAction(relation_action)
+        menu.addAction(relation_action)
 
         # Add button functionality
         field_action.triggered.connect(lambda: self.menu_action_clicked(self._list_field, "Enter Field"))
         # TODO method_action.triggered.connect(lambda: self.menu_action_clicked(self._list_method, "e.g. add(int, int)"))
-        # TODO relation_action.triggered.connect(lambda: self.menu_action_clicked(self._list_field, "Enter Field"))
+        relation_action.triggered.connect(lambda: self.menu_action_clicked(self._list_relation, "e.g. dst type"))
         # Create Menu
         menu.exec(self.mapToGlobal(position))
 
@@ -127,12 +129,18 @@ class ClassCard(QWidget):
         menu.addAction(edit_action)
         menu.addAction(delete_action)
 
+        # Save current text within row
+        self._old_text = widget.text()
+
         # Add button functionality
         edit_action.triggered.connect(lambda: self.edit_action_clicked(widget))
         delete_action.triggered.connect(lambda: self.delete_action_clicked(widget))
 
+        # Map the position to global coordinates
+        global_position = widget.mapToGlobal(position)
+
         # Create Menu
-        menu.exec(self.mapToGlobal(position))
+        menu.exec(global_position)
     
     def edit_action_clicked(self, widget: QLineEdit):
         """
@@ -161,8 +169,16 @@ class ClassCard(QWidget):
         Args:
             widget (QLineEdit): The QLineEdit widget to be removed.
         """
-        # Delete field from diagram
-        self._process_task_signal.emit("fld -d " + self._class_label.text() + " " + widget.text(), self)
+        # Boolean for whether diagram is also updated
+        is_new_row = False
+        if self._old_text == "":
+            is_new_row = True
+
+        # Enable widgets/menus
+        self._enable_widgets_signal.emit(True, self) 
+        self.enable_context_menus(True)
+
+        class_name = self._class_label.text()
 
         lists = [(self._list_field, self._list_field.count()),
                 (self._list_relation, self._list_relation.count()),
@@ -174,21 +190,15 @@ class ClassCard(QWidget):
                 if item is not None:
                     line_edit = list_widget.itemWidget(item)
                     if line_edit == widget:
+                        # Call specific delete based on list field
+                        if list_widget is self._list_field and not is_new_row:
+                            self._process_task_signal.emit("fld -d " + class_name + " " + widget.text(), self)
+                        elif list_widget is self._list_relation and not is_new_row:
+                            relation = self.split_relation(widget.text())
+                            self._process_task_signal.emit("rel -d " + class_name + " " + relation[0], self)
                         list_widget.removeItemWidget(item)
                         list_widget.takeItem(index)
                         return
-        
-
-
-    
-    def unselected_state(self):
-        """
-        Returns the Class Card and all widgets to an unselected state
-        """
-        self._enable_widgets_signal.emit(True, self) 
-        self.enable_context_menus(True)
-        self._selected_line.setReadOnly(True)
-        self._selected_line.setStyleSheet("background-color: white;")
 
 
     def menu_action_clicked(self, list: QListWidget, placeholder: str):
@@ -222,6 +232,25 @@ class ClassCard(QWidget):
 
         # Disable all context menus while actively editing
         self.enable_context_menus(False)
+
+    def eventFilter(self, obj, event: QEvent):
+        """
+        Captures escape key inputs and deletes a row if a selected row exists
+
+        Args:
+            obj: The object for which events are being filtered.
+            event (QEvent): The event to be filtered.
+
+        Returns:
+            bool: True if the event has been handled, False otherwise.
+        """
+        if event.type() == QEvent.Type.KeyPress:
+            if event.key() == Qt.Key.Key_Escape:
+                # Handle the escape key press here
+                if self._selected_line != None:
+                    self.delete_action_clicked(self._selected_line)
+                return True
+        return super().eventFilter(obj, event)
     
     def enable_context_menus(self, enable: bool):
         """
@@ -237,17 +266,7 @@ class ClassCard(QWidget):
             if isinstance(current_widget, QWidget):
                 stack.extend(current_widget.findChildren(QWidget))
 
-
-    def enable_all_items(self):
-        """
-        Enables context menus for all items within the ClassCard
-        """
-        self._class_label.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-        self._list_field.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-        self._list_method.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-        self._list_relation.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-
-    def verify_input(self, input: str, list: QListWidget):
+    def verify_input(self, new_text: str, list: QListWidget):
         """
         Sends a signal for the task to be processed.
 
@@ -255,16 +274,44 @@ class ClassCard(QWidget):
             input (str): The input text.
             widget (QWidget): The associated ClassCard widget.
         """
-        print(input, self._old_text)
+        class_name = self._class_label.text()
+        # Field task signals
         if list == self._list_field:
             if self._old_text == "":
-                self._process_task_signal.emit("fld -a " + self._class_label.text() + " " + input, self)
+                self._process_task_signal.emit("fld -a " + class_name + " " + new_text, self)
             else:
-                self._process_task_signal.emit("fld -r " + self._class_label.text() + " " + self._old_text + " " + input, self)
+                self._process_task_signal.emit("fld -r " + class_name + " " + 
+                                               self._old_text + " " + new_text, self)
+        # Relation task signals - (Source, Destination, Type)
+        elif list == self._list_relation:
+            if self._old_text == "":
+                words = self.split_relation(new_text)
+                self._process_task_signal.emit("rel -a " + class_name + " " + " ".join(words), self)
+            else:
+                self._process_task_signal.emit("rel -e " + class_name + " " + self._old_text + " " +
+                                               class_name + " " + new_text, self)
+    
+    def split_relation(self, text: str):
+        """
+        Splits a string into two words.
 
-        elif list == self._list_method:
-            # TODO given e.g. class add(one, two) run this command
-            pass
+        Args:
+            text (str): The input string to be split.
+
+        Returns:
+            list: A list containing three words. If the input string has fewer than two words,
+                  the remaining elements in the list will be empty strings.
+        """
+        words = text.split()
+        while len(words) < 2:
+            words.append("")  
+        return words
+
+    def deselect_line(self):
+        """
+        Deselects the currently selected QLineEdit.
+        """
+        self._selected_line = None
 
     def get_selected_line(self):
         """
