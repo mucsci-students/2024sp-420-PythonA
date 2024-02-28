@@ -169,15 +169,6 @@ class ClassCard(QWidget):
         Args:
             widget (QLineEdit): The QLineEdit widget to be removed.
         """
-        # Boolean for whether diagram is also updated
-        is_new_row = False
-        if self._old_text == "":
-            is_new_row = True
-
-        # Enable widgets/menus
-        self._enable_widgets_signal.emit(True, self) 
-        self.enable_context_menus(True)
-
         class_name = self._class_label.text()
 
         lists = [(self._list_field, self._list_field.count()),
@@ -191,14 +182,17 @@ class ClassCard(QWidget):
                     line_edit = list_widget.itemWidget(item)
                     if line_edit == widget:
                         # Call specific delete based on list field
-                        if list_widget is self._list_field and not is_new_row:
+                        if list_widget is self._list_field:
                             self._process_task_signal.emit("fld -d " + class_name + " " + widget.text(), self)
-                        elif list_widget is self._list_relation and not is_new_row:
+                        elif list_widget is self._list_relation:
                             relation = self.split_relation(widget.text())
                             self._process_task_signal.emit("rel -d " + class_name + " " + relation[0], self)
                         list_widget.removeItemWidget(item)
                         list_widget.takeItem(index)
                         return
+        # Enable widgets/menus
+        self._enable_widgets_signal.emit(True, self) 
+        self.enable_context_menus(True)
 
 
     def menu_action_clicked(self, list: QListWidget, placeholder: str):
@@ -248,9 +242,43 @@ class ClassCard(QWidget):
             if event.key() == Qt.Key.Key_Escape:
                 # Handle the escape key press here
                 if self._selected_line != None:
-                    self.delete_action_clicked(self._selected_line)
+                    self.escape_from_row()
                 return True
         return super().eventFilter(obj, event)
+    
+    def escape_from_row(self):
+        """
+        Method to escape from row editing mode. If it's a newly added row, removes the row from the class card.
+        Otherwise, returns the row to its original state.
+        """
+        lists = [(self._list_field, self._list_field.count()),
+                (self._list_relation, self._list_relation.count()),
+                (self._list_method, self._list_method.count())]
+        
+        # If newly added row, just remove from class card
+        if self._old_text == "":
+            for list_widget, count in lists:
+                for index in range(count):
+                    item = list_widget.item(index)
+                    if item is not None:
+                        line_edit = list_widget.itemWidget(item)
+                        if line_edit == self._selected_line:
+                            # Call specific delete based on list field
+                            list_widget.removeItemWidget(item)
+                            list_widget.takeItem(index)
+                            break
+        # Otherwise return the row to it's original state
+        else:
+            self._selected_line.setText(self._old_text)
+
+        # Return to unselected state
+        self._enable_widgets_signal.emit(True, self) 
+        self.enable_context_menus(True)
+        self._selected_line.setReadOnly(True)
+        self._selected_line.setStyleSheet("background-color: white;")
+
+
+
     
     def enable_context_menus(self, enable: bool):
         """
