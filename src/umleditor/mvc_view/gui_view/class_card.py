@@ -111,7 +111,7 @@ class ClassCard(QWidget):
         # Add button functionality
         field_action.triggered.connect(lambda: self.menu_action_clicked(self._list_field, "Enter Field"))
         # TODO method_action.triggered.connect(lambda: self.menu_action_clicked(self._list_method, "e.g. add(int, int)"))
-        relation_action.triggered.connect(lambda: self.menu_action_clicked(self._list_relation, "e.g. src dst type"))
+        relation_action.triggered.connect(lambda: self.menu_action_clicked(self._list_relation, "e.g. dst type"))
         # Create Menu
         menu.exec(self.mapToGlobal(position))
 
@@ -173,6 +173,8 @@ class ClassCard(QWidget):
         self._enable_widgets_signal.emit(True, self) 
         self.enable_context_menus(True)
 
+        class_name = self._class_label.text()
+
         lists = [(self._list_field, self._list_field.count()),
                 (self._list_relation, self._list_relation.count()),
                 (self._list_method, self._list_method.count())]
@@ -185,10 +187,10 @@ class ClassCard(QWidget):
                     if line_edit == widget:
                         # Call specific delete based on list field
                         if list_widget is self._list_field:
-                            self._process_task_signal.emit("fld -d " + self._class_label.text() + " " + widget.text(), self)
+                            self._process_task_signal.emit("fld -d " + class_name + " " + widget.text(), self)
                         elif list_widget is self._list_relation:
                             relation = widget.text().split()
-                            self._process_task_signal.emit("rel -d " + relation[0] + " " + relation[1], self)
+                            self._process_task_signal.emit("rel -d " + class_name + " " + relation[0], self)
                         list_widget.removeItemWidget(item)
                         list_widget.takeItem(index)
                         return
@@ -257,32 +259,36 @@ class ClassCard(QWidget):
             input (str): The input text.
             widget (QWidget): The associated ClassCard widget.
         """
+        class_name = self._class_label.text()
+        # Field task signals
         if list == self._list_field:
             if self._old_text == "":
-                self._process_task_signal.emit("fld -a " + self._class_label.text() + " " + new_text, self)
+                self._process_task_signal.emit("fld -a " + class_name + " " + new_text, self)
             else:
-                self._process_task_signal.emit("fld -r " + self._class_label.text() + " " + self._old_text + " " + new_text, self)
-
+                self._process_task_signal.emit("fld -r " + class_name + " " + 
+                                               self._old_text + " " + new_text, self)
+        # Relation task signals - (Source, Destination, Type)
         elif list == self._list_relation:
             if self._old_text == "":
                 words = self.split_relation(new_text)
-                self._process_task_signal.emit("rel -a " + words[0] + " " + words[1] + " " + words[2], self)
+                self._process_task_signal.emit("rel -a " + class_name + " " + " ".join(words), self)
             else:
-                self._process_task_signal.emit("rel -e " +  self._old_text + " " + new_text, self)
+                self._process_task_signal.emit("rel -e " + class_name + " " + self._old_text + " " +
+                                               class_name + " " + new_text, self)
     
     def split_relation(self, text: str):
         """
-        Splits a string into three words.
+        Splits a string into two words.
 
         Args:
             text (str): The input string to be split.
 
         Returns:
-            list: A list containing three words. If the input string has fewer than three words,
+            list: A list containing three words. If the input string has fewer than two words,
                   the remaining elements in the list will be empty strings.
         """
         words = text.split()
-        while len(words) < 3:
+        while len(words) < 2:
             words.append("")  
         return words
 
