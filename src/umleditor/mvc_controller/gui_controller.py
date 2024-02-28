@@ -43,8 +43,8 @@ class ControllerGUI (Controller):
             out = super().run(task)
         except Exception as e:
             # Ignore attempting to delete things that don't exist
-            if isinstance(e, CE.FieldNotFoundError):
-                pass
+            #if isinstance(e, CE.FieldNotFoundError) or isinstance(e, CE.RelationDoesNotExistError):
+            #    return
             self._window.invalid_input_message(str(e))
             return
         # Successful task

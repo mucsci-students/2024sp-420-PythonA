@@ -129,6 +129,9 @@ class ClassCard(QWidget):
         menu.addAction(edit_action)
         menu.addAction(delete_action)
 
+        # Save current text within row
+        self._old_text = widget.text()
+
         # Add button functionality
         edit_action.triggered.connect(lambda: self.edit_action_clicked(widget))
         delete_action.triggered.connect(lambda: self.delete_action_clicked(widget))
@@ -166,8 +169,10 @@ class ClassCard(QWidget):
         Args:
             widget (QLineEdit): The QLineEdit widget to be removed.
         """
-        # Delete field from diagram
-        #self._process_task_signal.emit("fld -d " + self._class_label.text() + " " + widget.text(), self)
+        # Boolean for whether diagram is also updated
+        is_new_row = False
+        if self._old_text == "":
+            is_new_row = True
 
         # Enable widgets/menus
         self._enable_widgets_signal.emit(True, self) 
@@ -186,10 +191,10 @@ class ClassCard(QWidget):
                     line_edit = list_widget.itemWidget(item)
                     if line_edit == widget:
                         # Call specific delete based on list field
-                        if list_widget is self._list_field:
+                        if list_widget is self._list_field and not is_new_row:
                             self._process_task_signal.emit("fld -d " + class_name + " " + widget.text(), self)
-                        elif list_widget is self._list_relation:
-                            relation = widget.text().split()
+                        elif list_widget is self._list_relation and not is_new_row:
+                            relation = self.split_relation(widget.text())
                             self._process_task_signal.emit("rel -d " + class_name + " " + relation[0], self)
                         list_widget.removeItemWidget(item)
                         list_widget.takeItem(index)
