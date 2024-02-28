@@ -234,6 +234,16 @@ class ClassCard(QWidget):
         self.enable_context_menus(False)
 
     def eventFilter(self, obj, event: QEvent):
+        """
+        Captures escape key inputs and deletes a row if a selected row exists
+
+        Args:
+            obj: The object for which events are being filtered.
+            event (QEvent): The event to be filtered.
+
+        Returns:
+            bool: True if the event has been handled, False otherwise.
+        """
         if event.type() == QEvent.Type.KeyPress:
             if event.key() == Qt.Key.Key_Escape:
                 # Handle the escape key press here
