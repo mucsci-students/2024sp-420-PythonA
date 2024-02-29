@@ -6,7 +6,7 @@ from umleditor.mvc_model import CustomExceptions as CE
 from umleditor.mvc_model.diagram import Diagram
 from umleditor.mvc_controller.uml_parser import check_args
 import os
-
+import sys
 
 class Controller:
     def __init__(self, d:Diagram = Diagram(), q:bool = False) -> None:
@@ -28,7 +28,7 @@ class Controller:
             
             except TypeError as t:
                 raise CE.InvalidArgCountError(t)
-            except ValueError:
+            except ValueError as v:
                 raise CE.NeedsMoreInput()
             except Exception as e:
                 raise e
