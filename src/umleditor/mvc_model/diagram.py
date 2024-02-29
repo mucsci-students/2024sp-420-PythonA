@@ -292,7 +292,3 @@ class Diagram:
         else:
             self.add_relation(new_src, new_dst, new_type)
             self.delete_relation(old_src, old_dst)
-
-
-
-    

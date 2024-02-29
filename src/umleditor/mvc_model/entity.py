@@ -13,12 +13,12 @@ class Entity:
         self._methods: list[UML_Method] = []
 
     def get_name(self):
-        '''
+        """
         Returns the name of the entity.
 
         # Returns:
             (str): The name of the entity
-        '''
+        """
         return self._name
 
     def set_name(self, entity_name: str):
@@ -95,6 +95,24 @@ class Entity:
         else:
             self._fields[self._fields.index(old_field)] = new_field
 
+    def get_method(self, method_name:str):
+        """
+        Checks if a method exists inside an entity.
+
+        Args:
+            method_name (str): The method's name to be checked for.
+
+        Raises:
+            None.
+
+        Returns:
+            bool: True if the method exists. False if it does not.
+        """
+        for m in self._methods:
+            if m.get_method_name() == method_name:
+                return m
+        raise CustomExceptions.MethodNotFoundError(method_name)
+        
     def add_method(self, method_name: str):
         """
         Adds a new method to the to the list.
@@ -172,7 +190,7 @@ class Entity:
         
             Return: a comma separated list of all methods and their params in this entity
         '''
-        return ", ".join(str(m) for m in self._methods) + '\n'
+        return ", ".join(m.__str__() for m in self._methods) + '\n'
 
     def __str__(self) -> str:
         """
@@ -192,7 +210,12 @@ class Entity:
         '''
         return self._name == other._name
 
+#====================================================================================#
+#                                  Method Definition
+#====================================================================================#
+     
 class UML_Method:
+
     def __init__(self, method_name=''):
         """
         Creates a UML_Method object.
@@ -255,7 +278,7 @@ class UML_Method:
         for new_param in params:
             if new_param in self._params:
                 raise CustomExceptions.ParameterExistsError(new_param)
-        self._params.extend(params)
+            self._params.append(new_param)
 
     def remove_parameters(self, params: list[str]):
         """
@@ -274,7 +297,7 @@ class UML_Method:
             if remove_param not in self._params:
                 raise CustomExceptions.ParameterNotFoundError(remove_param)
         for remove_param in params:
-            del self._params[self._params.index(remove_param)]
+            self._params.remove(remove_param)
 
     def change_parameters(self, old_params: list[str], new_params: list[str]):
         """
@@ -325,3 +348,17 @@ class UML_Method:
         result += "\n\t" + self.get_method_name() + "'s Params:\n\t\t"
         param_results = ', '.join(p for p in self._params)
         return result + param_results
+    
+    def __eq__ (self, o):
+        """Equality operator for Methods - checks equality of both fields"""
+        if self is o:
+            return True
+        if o is None: 
+            return False
+        
+        if self._name != o._name:
+            return False
+        for param in self._params:
+            if not o._params.__contains__(param):
+                return False
+        return True

@@ -39,7 +39,7 @@ def help_menu():
         "Parameter Commands:\n\t"
         "prm -a 'class' 'mthd' 'prm' - adds one or more params to a method (seperate each with a space)\n\t"
         "prm -d 'class' 'mthd' 'prm' - deletes the param from the method if it exists\n\t"
-        "prm -c 'class' 'mthd' 'prm' - replaces the params in the method with the new param(s) supplied\n"
+        "prm -c 'class' 'mthd' 'old' | 'new' - replaces the 'old' param(s) in the method with the 'new' param(s) supplied\n"
         #Relation Commands
         "Relation Commands:\n\t"
         "rel -a 'src' 'dest' 'type' - adds a relationship between class 'src' and class 'dest' of type 'type'\n\t"
