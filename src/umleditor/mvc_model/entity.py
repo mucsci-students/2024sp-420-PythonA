@@ -93,7 +93,7 @@ class Entity:
         else:
             self._fields[self._fields.index(old_field)] = new_field
 
-    def has_method(self, method_name:str):
+    def get_method(self, method_name:str):
         """
         Checks if a method exists inside an entity.
 
@@ -108,28 +108,8 @@ class Entity:
         """
         for m in self._methods:
             if m.get_method_name() == method_name:
-                return True
-        return False
-
-    def get_method(self, method_name:str):
-        """
-        Gets a method object from inside an entity if it exists.
-
-        Args:
-            method_name (str): The method's name to be gotten from the entity.
-
-        Raises:
-            CustomExceptions.MethodNotFoundError: If the method does not
-                exist in the Entity.
-
-        Returns:
-            method (UML_Method): The method named method_name.
-        """
-        temp = UML_Method(method_name)
-        method = self._methods[self._methods.index(temp)] if self.has_method(method_name) else None
-        if method == None:
-            raise CustomExceptions.MethodNotFoundError(method_name)
-        return method
+                return m
+        raise CustomExceptions.MethodNotFoundError(method_name)
         
     def add_method(self, method_name: str):
         """
