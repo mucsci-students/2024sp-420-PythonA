@@ -1,7 +1,7 @@
 import os
 from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6 import uic
-from PyQt6.QtWidgets import QMessageBox, QWidget, QVBoxLayout, QMenuBar, QLineEdit
+from PyQt6.QtWidgets import QMessageBox, QWidget, QMenuBar, QGridLayout
 from PyQt6.QtCore import pyqtSignal
 from umleditor.mvc_view.gui_view.class_input_dialog import ClassInputDialog
 from umleditor.mvc_view.gui_view.class_card import ClassCard
@@ -22,7 +22,13 @@ class ViewGUI(QtWidgets.QMainWindow):
         super().__init__(*args, **kwargs)
         self._ui = uic.loadUi(os.path.join(os.path.dirname(__file__),"uml.ui"), self)
         self.connect_menu()
-        self._x = 0
+        # Create grid and max sizes
+        self._grid_layout = QGridLayout(self._ui.centralwidget)
+        self._max_size = 20
+        self._max_column = 5
+        self._size = 0
+        self._row = 0
+        self._column = 0
     
     def get_signal(self):
         """
@@ -71,6 +77,9 @@ class ViewGUI(QtWidgets.QMainWindow):
         """
         On Confirm emits signal to process task
         """
+        if self._size >= self._max_size:
+            self.invalid_input_message("No more than " + str(self._max_size) + " Class Cards in a single diagram!")
+            return
         task = 'class -a ' + self._dialog.input_text.text()
         # Emit signal to controller to handle task
         self._process_task_signal.emit(task, self._dialog)
@@ -86,8 +95,18 @@ class ViewGUI(QtWidgets.QMainWindow):
         class_card = ClassCard(name) 
         class_card.get_task_signal().connect(self.forward_signal)
         class_card.get_enable_signal().connect(self.enable_widgets)
-        self._ui.gridLayout.addWidget(class_card, self._x, self._x)
-        self._x = self._x + 1
+        if self._size == 0:
+            self._grid_layout.addWidget(class_card, self._row, self._column)
+            self._size += 1
+        else: 
+            if self._column < self._max_column - 1:
+                self._column += 1
+            else:
+                self._row += 1
+                self._column = 0
+            self._size += 1
+            self._grid_layout.addWidget(class_card, self._row, self._column)
+
 
     def enable_widgets(self, enabled: bool, active_widget: QWidget):
         """
