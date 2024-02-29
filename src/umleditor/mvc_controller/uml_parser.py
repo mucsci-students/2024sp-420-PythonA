@@ -37,16 +37,13 @@ def parse (c, input:str) -> list:
     #UML_Method has enough extra work that needs to be done for it that it's just its own case.
     if command_class == UML_Method:
         bits = bits[2:]
-        print("in UML_Method")
         #get the object and prep the list for splitting
         ent = c._diagram.get_entity(bits.pop(0))
         obj = ent.get_method(bits.pop(0))
-        print("before split")
-        args = __split_list(bits[2:])
-        print("past split")
+        args = __split_list(bits)
         for arg in args:
             check_args(arg)
-        print("above return")
+        print("before return")
         return [getattr(obj, command_str)] + args
     
     #if the args aren't a list, check them as normal

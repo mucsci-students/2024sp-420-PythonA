@@ -29,7 +29,7 @@ class Controller:
             except TypeError as t:
                 raise CE.InvalidArgCountError(t)
             except ValueError as v:
-                print(str(v))
+                raise CE.NeedsMoreInput()
             except Exception as e:
                 raise e
 

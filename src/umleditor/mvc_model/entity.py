@@ -208,7 +208,7 @@ class Entity:
         
             Return: a comma separated list of all methods and their params in this entity
         '''
-        return ", ".join(str(m) for m in self._methods) + '\n'
+        return ", ".join(m.__str__() for m in self._methods) + '\n'
 
     def __str__(self) -> str:
         """
@@ -228,7 +228,12 @@ class Entity:
         '''
         return self._name == other._name
 
+#====================================================================================#
+#                                  Method Definition
+#====================================================================================#
+     
 class UML_Method:
+
     def __init__(self, method_name=''):
         """
         Creates a UML_Method object.
@@ -289,9 +294,10 @@ class UML_Method:
             None.
         """
         for new_param in params:
+            print("outside if")
             if new_param in self._params:
                 raise CustomExceptions.ParameterExistsError(new_param)
-        self._params.extend(params)
+            self._params.append(new_param)
 
     def remove_parameters(self, params: list[str]):
         """
@@ -310,7 +316,7 @@ class UML_Method:
             if remove_param not in self._params:
                 raise CustomExceptions.ParameterNotFoundError(remove_param)
         for remove_param in params:
-            del self._params[self._params.index(remove_param)]
+            self._params.remove(remove_param)
 
     def change_parameters(self, old_params: list[str], new_params: list[str]):
         """
@@ -361,3 +367,17 @@ class UML_Method:
         result += "\n\t" + self.get_method_name() + "'s Params:\n\t\t"
         param_results = ', '.join(p for p in self._params)
         return result + param_results
+    
+    def __eq__ (self, o):
+        """Equality operator for Methods - checks equality of both fields"""
+        if self is o:
+            return True
+        if o is None: 
+            return False
+        
+        if self._name != o._name:
+            return False
+        for param in self._params:
+            if not o._params.__contains__(param):
+                return False
+        return True
