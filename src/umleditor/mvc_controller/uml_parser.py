@@ -105,6 +105,7 @@ def __find_class(function:str):
 def check_args(args:list):
     '''Given a list of args, checks to make sure each one is valid. 
         Valid is defined as containing alphanumeric chars, underscore, and hyphen.
+
         
         Args: 
             args(list): a list of strings to be checked

@@ -47,7 +47,7 @@ class Entity:
         if field_name in self._fields:
             raise CustomExceptions.FieldExistsError(field_name)
         else:
-            self._fields.append(field_name)
+            self._fields.append(field_name)        
 
     def delete_field(self, field_name: str):
         """
@@ -85,6 +85,8 @@ class Entity:
         Returns:
             None.
         """
+        if old_field == new_field:
+            return
         if old_field not in self._fields:
             raise CustomExceptions.FieldNotFoundError(old_field)
         

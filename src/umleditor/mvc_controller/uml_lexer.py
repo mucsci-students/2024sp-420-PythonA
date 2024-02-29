@@ -9,6 +9,7 @@ _command_flag_map = {
     "mthd"  : ["a","d","r"],
     "prm"   : ["a","d","c"],
     "rel"   : ["a","t","d"],
+
     "save"  : [""],
     "load"  : [""],
     "exit"  : [""],

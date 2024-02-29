@@ -5,6 +5,7 @@ from PyQt6.QtWidgets import QInputDialog, QLineEdit
 from PyQt6.QtCore import QDir
 from umleditor.mvc_controller.controller import Controller
 from umleditor.mvc_view.gui_view.class_input_dialog import ClassInputDialog
+from umleditor.mvc_model.custom_exceptions import CustomExceptions as CE
 
 class ControllerGUI (Controller):
     """
@@ -37,16 +38,23 @@ class ControllerGUI (Controller):
             task (str): The task to run.
             widget (QtWidgets): Used to set particular widget to its completed state
         """
+        print(task)
         try:
             out = super().run(task)
         except Exception as e:
+            # Ignore attempting to delete things that don't exist
+            #if isinstance(e, CE.FieldNotFoundError) or isinstance(e, CE.RelationDoesNotExistError):
+            #    return
             self._window.invalid_input_message(str(e))
             return
         # Successful task
         if "class -a" in task:
             self.add_class(task, widget)
-        elif "fld -a" in task:
-            self.add_field(widget)
+        # No action required after deleting
+        elif "-d" in task:
+            return
+        else:
+            self.acceptance_state(widget)
     
     def add_class(self, task: str, widget: QtWidgets):
         """
@@ -60,7 +68,7 @@ class ControllerGUI (Controller):
         entity_name = task.split()[-1]
         self._window.add_class_card(entity_name)
     
-    def add_field(self, widget):
+    def acceptance_state(self, widget):
         """
         Makes text read-only and returns diagram to original state
 
@@ -69,6 +77,7 @@ class ControllerGUI (Controller):
         """
         widget.get_selected_line().setReadOnly(True)
         widget.get_selected_line().setStyleSheet("background-color: white;")
-        widget.enable_all_items()
+        widget.enable_context_menus(True)
+        widget.deselect_line()
         self._window.enable_widgets(True, self)
         
