@@ -7,13 +7,9 @@ _command_flag_map = {
     "list"  : ["a","c","r","d"],
     "fld"   : ["a","d","r"],
     "mthd"  : ["a","d","r"],
-<<<<<<< HEAD
-    "rel"   : ["a","t","d"],
-=======
     "prm"   : ["a","d","c"],
-    "rel"   : ["a","t","d"],
+    "rel"   : ["a","t","d", "e"],
 
->>>>>>> develop
     "save"  : [""],
     "load"  : [""],
     "exit"  : [""],
@@ -28,12 +24,8 @@ _command_function_map = {
     "list"  : ["list_everything","list_entities","list_relations","list_entity_details"],
     "fld"   : ["add_field","delete_field","rename_field"],
     "mthd"  : ["add_method","delete_method","rename_method"],
-<<<<<<< HEAD
-    "rel"   : ["add_relation","change_relation_type","delete_relation"],
-=======
     "prm"   : ["add_parameters", "remove_parameters", "change_parameters"],
-    "rel"   : ["add_relation", "change_relation_type", "delete_relation"],
->>>>>>> develop
+    "rel"   : ["add_relation", "change_relation_type", "delete_relation", "edit_relation"],
     "save"  : ["save"],
     "load"  : ["load"],
     "exit"  : ["quit"],
