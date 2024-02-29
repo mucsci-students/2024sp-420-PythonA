@@ -276,7 +276,6 @@ class UML_Method:
             None.
         """
         for new_param in params:
-            print("outside if")
             if new_param in self._params:
                 raise CustomExceptions.ParameterExistsError(new_param)
             self._params.append(new_param)

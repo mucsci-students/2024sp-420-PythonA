@@ -43,7 +43,6 @@ def parse (c, input:str) -> list:
         args = __split_list(bits)
         for arg in args:
             check_args(arg)
-        print("before return")
         return [getattr(obj, command_str)] + args
     
     #if the args aren't a list, check them as normal
