@@ -1,4 +1,5 @@
 import os
+import sys
 from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6 import uic
 from PyQt6.QtWidgets import QMessageBox, QWidget, QMenuBar, QGridLayout
@@ -46,7 +47,7 @@ class ViewGUI(QtWidgets.QMainWindow):
         self._ui.actionAdd_Class.triggered.connect(self.add_class_click)
         self._ui.actionSave.triggered.connect(self.save_click)
         self._ui.actionLoad.triggered.connect(self.load_click)
-        # self._ui.actionExit.triggered.connect(self.exit_click)
+        self._ui.actionExit.triggered.connect(self.exit_click)
 
     def invalid_input_message(self, warning: str):
         """
@@ -133,7 +134,6 @@ class ViewGUI(QtWidgets.QMainWindow):
             if item is not None:
                 class_card = item.widget()
                 if isinstance(class_card, ClassCard):
-                    print(i)
                     self._grid_layout.removeWidget(class_card)
                     class_card.deleteLater() 
                     self._size -= 1  # Decrement the total count of class cards
@@ -173,6 +173,23 @@ class ViewGUI(QtWidgets.QMainWindow):
         task = 'load ' + self._dialog.input_text.text()
         # Emit signal to controller to handle task
         self._process_task_signal.emit(task, self._dialog)
+
+    #exit
+    def exit_click(self):
+        """
+        Opens a dialog for exit and connects confirm button
+        """
+        msg = QMessageBox()
+        msg.setWindowTitle("Exit")
+        msg.setText("Are you sure you want to proceed?(Don't forget to save your digram:)")
+        msg.setIcon(QMessageBox.Icon.Question)
+        msg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        
+        result = msg.exec()
+        if result == QMessageBox.StandardButton.Yes:
+            sys.exit()
+        else:
+            pass
 
 ##################################################################################################
 
