@@ -1,4 +1,0 @@
-class -a Class1
-class -a Class2
-list -a
-list -c
