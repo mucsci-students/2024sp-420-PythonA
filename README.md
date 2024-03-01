@@ -35,10 +35,10 @@ If you do not have python installed, install the latest version for your operati
 
 # Download the Project
 
-## In a Terminal
+### In a Terminal
 To dowload the project directly into a terminal, git tools will be required. Follow the instructions [here](https://github.com/git-guides/install-git) to install git if it is not already installed.
 
-## In a Desktop Environment
+### In a Desktop Environment
 Download the zip [here](https://github.com/mucsci-students/2024sp-420-CWorld/archive/refs/heads/main.zip) and extract it.
 
 
@@ -46,9 +46,15 @@ Download the zip [here](https://github.com/mucsci-students/2024sp-420-CWorld/arc
 
 Regardless of operating system, this project will install dependencies when it is built. If the build script is run outside a virtual environment, it may modify files on your computer unpredictably. To setup a virtual environment, follow [this link](https://docs.python.org/3/library/venv.html).
 
+<ol>
+<li> Open a terminal and navigate to the folder that the project was cloned/extracted into. Basics of terminal navigation can be found at the following links for [Mac](https://www.macworld.com/article/221277/command-line-navigating-files-folders-mac-terminal.html), [Windows PowerShell](https://wiki.communitydata.science/Windows_terminal_navigation), [Windows Command Prompt](https://www.digitalcitizen.life/command-prompt-how-use-basic-commands/), and [Linux](https://www.linode.com/docs/guides/linux-navigation-commands/). 
+<li> Once you are in the source directory of the project (its title should be 2024sp-420-CWorld), type 'python build.py'. If you get a warning about not being in a virtual environment, hit enter to exit the script then follow [these](https://docs.python.org/3/library/venv.html) instructions to setup and enter a virtual environment before running 'python build.py' again.
+<li> Type 'python main.py' to run the program in its default mode, or refer to the flags section below this for other options.
+</ol>
 
-
-
+### Alternate operation modes
+'python main.py cli' - runs the program in CLI mode instead of creating a gui
+'python main.py -O'  - runs the program in CLI debug mode. This mode is nearly identical to the CLI mode, just with slightly less error handling. Use at your own risk. 
 
 
 ## Authors
