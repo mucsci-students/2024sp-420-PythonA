@@ -52,7 +52,7 @@ class ControllerGUI (Controller):
             self.add_class(task, widget)
         # No action required after deleting
         elif "-d" in task:
-            return
+            self.delete_class(task, widget)
         else:
             self.acceptance_state(widget)
     
@@ -67,7 +67,17 @@ class ControllerGUI (Controller):
         widget.reject()
         entity_name = task.split()[-1]
         self._window.add_class_card(entity_name)
-    
+
+    def delete_class(self, task: str, widget: QtWidgets):
+        """
+        Deletes class card.
+
+        Parameters:
+            widget: The widget instance.
+        """
+        class_name = task.split()[-1]
+        self._window.delete_class_card(class_name)
+
     def acceptance_state(self, widget):
         """
         Makes text read-only and returns diagram to original state
