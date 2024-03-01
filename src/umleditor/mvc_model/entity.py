@@ -106,7 +106,7 @@ class Entity:
             None.
 
         Returns:
-            bool: True if the method exists. False if it does not.
+            UML_Method: Returns method if it exists
         """
         for m in self._methods:
             if m.get_method_name() == method_name:
@@ -131,6 +131,26 @@ class Entity:
         else:
             new_method = UML_Method(method_name)
             self._methods.append(new_method)
+    
+    def add_method_and_params(self, method_name: str, *params) :
+        """
+        Adds a method with specified parameters to the class.
+
+        Parameters:
+            method_name (str): The name of the method to add.
+            *params: Variable-length argument list representing the parameters for the method.
+        """
+        self.add_method(method_name)
+        self.get_method(method_name).add_parameters([params])
+
+    def edit_method(self, old_method: str, new_method: str,  *params):
+        deleted_method = self.get_method(old_method) 
+        self.delete_method(old_method)
+        try:
+            self.add_method_and_params(new_method, *params)
+        except Exception as e:
+            self._methods.append(deleted_method)
+            raise e
 
     def delete_method(self, method_name: str):
         """

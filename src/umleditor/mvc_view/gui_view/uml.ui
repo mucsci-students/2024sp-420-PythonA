@@ -49,6 +49,7 @@
     <addaction name="actionSave"/>
     <addaction name="actionLoad"/>
     <addaction name="actionExit"/>
+    <addaction name="actionHelp_2"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -88,6 +89,11 @@
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionHelp_2">
+   <property name="text">
+    <string>Help</string>
    </property>
   </action>
  </widget>

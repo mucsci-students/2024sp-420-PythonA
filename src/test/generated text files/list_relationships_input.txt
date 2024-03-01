@@ -1,7 +1,0 @@
-class -a Class1
-class -a Class2
-rel -a Class1 Class2
-rel -a Class2 Class1
-rel -a Class1 Class1
-list -a
-list -r

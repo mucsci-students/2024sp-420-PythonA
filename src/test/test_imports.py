@@ -76,8 +76,8 @@ def test_import_class_card():
     assert ClassCard
 
 def test_import_class_input_dialog():
-    from umleditor.mvc_view.gui_view.class_input_dialog import ClassInputDialog
-    assert ClassInputDialog
+    from umleditor.mvc_view.gui_view.class_input_dialog import CustomInputDialog
+    assert CustomInputDialog
 
 def test_import_view_gui():
     from umleditor.mvc_view.gui_view.view_GUI import ViewGUI

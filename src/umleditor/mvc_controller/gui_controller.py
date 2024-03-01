@@ -4,7 +4,7 @@ from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QInputDialog, QLineEdit
 from PyQt6.QtCore import QDir
 from umleditor.mvc_controller.controller import Controller
-from umleditor.mvc_view.gui_view.class_input_dialog import ClassInputDialog
+from umleditor.mvc_view.gui_view.class_input_dialog import CustomInputDialog
 from umleditor.mvc_model.custom_exceptions import CustomExceptions as CE
 
 class ControllerGUI (Controller):
@@ -48,6 +48,12 @@ class ControllerGUI (Controller):
             self._window.invalid_input_message(str(e))
             return
         # Successful task
+        if 'save' in task:
+            self.save_file(widget)
+            return
+        if 'load' in task:
+            self.load_file(widget)
+            return
         if "class -a" in task:
             self.add_class(task, widget)
         # No action required after deleting
@@ -55,6 +61,39 @@ class ControllerGUI (Controller):
             self.delete_class(task, widget)
         else:
             self.acceptance_state(widget)
+
+    def save_file(self, widget: QtWidgets):
+        """
+        Closes dialog and save file.
+
+        Parameters:
+            widget: ClassInputDialog.
+        """
+        widget.reject()
+
+    def load_file(self, widget: QtWidgets):
+        """
+        Closes dialog and load file.
+
+        Parameters:
+            widget: ClassInputDialog.
+        """
+        widget.reject()
+        self._window.delete_all_class_card()
+        for entity in self._diagram._entities:
+            class_card = self._window.add_class_card(entity._name)
+            for field in entity._fields:
+                class_card.add_field(field)
+            for method in entity._methods:
+                s = method.get_method_name()
+                for param in method._params:
+                    s += ' ' + param
+                class_card.add_method(s)
+            for relation in self._diagram._relations:
+                if relation._source == entity:
+                    s = relation._destination._name + ' ' + relation._type
+                    class_card.add_relation(s)
+
     
     def add_class(self, task: str, widget: QtWidgets):
         """

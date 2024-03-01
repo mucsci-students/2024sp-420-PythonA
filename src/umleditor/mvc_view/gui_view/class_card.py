@@ -191,6 +191,9 @@ class ClassCard(QWidget):
                         elif list_widget is self._list_relation:
                             relation = self.split_relation(widget.text())
                             self._process_task_signal.emit("rel -d " + class_name + " " + relation[0], self)
+                        else:
+                            method = widget.text().split()
+                            self._process_task_signal.emit("mthd -d " + class_name + " " + method[0], self)
                         list_widget.removeItemWidget(item)
                         list_widget.takeItem(index)
                         return
@@ -327,8 +330,17 @@ class ClassCard(QWidget):
             else:
                 self._process_task_signal.emit("rel -e " + class_name + " " + self._old_text + " " +
                                                class_name + " " + new_text, self)
-        # Method task signals - methodName param1 param2      
+        # Method task signals  
         else:
+            # - methodName param1 param2...     
+            if self._old_text == "":
+                words = new_text.split()
+                self._process_task_signal.emit("mthd -ga " + class_name + " " + " ".join(words), self)
+            # - oldName newName param1 param2...         
+            else:
+                words = new_text.split()
+                old_name = self._old_text.split()[0]
+                self._process_task_signal.emit("mthd -e " + class_name + " " + old_name + " " + " ".join(words), self)
             pass
 
     
@@ -381,3 +393,82 @@ class ClassCard(QWidget):
             pyqtSignal: The signal for widget enabling.
         """
         return self._enable_widgets_signal
+    
+#######################################################################
+    
+    #load
+
+    def add_field(self, field):
+        """
+        Adds a field.
+        """
+        list = self._list_field
+
+        # Create field and add to list
+        item = QListWidgetItem()
+        list.addItem(item) #!!!
+        text = QLineEdit()
+        text.setText(field)
+        text.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+
+        # Pass the QLineEdit instance 
+        text.customContextMenuRequested.connect(lambda pos: self.show_row_menu(pos, text))
+
+        # lambda ensures text is only evaluated on enter
+        text.returnPressed.connect(lambda: self.verify_input(text.text(), list))
+
+        # Formatting / Style
+        list.setItemWidget(item, text)
+        text.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        text.setReadOnly(True)
+    
+    def add_method(self, method):
+        """
+        Adds a method.
+        """
+        list = self._list_method
+
+        # Create field and add to list
+        item = QListWidgetItem()
+        list.addItem(item) #!!!
+        text = QLineEdit()
+        text.setText(method)
+        text.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+
+        # Pass the QLineEdit instance 
+        text.customContextMenuRequested.connect(lambda pos: self.show_row_menu(pos, text))
+
+        # lambda ensures text is only evaluated on enter
+        text.returnPressed.connect(lambda: self.verify_input(text.text(), list))
+
+        # Formatting / Style
+        list.setItemWidget(item, text)
+        text.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        text.setReadOnly(True)
+
+    def add_relation(self, relation):
+        """
+        Adds a relation.
+        """
+        list = self._list_relation
+
+        # Create field and add to list
+        item = QListWidgetItem()
+        list.addItem(item) #!!!
+        text = QLineEdit()
+        text.setText(relation)
+        text.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+
+        # Pass the QLineEdit instance 
+        text.customContextMenuRequested.connect(lambda pos: self.show_row_menu(pos, text))
+
+        # lambda ensures text is only evaluated on enter
+        text.returnPressed.connect(lambda: self.verify_input(text.text(), list))
+
+        # Formatting / Style
+        list.setItemWidget(item, text)
+        text.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        text.setReadOnly(True)

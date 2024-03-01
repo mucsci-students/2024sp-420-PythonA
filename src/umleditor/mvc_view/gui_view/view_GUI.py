@@ -1,9 +1,10 @@
 import os
+import sys
 from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6 import uic
 from PyQt6.QtWidgets import QMessageBox, QWidget, QMenuBar, QGridLayout
 from PyQt6.QtCore import pyqtSignal
-from umleditor.mvc_view.gui_view.class_input_dialog import ClassInputDialog
+from umleditor.mvc_view.gui_view.class_input_dialog import CustomInputDialog
 from umleditor.mvc_view.gui_view.class_card import ClassCard
 
 class ViewGUI(QtWidgets.QMainWindow):
@@ -44,6 +45,10 @@ class ViewGUI(QtWidgets.QMainWindow):
         Connects menu actions to corresponding methods.
         """
         self._ui.actionAdd_Class.triggered.connect(self.add_class_click)
+        self._ui.actionSave.triggered.connect(self.save_click)
+        self._ui.actionLoad.triggered.connect(self.load_click)
+        self._ui.actionExit.triggered.connect(self.exit_click)
+        self._ui.actionHelp_2.triggered.connect(self.help_click)
 
     def invalid_input_message(self, warning: str):
         """
@@ -69,7 +74,7 @@ class ViewGUI(QtWidgets.QMainWindow):
         """
         Opens a dialog for adding a class and connects confirm button
         """
-        self._dialog = ClassInputDialog()
+        self._dialog = CustomInputDialog(name="Add Class")
         self._dialog.ok_button.clicked.connect(self.confirm_class_clicked)
         self._dialog.exec()
 
@@ -91,6 +96,9 @@ class ViewGUI(QtWidgets.QMainWindow):
 
         Args:
             name (str): The name of the class.
+
+        Returns:
+            ClassCard: the class card added.
         """
         class_card = ClassCard(name) 
         class_card.get_task_signal().connect(self.forward_signal)
@@ -106,6 +114,7 @@ class ViewGUI(QtWidgets.QMainWindow):
                 self._column = 0
             self._size += 1
             self._grid_layout.addWidget(class_card, self._row, self._column)
+        return class_card
 
     def delete_class_card(self, name: str):
         """
@@ -119,6 +128,91 @@ class ViewGUI(QtWidgets.QMainWindow):
                     self._grid_layout.removeWidget(class_card)
                     class_card.deleteLater() 
                     self._size -= 1  # Decrement the total count of class cards
+    
+    def delete_all_class_card(self):
+        for i in reversed(range(self._grid_layout.count())): 
+            item = self._grid_layout.itemAt(i)
+            if item is not None:
+                class_card = item.widget()
+                if isinstance(class_card, ClassCard):
+                    self._grid_layout.removeWidget(class_card)
+                    class_card.deleteLater() 
+                    self._size -= 1  # Decrement the total count of class cards
+
+##################################################################################################
+
+    # save
+    def save_click(self):
+        """
+        Opens a dialog for save and connects confirm button
+        """
+        self._dialog = CustomInputDialog('Save')
+        self._dialog.ok_button.clicked.connect(self.confirm_save_clicked)
+        self._dialog.exec()
+
+    def confirm_save_clicked(self):
+        """
+        On Confirm emits signal to process task
+        """
+        task = 'save ' + self._dialog.input_text.text()
+        # Emit signal to controller to handle task
+        self._process_task_signal.emit(task, self._dialog)
+
+    # load
+    def load_click(self):
+        """
+        Opens a dialog for load and connects confirm button
+        """
+        self._dialog = CustomInputDialog('Load')
+        self._dialog.ok_button.clicked.connect(self.confirm_load_clicked)
+        self._dialog.exec()
+
+    def confirm_load_clicked(self):
+        """
+        On Confirm emits signal to process task
+        """
+        task = 'load ' + self._dialog.input_text.text()
+        # Emit signal to controller to handle task
+        self._process_task_signal.emit(task, self._dialog)
+
+    #exit
+    def exit_click(self):
+        """
+        Opens a dialog for exit and connects confirm button
+        """
+        msg = QMessageBox()
+        msg.setWindowTitle("Exit")
+        msg.setText("Are you sure you want to proceed?(Don't forget to save your digram:)")
+        msg.setIcon(QMessageBox.Icon.Question)
+        msg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        
+        result = msg.exec()
+        if result == QMessageBox.StandardButton.Yes:
+            sys.exit()
+        else:
+            pass
+
+    #help
+    def help_click(self):
+        msg = QMessageBox()
+        msg.setWindowTitle("Help")
+        info = ''
+        info += "Right click class name to add field/method/relationship"
+        info += '\n'
+        info += "Right click to edit selected rows"
+        info += '\n'
+        info += "Press Esc to stop editing"
+        info += '\n'
+        info += "Unsaved rows will be deleted and saved rows will be returned to its original state"
+        info += '\n'
+        info += "Relationship Types: 'aggregation', 'composition', 'inheritance', 'realization'"
+        info += '\n'
+        msg.setText(info)
+        msg.setIcon(QMessageBox.Icon.Information)
+        msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+        msg.exec()
+
+##################################################################################################
 
     def enable_widgets(self, enabled: bool, active_widget: QWidget):
         """
@@ -134,4 +228,3 @@ class ViewGUI(QtWidgets.QMainWindow):
                     child_widget.setEnabled(True)
                 else:
                     child_widget.setEnabled(False)
-
