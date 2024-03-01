@@ -52,10 +52,13 @@ Regardless of operating system, this project will install dependencies when it i
 <li> Type 'python main.py' to run the program in its default mode, or refer to the flags section below this for other options.
 </ol>
 
-### Alternate operation modes
+### Operation modes
+'python main.py'     - default operation mode, opens a GUI. 
 'python main.py cli' - runs the program in CLI mode instead of creating a gui
 'python main.py -O'  - runs the program in CLI debug mode. This mode is nearly identical to the CLI mode, just with slightly less error handling. Use at your own risk. 
 
+**If you are in the CLI mode, type 'help' for a list of commands.**
+**In the gui, use the menu options available at the top of the screen and/or by right clicking to manipulate the diagram to your needs**
 
 ## Authors
 Adam Glick-Lynch, Ganga Acharya, Marshall Feng, Peter Freedman, Tim Moser
