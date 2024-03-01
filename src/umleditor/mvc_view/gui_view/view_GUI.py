@@ -45,7 +45,7 @@ class ViewGUI(QtWidgets.QMainWindow):
         """
         self._ui.actionAdd_Class.triggered.connect(self.add_class_click)
         self._ui.actionSave.triggered.connect(self.save_click)
-        # self._ui.actionLoad.triggered.connect(self.load_click)
+        self._ui.actionLoad.triggered.connect(self.load_click)
         # self._ui.actionExit.triggered.connect(self.exit_click)
 
     def invalid_input_message(self, warning: str):
@@ -94,6 +94,9 @@ class ViewGUI(QtWidgets.QMainWindow):
 
         Args:
             name (str): The name of the class.
+
+        Returns:
+            ClassCard: the class card added.
         """
         class_card = ClassCard(name) 
         class_card.get_task_signal().connect(self.forward_signal)
@@ -109,6 +112,7 @@ class ViewGUI(QtWidgets.QMainWindow):
                 self._column = 0
             self._size += 1
             self._grid_layout.addWidget(class_card, self._row, self._column)
+        return class_card
 
     def delete_class_card(self, name: str):
         """
@@ -122,9 +126,21 @@ class ViewGUI(QtWidgets.QMainWindow):
                     self._grid_layout.removeWidget(class_card)
                     class_card.deleteLater() 
                     self._size -= 1  # Decrement the total count of class cards
+    
+    def delete_all_class_card(self):
+        for i in reversed(range(self._grid_layout.count())): 
+            item = self._grid_layout.itemAt(i)
+            if item is not None:
+                class_card = item.widget()
+                if isinstance(class_card, ClassCard):
+                    print(i)
+                    self._grid_layout.removeWidget(class_card)
+                    class_card.deleteLater() 
+                    self._size -= 1  # Decrement the total count of class cards
 
 ##################################################################################################
 
+    # save
     def save_click(self):
         """
         Opens a dialog for save and connects confirm button
@@ -138,6 +154,23 @@ class ViewGUI(QtWidgets.QMainWindow):
         On Confirm emits signal to process task
         """
         task = 'save ' + self._dialog.input_text.text()
+        # Emit signal to controller to handle task
+        self._process_task_signal.emit(task, self._dialog)
+
+    # load
+    def load_click(self):
+        """
+        Opens a dialog for load and connects confirm button
+        """
+        self._dialog = CustomInputDialog('Load')
+        self._dialog.ok_button.clicked.connect(self.confirm_load_clicked)
+        self._dialog.exec()
+
+    def confirm_load_clicked(self):
+        """
+        On Confirm emits signal to process task
+        """
+        task = 'load ' + self._dialog.input_text.text()
         # Emit signal to controller to handle task
         self._process_task_signal.emit(task, self._dialog)
 

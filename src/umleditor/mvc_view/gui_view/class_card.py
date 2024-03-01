@@ -393,3 +393,82 @@ class ClassCard(QWidget):
             pyqtSignal: The signal for widget enabling.
         """
         return self._enable_widgets_signal
+    
+#######################################################################
+    
+    #load
+
+    def add_field(self, field):
+        """
+        Adds a field.
+        """
+        list = self._list_field
+
+        # Create field and add to list
+        item = QListWidgetItem()
+        list.addItem(item) #!!!
+        text = QLineEdit()
+        text.setText(field)
+        text.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+
+        # Pass the QLineEdit instance 
+        text.customContextMenuRequested.connect(lambda pos: self.show_row_menu(pos, text))
+
+        # lambda ensures text is only evaluated on enter
+        text.returnPressed.connect(lambda: self.verify_input(text.text(), list))
+
+        # Formatting / Style
+        list.setItemWidget(item, text)
+        text.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        text.setReadOnly(True)
+    
+    def add_method(self, method):
+        """
+        Adds a method.
+        """
+        list = self._list_method
+
+        # Create field and add to list
+        item = QListWidgetItem()
+        list.addItem(item) #!!!
+        text = QLineEdit()
+        text.setText(method)
+        text.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+
+        # Pass the QLineEdit instance 
+        text.customContextMenuRequested.connect(lambda pos: self.show_row_menu(pos, text))
+
+        # lambda ensures text is only evaluated on enter
+        text.returnPressed.connect(lambda: self.verify_input(text.text(), list))
+
+        # Formatting / Style
+        list.setItemWidget(item, text)
+        text.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        text.setReadOnly(True)
+
+    def add_relation(self, relation):
+        """
+        Adds a relation.
+        """
+        list = self._list_relation
+
+        # Create field and add to list
+        item = QListWidgetItem()
+        list.addItem(item) #!!!
+        text = QLineEdit()
+        text.setText(relation)
+        text.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+
+        # Pass the QLineEdit instance 
+        text.customContextMenuRequested.connect(lambda pos: self.show_row_menu(pos, text))
+
+        # lambda ensures text is only evaluated on enter
+        text.returnPressed.connect(lambda: self.verify_input(text.text(), list))
+
+        # Formatting / Style
+        list.setItemWidget(item, text)
+        text.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        text.setReadOnly(True)
