@@ -2,15 +2,34 @@
 
 This readme contains the steps to launch the **CWorld UML Editor**. This is a terminal based program that allows users to create a Class Diagram with Relations, Classes, and Attributes. Once the program is running, type 'help' for a list of commands.
 
+# Setup Your Environment
+<B>The minimum required version of Python to run this program is 3.8. If your version of python, found in the section below, is less than that, please follow [this](https://www.python.org/downloads/) link to install a newer version. </B>
+
+## Make Sure Python is Installed
+
+### MacOS
+<ol>
+<li> In the top right corner of your screen, there will be a search bar, a magnifying glass, or both (depending on your version of Mac). Click that.
+<li> Type 'terminal', then hit enter.
+<li> type 'python3 --version' and hit enter. If you don't have developer tools installed, accept the install and wait for it to complete before retyping this command.
+<li> The terminal will print out "Python x.x.x", where x is a number, if python is installed.
+</ol>
+
+### Windows
+<ol>
+<li> Hold the windows key and click R.
+<li> type 'cmd' and hit enter
+<li> type 'python --version' and hit enter
+<li> 
+
 # Steps for Running the Program
 
 
 
 ## Prerequisite 
-You can check if you have python installed by entering ```py -V``` or ```python3 --version``` into terminal
+You can check if you have python installed by entering ```py -V``` or ```python3 --version``` into a terminal of your chou
 
-
-If you don't have python installed (tested on 3.12.2)[ follow the steps here!](https://www.python.org/downloads/)
+The minimum required version of python is 3.8. If you don't have python installed, download it [here](https://www.python.org/downloads/).
 
 
 
@@ -30,7 +49,7 @@ Windows OS:
 - Select the ```2024sp-420-CWorld-develop``` folder
 - Double click the ```main``` file and open with Python
 
-![alt text](fe-2.png)
+![alt text](./assets/fe-2.png)
 
 MacOS:
 
