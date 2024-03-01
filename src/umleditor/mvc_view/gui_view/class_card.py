@@ -330,11 +330,17 @@ class ClassCard(QWidget):
             else:
                 self._process_task_signal.emit("rel -e " + class_name + " " + self._old_text + " " +
                                                class_name + " " + new_text, self)
-        # Method task signals - methodName param1 param2      
+        # Method task signals  
         else:
+            # - methodName param1 param2...     
             if self._old_text == "":
                 words = new_text.split()
                 self._process_task_signal.emit("mthd -ga " + class_name + " " + " ".join(words), self)
+            # - oldName newName param1 param2...         
+            else:
+                words = new_text.split()
+                old_name = self._old_text.split()[0]
+                self._process_task_signal.emit("mthd -e " + class_name + " " + old_name + " " + " ".join(words), self)
             pass
 
     
