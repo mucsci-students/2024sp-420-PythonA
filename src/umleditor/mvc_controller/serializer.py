@@ -30,7 +30,7 @@ def serialize(diagram: Diagram, path: str) -> None:
     '''
     # classes
     saved_classes = []
-    for entity in diagram._entities.values():
+    for entity in diagram._entities:
         saved_class = {}
         # class name
         saved_class['name'] = entity._name
@@ -102,7 +102,7 @@ def deserialize(diagram: Diagram, path: str) -> None:
         raise CE.JsonDecodeError(filepath=path)
     try:
         # classes
-        loaded_classes = {}
+        loaded_classes = []
         for saved_class in obj['classes']:
             loaded_class = Entity()
             # class name
@@ -137,16 +137,18 @@ def deserialize(diagram: Diagram, path: str) -> None:
                 loaded_method._params = loaded_params
                 loaded_methods.append(loaded_method)
             loaded_class._methods = loaded_methods
-            loaded_classes[loaded_class._name] = loaded_class
+            loaded_classes.append(loaded_class)
         diagram._entities = loaded_classes
         # relationships
         loaded_relationships = []
         for saved_relationship in obj['relationships']:
             loaded_relationship = Relation()
             # relationship source
-            loaded_relationship._source = loaded_classes[saved_relationship['source']]
+            # loaded_relationship._source = saved_relationship['source']
+            loaded_relationship._source = [entity for entity in loaded_classes if entity._name == saved_relationship['source']][0]
             # relationship destination
-            loaded_relationship._destination = loaded_classes[saved_relationship['destination']]
+            # loaded_relationship._destination = saved_relationship['destination']
+            loaded_relationship._destination = [entity for entity in loaded_classes if entity._name == saved_relationship['destination']][0]
             # relationship type
             loaded_relationship._type = saved_relationship['type']
             loaded_relationships.append(loaded_relationship)

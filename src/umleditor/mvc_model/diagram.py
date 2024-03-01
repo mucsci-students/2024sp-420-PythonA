@@ -142,7 +142,7 @@ class Diagram:
             str: A templated string containing the fields, methods, params
                 and relations of an entity.
         """
-       
+
         ent = self.get_entity(entity_name)
         fields = entity_name +":\n" + entity_name + "'s Fields:\n" + ent.list_fields() + '\n'
         methods = entity_name + "'s Methods:\n" + ent.list_methods()
