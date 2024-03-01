@@ -329,6 +329,9 @@ class ClassCard(QWidget):
                                                class_name + " " + new_text, self)
         # Method task signals - methodName param1 param2      
         else:
+            if self._old_text == "":
+                words = new_text.split()
+                self._process_task_signal.emit("mthd -ga " + class_name + " " + " ".join(words), self)
             pass
 
     
