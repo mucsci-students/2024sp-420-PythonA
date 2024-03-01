@@ -6,11 +6,24 @@ import sys
 from PyQt6 import QtWidgets
 
 
-def debug_main():
-    app = CLI_Controller()
-    app.run()
-
 def main():
+    #decides which main to run
+    which_main = sys.argv[1] if len(sys.argv) > 1 else None
+
+    if which_main == 'cli':
+        mainCLI()
+    elif which_main == '-O':
+        debug_main()
+    else:
+        mainGUI()
+
+def debug_main():
+    #CLI main without some error catching
+    app = CLI_Controller()
+    app.run()   
+
+def mainCLI():
+    #main CLI execution
     try:
         app = CLI_Controller()
         app.run()
@@ -24,7 +37,9 @@ def main():
         # Never expect errors to be caught here
         print('Oh no! Unexpected Error!')
 
+
 def mainGUI():
+    #main gui execution
     try:
         # Create QApplication for running the program
         app = QtWidgets.QApplication(sys.argv)
@@ -45,8 +60,4 @@ def mainGUI():
         print('Oh no! Unexpected Error!')
 
 if __name__ == '__main__':
-    if not __debug__:
-        debug_main()
-    else:
-        #main()
-        mainGUI()
+    main()
