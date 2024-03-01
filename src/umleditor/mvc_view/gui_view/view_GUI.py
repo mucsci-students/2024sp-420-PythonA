@@ -48,6 +48,7 @@ class ViewGUI(QtWidgets.QMainWindow):
         self._ui.actionSave.triggered.connect(self.save_click)
         self._ui.actionLoad.triggered.connect(self.load_click)
         self._ui.actionExit.triggered.connect(self.exit_click)
+        self._ui.actionHelp_2.triggered.connect(self.help_click)
 
     def invalid_input_message(self, warning: str):
         """
@@ -190,6 +191,26 @@ class ViewGUI(QtWidgets.QMainWindow):
             sys.exit()
         else:
             pass
+
+    #help
+    def help_click(self):
+        msg = QMessageBox()
+        msg.setWindowTitle("Help")
+        info = ''
+        info += "Right click class name to add field/method/relationship"
+        info += '\n'
+        info += "Right click to edit selected rows"
+        info += '\n'
+        info += "Press Esc to stop editing"
+        info += '\n'
+        info += "Unsaved rows will be deleted and saved rows will be returned to its original state"
+        info += '\n'
+        info += "Relationship Types: 'aggregation', 'composition', 'inheritance', 'realization'"
+        info += '\n'
+        msg.setText(info)
+        msg.setIcon(QMessageBox.Icon.Information)
+        msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+        msg.exec()
 
 ##################################################################################################
 
