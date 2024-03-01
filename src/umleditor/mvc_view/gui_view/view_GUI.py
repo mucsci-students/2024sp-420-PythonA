@@ -3,7 +3,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6 import uic
 from PyQt6.QtWidgets import QMessageBox, QWidget, QMenuBar, QGridLayout
 from PyQt6.QtCore import pyqtSignal
-from umleditor.mvc_view.gui_view.class_input_dialog import ClassInputDialog
+from umleditor.mvc_view.gui_view.class_input_dialog import CustomInputDialog
 from umleditor.mvc_view.gui_view.class_card import ClassCard
 
 class ViewGUI(QtWidgets.QMainWindow):
@@ -44,6 +44,9 @@ class ViewGUI(QtWidgets.QMainWindow):
         Connects menu actions to corresponding methods.
         """
         self._ui.actionAdd_Class.triggered.connect(self.add_class_click)
+        self._ui.actionSave.triggered.connect(self.save_click)
+        # self._ui.actionLoad.triggered.connect(self.load_click)
+        # self._ui.actionExit.triggered.connect(self.exit_click)
 
     def invalid_input_message(self, warning: str):
         """
@@ -69,7 +72,7 @@ class ViewGUI(QtWidgets.QMainWindow):
         """
         Opens a dialog for adding a class and connects confirm button
         """
-        self._dialog = ClassInputDialog()
+        self._dialog = CustomInputDialog(name="Add Class")
         self._dialog.ok_button.clicked.connect(self.confirm_class_clicked)
         self._dialog.exec()
 
@@ -120,6 +123,26 @@ class ViewGUI(QtWidgets.QMainWindow):
                     class_card.deleteLater() 
                     self._size -= 1  # Decrement the total count of class cards
 
+##################################################################################################
+
+    def save_click(self):
+        """
+        Opens a dialog for save and connects confirm button
+        """
+        self._dialog = CustomInputDialog('Save')
+        self._dialog.ok_button.clicked.connect(self.confirm_save_clicked)
+        self._dialog.exec()
+
+    def confirm_save_clicked(self):
+        """
+        On Confirm emits signal to process task
+        """
+        task = 'save ' + self._dialog.input_text.text()
+        # Emit signal to controller to handle task
+        self._process_task_signal.emit(task, self._dialog)
+
+##################################################################################################
+
     def enable_widgets(self, enabled: bool, active_widget: QWidget):
         """
         Toggles unselected Widgets. False = Disabled, True = Enabled
@@ -134,4 +157,3 @@ class ViewGUI(QtWidgets.QMainWindow):
                     child_widget.setEnabled(True)
                 else:
                     child_widget.setEnabled(False)
-

@@ -70,9 +70,9 @@ def serialize(diagram: Diagram, path: str) -> None:
     for relation in diagram._relations:
         saved_relationship = {}
         # relationship source
-        saved_relationship['source'] = relation._source
+        saved_relationship['source'] = relation._source._name
         # relationship destination
-        saved_relationship['destination'] = relation._destination
+        saved_relationship['destination'] = relation._destination._name
         # relationship type
         saved_relationship['type'] = relation._type
         saved_relationships.append(saved_relationship)

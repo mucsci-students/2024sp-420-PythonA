@@ -3,10 +3,10 @@ from PyQt6.QtWidgets import  QPushButton, QVBoxLayout, QLineEdit, QDialog, QDial
     Custom Dialog Box w/ custom accept signal allowing us to
     check for valid class input
 '''
-class ClassInputDialog(QDialog):
-    def __init__(self, parent=None):
+class CustomInputDialog(QDialog):
+    def __init__(self, name, parent=None):
         super().__init__(parent)
-        self.setWindowTitle("Add Class")
+        self.setWindowTitle(name)
         
         self.input_text = QLineEdit()
         self.ok_button = QPushButton("OK")

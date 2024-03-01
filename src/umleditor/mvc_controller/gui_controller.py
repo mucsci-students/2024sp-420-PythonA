@@ -4,7 +4,7 @@ from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QInputDialog, QLineEdit
 from PyQt6.QtCore import QDir
 from umleditor.mvc_controller.controller import Controller
-from umleditor.mvc_view.gui_view.class_input_dialog import ClassInputDialog
+from umleditor.mvc_view.gui_view.class_input_dialog import CustomInputDialog
 from umleditor.mvc_model.custom_exceptions import CustomExceptions as CE
 
 class ControllerGUI (Controller):
@@ -48,6 +48,9 @@ class ControllerGUI (Controller):
             self._window.invalid_input_message(str(e))
             return
         # Successful task
+        if 'save' in task:
+            self.save_file(widget)
+            return
         if "class -a" in task:
             self.add_class(task, widget)
         # No action required after deleting
@@ -55,6 +58,15 @@ class ControllerGUI (Controller):
             self.delete_class(task, widget)
         else:
             self.acceptance_state(widget)
+
+    def save_file(self, widget: QtWidgets):
+        """
+        Closes dialog and save file.
+
+        Parameters:
+            widget: ClassInputDialog.
+        """
+        widget.reject()
     
     def add_class(self, task: str, widget: QtWidgets):
         """
