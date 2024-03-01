@@ -131,6 +131,18 @@ class Entity:
         else:
             new_method = UML_Method(method_name)
             self._methods.append(new_method)
+    
+    def add_method_and_params(self, method_name: str, params:list[str]):
+        """
+        Adds a method with specified parameters to the class.
+
+        Parameters:
+            method_name (str): The name of the method to add.
+            params (list[str]): A list of parameter names for the method.
+
+        """
+        self.add_method(method_name)
+        self.get_method(method_name).add_parameters(params)
 
     def delete_method(self, method_name: str):
         """
