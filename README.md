@@ -54,10 +54,10 @@ Regardless of operating system, this project will install dependencies when it i
 <li> Type 'py main.py' to run the program in its default mode, or refer to the flags section below this for other options.
 </ol>
 
-[Mac Terminal Navigation](https://www.macworld.com/article/221277/command-line-navigating-files-folders-mac-terminal.html) 
-[Windows PowerShell Navigation](https://wiki.communitydata.science/Windows_terminal_navigation)
-[Windows Command Prompt Navigation](https://www.digitalcitizen.life/command-prompt-how-use-basic-commands/)
-[Linux Terminal Navigation](https://www.linode.com/docs/guides/linux-navigation-commands/)
+[Mac Terminal Navigation](https://www.macworld.com/article/221277/command-line-navigating-files-folders-mac-terminal.html) </n>
+[Windows PowerShell Navigation](https://wiki.communitydata.science/Windows_terminal_navigation) </n>
+[Windows Command Prompt Navigation](https://www.digitalcitizen.life/command-prompt-how-use-basic-commands/) </n>
+[Linux Terminal Navigation](https://www.linode.com/docs/guides/linux-navigation-commands/) </n>
 
 ### Operation modes
 'py main.py'     - default operation mode, opens a GUI. 
