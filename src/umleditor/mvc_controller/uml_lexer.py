@@ -8,7 +8,7 @@ _command_flag_map = {
     "fld"   : ["a","d","r"],
     "mthd"  : ["a","d","r"],
     "prm"   : ["a","d","c"],
-    "rel"   : ["a","t","d"],
+    "rel"   : ["a","t","d", "e"],
 
     "save"  : [""],
     "load"  : [""],
@@ -25,7 +25,7 @@ _command_function_map = {
     "fld"   : ["add_field","delete_field","rename_field"],
     "mthd"  : ["add_method","delete_method","rename_method"],
     "prm"   : ["add_parameters", "remove_parameters", "change_parameters"],
-    "rel"   : ["add_relation", "change_relation_type", "delete_relation"],
+    "rel"   : ["add_relation", "change_relation_type", "delete_relation", "edit_relation"],
     "save"  : ["save"],
     "load"  : ["load"],
     "exit"  : ["quit"],

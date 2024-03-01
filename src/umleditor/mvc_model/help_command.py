@@ -45,7 +45,8 @@ def help_menu():
         "rel -a 'src' 'dest' 'type' - adds a relationship between class 'src' and class 'dest' of type 'type'\n\t"
         "Relationship types: 'aggregation', 'composition', 'inheritance', 'realization'\n\t"
         "rel -t 'src' 'dest' 'type' - changes the type of the relationship between class 'src' and class 'dest' to 'new type'\n\t"
-        "rel -d 'src' 'dest' - deletes a relationship between class 'src' and class 'dest'\n"
+        "rel -d 'src' 'dest' - deletes a relationship between class 'src' and class 'dest'\n\t"
+        "rel -e 'old_src' 'old_dst' 'old_type' 'new_src' 'new_dst' 'new_type' - edits the old relation's fields to be their corresponding new values\n"
         #List Commands
         "List Flags: \n\t"
         "list -a   - list all classes and their contents in the UML Diagram\n\t"
