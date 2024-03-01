@@ -138,10 +138,8 @@ class Entity:
 
         Parameters:
             method_name (str): The name of the method to add.
-            params (list[str]): A list of parameter names for the method.
-
+            *params: Variable-length argument list representing the parameters for the method.
         """
-        print("WE ARE HERE")
         self.add_method(method_name)
         self.get_method(method_name).add_parameters([params])
 

@@ -191,6 +191,9 @@ class ClassCard(QWidget):
                         elif list_widget is self._list_relation:
                             relation = self.split_relation(widget.text())
                             self._process_task_signal.emit("rel -d " + class_name + " " + relation[0], self)
+                        else:
+                            method = widget.text().split()
+                            self._process_task_signal.emit("mthd -d " + class_name + " " + method[0], self)
                         list_widget.removeItemWidget(item)
                         list_widget.takeItem(index)
                         return
