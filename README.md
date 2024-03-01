@@ -57,7 +57,7 @@ Regardless of operating system, this project will install dependencies when it i
 [Mac Terminal Navigation](https://www.macworld.com/article/221277/command-line-navigating-files-folders-mac-terminal.html) \
 [Windows PowerShell Navigation](https://wiki.communitydata.science/Windows_terminal_navigation) \
 [Windows Command Prompt Navigation](https://www.digitalcitizen.life/command-prompt-how-use-basic-commands/) \
-[Linux Terminal Navigation](https://www.linode.com/docs/guides/linux-navigation-commands/) \
+[Linux Terminal Navigation](https://www.linode.com/docs/guides/linux-navigation-commands/)
 
 ### Operation modes
 'py main.py'     - default operation mode, opens a GUI. 
