@@ -87,6 +87,19 @@ class CustomExceptions:
         def __init__(self, invalid_type):
             super().__init__(f"{invalid_type} is not a valid relation type.")
 
+    class SelfRelationError(Exception):
+        """
+        Exception raised when a relation is added between an entity and itself.
+
+        Args: entity_name (str): The name of the entity that is trying to relate 
+                                    to itself.
+
+
+        """
+        def __init__(self, entity_name):
+            super().__init__(f"A self-relation for entity '{entity_name}' is not" 
+                             f"allowed.")
+
     #===============================================================================#
                                 #Method Exceptions
     #===============================================================================#

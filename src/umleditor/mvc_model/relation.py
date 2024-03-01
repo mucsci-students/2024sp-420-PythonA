@@ -11,7 +11,7 @@ class Relation:
         Args:
             source (Entity): The entity at the start of the relation.
             destination (Entity): The entity at the end of the relation.
-            type (str): The type of the relation.
+            type (str): The type of the relation - ['aggregation', 'composition', 'inheritance', 'realization'] 
             
         Raises:
             CustomExceptions.InvalidRelationTypeError: If the type of the relation is 
