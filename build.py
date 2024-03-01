@@ -3,7 +3,6 @@ import os
 def main():
     if in_venv():
         os.system("pip install -e .")
-        os.system("pyinstaller main.py")
 
 def in_venv() -> bool:
     '''Checks if the user is currently in a virtual environment
