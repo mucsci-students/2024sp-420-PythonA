@@ -206,6 +206,9 @@ class Diagram:
         """
         src = self.get_entity(source)
         dst = self.get_entity(destination)
+
+        if src == dst:
+            raise CustomExceptions.SelfRelationError(source)
         
         to_add = Relation(type, src, dst)
         for rel in self._relations:
