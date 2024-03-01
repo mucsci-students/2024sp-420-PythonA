@@ -46,16 +46,23 @@ Download the zip [here](https://github.com/mucsci-students/2024sp-420-CWorld/arc
 
 Regardless of operating system, this project will install dependencies when it is built. If the build script is run outside a virtual environment, it may modify files on your computer unpredictably. To setup a virtual environment, follow [this link](https://docs.python.org/3/library/venv.html).
 
+**The command to execute a python program varies with operating system. On Mac, it is python3. On Windows both py and python work. On Linux it is python. Through the duration of these build instructions, py will be used. Substitute the command appropriate for your operating system in its place.**
+
 <ol>
-<li> Open a terminal and navigate to the folder that the project was cloned/extracted into. Basics of terminal navigation can be found at the following links for [Mac](https://www.macworld.com/article/221277/command-line-navigating-files-folders-mac-terminal.html), [Windows PowerShell](https://wiki.communitydata.science/Windows_terminal_navigation), [Windows Command Prompt](https://www.digitalcitizen.life/command-prompt-how-use-basic-commands/), and [Linux](https://www.linode.com/docs/guides/linux-navigation-commands/). 
-<li> Once you are in the source directory of the project (its title should be 2024sp-420-CWorld), type 'python build.py'. If you get a warning about not being in a virtual environment, hit enter to exit the script then follow [these](https://docs.python.org/3/library/venv.html) instructions to setup and enter a virtual environment before running 'python build.py' again.
-<li> Type 'python main.py' to run the program in its default mode, or refer to the flags section below this for other options.
+<li> Open a terminal and navigate to the folder that the project was cloned/extracted into. Basics of terminal navigation can be found at the links listed below this list. 
+<li> Once you are in the source directory of the project (its name should be 2024sp-420-CWorld), type 'py build.py'. If you get a warning about not being in a virtual environment, hit enter to exit the script then follow the instructions at the top of this section to setup and enter a virtual environment before running 'py build.py' again.
+<li> Type 'py main.py' to run the program in its default mode, or refer to the flags section below this for other options.
 </ol>
 
+[Mac Terminal Navigation](https://www.macworld.com/article/221277/command-line-navigating-files-folders-mac-terminal.html) 
+[Windows PowerShell Navigation](https://wiki.communitydata.science/Windows_terminal_navigation)
+[Windows Command Prompt Navigation](https://www.digitalcitizen.life/command-prompt-how-use-basic-commands/)
+[Linux Terminal Navigation](https://www.linode.com/docs/guides/linux-navigation-commands/)
+
 ### Operation modes
-'python main.py'     - default operation mode, opens a GUI. 
-'python main.py cli' - runs the program in CLI mode instead of creating a gui
-'python main.py -O'  - runs the program in CLI debug mode. This mode is nearly identical to the CLI mode, just with slightly less error handling. Use at your own risk. 
+'py main.py'     - default operation mode, opens a GUI. 
+'py main.py cli' - runs the program in CLI mode instead of creating a gui
+'py main.py -O'  - runs the program in CLI debug mode. This mode is nearly identical to the CLI mode, just with slightly less error handling. Use at your own risk. 
 
 **If you are in the CLI mode, type 'help' for a list of commands.**
 **In the gui, use the menu options available at the top of the screen and/or by right clicking to manipulate the diagram to your needs**
