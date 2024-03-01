@@ -67,5 +67,8 @@ Regardless of operating system, this project will install dependencies when it i
 **If you are in the CLI mode, type 'help' for a list of commands.**
 **In the gui, use the menu options available at the top of the screen and/or by right clicking to manipulate the diagram to your needs**
 
+### Test the project
+'pytest'         - from the source directory of the project, automatically finds and executes all test files.
+
 ## Authors
 Adam Glick-Lynch, Ganga Acharya, Marshall Feng, Peter Freedman, Tim Moser
