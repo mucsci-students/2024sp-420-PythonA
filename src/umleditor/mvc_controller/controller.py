@@ -19,7 +19,7 @@ class Controller:
                 #parse the command
                 input = parse(self, line)
 
-                #return from input is [function object, arg1,...,argn]
+                #return from parse call is [function object, arg1,...,argn]
                 command = input[0]
                 args = input[1:]
 
