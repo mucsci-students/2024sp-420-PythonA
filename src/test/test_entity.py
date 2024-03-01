@@ -9,9 +9,18 @@ def test_get_name():
     assert ent1.get_name() == "entity1"
     assert ent1.get_name() != "entity2"
 
+def test_entity_equals():
+    ent1 = Entity("entity1")
+    ent2 = Entity("entity2")
+    assert ent1 == ent1
+    assert ent2 == ent2
+    assert ent1 != ent2
+    assert ent2 != ent1
+
 def test_set_name():
     ent1 = Entity("entity1")
     assert ent1.get_name() == "entity1"
+    assert ent1.get_name() != "entity2"
     ent1.set_name("entity2")
     assert ent1.get_name() != "entity1"
     assert ent1.get_name() == "entity2"
