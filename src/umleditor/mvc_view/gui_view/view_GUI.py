@@ -107,6 +107,18 @@ class ViewGUI(QtWidgets.QMainWindow):
             self._size += 1
             self._grid_layout.addWidget(class_card, self._row, self._column)
 
+    def delete_class_card(self, name: str):
+        """
+        Removes the ClassCard widget for the specified class from the layout.
+        """
+        for i in range(self._grid_layout.count()): 
+            item = self._grid_layout.itemAt(i)
+            if item is not None:
+                class_card = item.widget()
+                if isinstance(class_card, ClassCard) and class_card._name == name:
+                    self._grid_layout.removeWidget(class_card)
+                    class_card.deleteLater() 
+                    self._size -= 1  # Decrement the total count of class cards
 
     def enable_widgets(self, enabled: bool, active_widget: QWidget):
         """

@@ -100,15 +100,19 @@ class ClassCard(QWidget):
         """
         # Create menu & Actions
         menu = QMenu()
+        delete_action = QAction("Delete Class", self)
         field_action = QAction("Add Field", self)
         method_action = QAction("Add Method", self)
         relation_action = QAction("Add Relation", self)
 
+        menu.addAction(delete_action)
+        menu.addSeparator()
         menu.addAction(field_action)
         menu.addAction(method_action)
         menu.addAction(relation_action)
 
         # Add button functionality
+        delete_action.triggered.connect(self.confirm_delete_class)
         field_action.triggered.connect(lambda: self.menu_action_clicked(self._list_field, "Enter Field"))
         method_action.triggered.connect(lambda: self.menu_action_clicked(self._list_method, "e.g. method param1 param2..."))
         relation_action.triggered.connect(lambda: self.menu_action_clicked(self._list_relation, "e.g. dst type"))
@@ -194,6 +198,11 @@ class ClassCard(QWidget):
         self._enable_widgets_signal.emit(True, self) 
         self.enable_context_menus(True)
 
+    def confirm_delete_class(self):
+        """
+        Confirms the deletion of the class.
+        """
+        self._process_task_signal.emit(f"class -d  {self._name}", self)
 
     def menu_action_clicked(self, list: QListWidget, placeholder: str):
         """
