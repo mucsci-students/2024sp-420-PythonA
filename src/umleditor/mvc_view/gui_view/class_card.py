@@ -1,6 +1,7 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QListWidget, QMenu, QLineEdit, QLabel, QListWidgetItem
 from PyQt6.QtGui import QAction
 from PyQt6.QtCore import Qt, pyqtSignal, QEvent
+from umleditor.mvc_view.gui_view.class_input_dialog import CustomInputDialog
 
 class ClassCard(QWidget):
     """
@@ -100,22 +101,25 @@ class ClassCard(QWidget):
         """
         # Create menu & Actions
         menu = QMenu()
+        rename_action = QAction("Rename Class", self)
         delete_action = QAction("Delete Class", self)
         field_action = QAction("Add Field", self)
         method_action = QAction("Add Method", self)
         relation_action = QAction("Add Relation", self)
 
-        menu.addAction(delete_action)
-        menu.addSeparator()
+        menu.addAction(rename_action)
         menu.addAction(field_action)
         menu.addAction(method_action)
         menu.addAction(relation_action)
-
+        menu.addSeparator()
+        menu.addAction(delete_action)
         # Add button functionality
         delete_action.triggered.connect(self.confirm_delete_class)
         field_action.triggered.connect(lambda: self.menu_action_clicked(self._list_field, "Enter Field"))
         method_action.triggered.connect(lambda: self.menu_action_clicked(self._list_method, "e.g. method param1 param2..."))
         relation_action.triggered.connect(lambda: self.menu_action_clicked(self._list_relation, "e.g. dst type"))
+        rename_action.triggered.connect(self.rename_action_clicked)
+
         # Create Menu
         menu.exec(self.mapToGlobal(position))
 
@@ -130,6 +134,7 @@ class ClassCard(QWidget):
         menu = QMenu()
         edit_action = QAction("Edit", self)
         delete_action = QAction("Delete", self)
+
         menu.addAction(edit_action)
         menu.addAction(delete_action)
 
@@ -145,6 +150,20 @@ class ClassCard(QWidget):
 
         # Create Menu
         menu.exec(global_position)
+
+    def rename_action_clicked(self):
+        self._rename_dialog = CustomInputDialog(name="Rename Class")
+        self._rename_dialog.ok_button.clicked.connect(self.confirm_rename_clicked)
+        self._rename_dialog.exec()
+
+    def confirm_rename_clicked(self):
+        self._process_task_signal.emit("class -r " + self._name + " " + self._rename_dialog.input_text.text(), self)
+    
+    def accept_new_name(self, new_name: str):
+        self._class_label.setText(new_name)
+        self.set_name(new_name)
+        self._rename_dialog.reject()
+
     
     def edit_action_clicked(self, widget: QLineEdit):
         """

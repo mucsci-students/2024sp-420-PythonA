@@ -54,6 +54,9 @@ class ControllerGUI (Controller):
         if 'load' in task:
             self.load_file(widget)
             return
+        if 'class -r' in task:
+            self.rename_class(task,widget)
+            return
         if "class -a" in task:
             self.add_class(task, widget)
         # No action required after deleting
@@ -94,6 +97,9 @@ class ControllerGUI (Controller):
                     s = relation._destination._name + ' ' + relation._type
                     class_card.add_relation(s)
 
+    def rename_class(self, task: str, widget: QtWidgets):
+        words = task.split()
+        widget.accept_new_name(words[-1])
     
     def add_class(self, task: str, widget: QtWidgets):
         """
