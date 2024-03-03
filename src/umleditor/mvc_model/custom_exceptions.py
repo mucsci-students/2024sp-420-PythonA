@@ -146,6 +146,16 @@ class CustomExceptions:
         def __init__(self, parameter_name):
             super().__init__(f"Parameter named: '{parameter_name}' does not exist.")
 
+    class DuplicateParametersError(Error):
+        """
+        Exception raised when the parameter occurs more than once.
+
+        Args:
+            parameter_name (str): The name of the parameter occurs more than once.
+        """
+        def __init__(self, parameter_name):
+            super().__init__(f"Parameter named: '{parameter_name}' occurs more than once.")
+
     #===============================================================================#
                                 #Parser/Controller Exceptions
     #===============================================================================#

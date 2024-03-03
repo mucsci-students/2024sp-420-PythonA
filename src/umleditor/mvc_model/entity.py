@@ -282,6 +282,20 @@ class UML_Method:
         """
         self._name = new_name
 
+    def _check_duplicate_paramters(self, params: list[str]):
+        """
+        Checks if there are duplicate paramters.
+        
+        Args:
+            params (list[str]): The list of new parameters to be checked.
+            
+        Raises:
+            CustomExceptions.DuplicateParametersError: If any of the parameter occurs more than once.
+        """
+        for param in params:
+            if params.count(param) != 1:
+                raise CustomExceptions.DuplicateParametersError(param)
+
     def add_parameters(self, params: list[str]):
         """
         Adds a list of new parameters to the method.
@@ -295,6 +309,7 @@ class UML_Method:
         Returns:
             None.
         """
+        self._check_duplicate_paramters(params)
         for new_param in params:
             if new_param in self._params:
                 raise CustomExceptions.ParameterExistsError(new_param)
@@ -313,6 +328,7 @@ class UML_Method:
         Returns:
             None.
         """
+        self._check_duplicate_paramters(params)
         for remove_param in params:
             if remove_param not in self._params:
                 raise CustomExceptions.ParameterNotFoundError(remove_param)
@@ -334,6 +350,8 @@ class UML_Method:
         Returns:
             None.
         """
+        self._check_duplicate_paramters(old_params)
+        self._check_duplicate_paramters(new_params)
         for remove_param in old_params:
             if remove_param not in self._params:
                 raise CustomExceptions.ParameterNotFoundError(remove_param)
