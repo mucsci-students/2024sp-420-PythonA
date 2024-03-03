@@ -4,6 +4,7 @@
 def test_import_cli_controller():
     from umleditor.mvc_controller.cli_controller import CLI_Controller
     assert CLI_Controller
+    assert CLI_Controller.run
 
 def test_import_controller_input():
     from umleditor.mvc_controller.controller_input import read_line, read_file
@@ -18,10 +19,21 @@ def test_import_controller_output():
 def test_import_controller():
     from umleditor.mvc_controller import Controller
     assert Controller
+    assert Controller.run
+    assert Controller.quit
+    assert Controller.save
+    assert Controller.load
 
 def test_import_gui_controller():
     from umleditor.mvc_controller.gui_controller import ControllerGUI
     assert ControllerGUI
+    assert ControllerGUI.run
+    assert ControllerGUI.save_file
+    assert ControllerGUI.load_file
+    assert ControllerGUI.rename_class
+    assert ControllerGUI.add_class
+    assert ControllerGUI.delete_class
+    assert ControllerGUI.acceptance_state
 
 def test_import_serialzer():
     from umleditor.mvc_controller.serializer import CustomJSONEncoder, serialize, deserialize
@@ -50,10 +62,37 @@ def test_import_custom_exceptions():
 def test_import_diagram():
     from umleditor.mvc_model import Diagram
     assert Diagram
+    assert Diagram.add_entity
+    assert Diagram.get_entity
+    assert Diagram.delete_entity
+    assert Diagram.has_entity
+    assert Diagram.rename_entity
+    assert Diagram.list_everything
+    assert Diagram.list_entity_details
+    assert Diagram.list_entities
+    assert Diagram.list_relations
+    assert Diagram.list_entity_relations
+    assert Diagram.add_relation
+    assert Diagram.delete_relation
+    assert Diagram.change_relation_type
+    assert Diagram.edit_relation
 
 def test_import_entity():
     from umleditor.mvc_model import Entity
     assert Entity
+    assert Entity.get_name
+    assert Entity.set_name
+    assert Entity.add_field
+    assert Entity.delete_field
+    assert Entity.rename_field
+    assert Entity.get_method
+    assert Entity.add_method
+    assert Entity.add_method_and_params
+    assert Entity.edit_method
+    assert Entity.delete_method
+    assert Entity.rename_method
+    assert Entity.list_fields
+    assert Entity.list_methods
 
 def test_import_help():
     from umleditor.mvc_model.help_command import help_menu
