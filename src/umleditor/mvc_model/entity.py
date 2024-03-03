@@ -298,7 +298,7 @@ class UML_Method:
         for new_param in params:
             if new_param in self._params:
                 raise CustomExceptions.ParameterExistsError(new_param)
-            self._params.append(new_param)
+        self._params.extend(params)
 
     def remove_parameters(self, params: list[str]):
         """
