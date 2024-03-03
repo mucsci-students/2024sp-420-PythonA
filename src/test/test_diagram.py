@@ -10,8 +10,24 @@ def test_create_diagram():
 
 def test_dia_add_entity():
     dia = Diagram()
+    assert not dia.has_entity("ent")
     dia.add_entity("ent")
-    assert dia._entities
+    assert dia.has_entity("ent")
+
+def test_dia_add_multiple_entities():
+    dia = Diagram()
+    assert not dia.has_entity("ent1")
+    assert not dia.has_entity("ent2")
+    assert not dia.has_entity("ent3")
+    dia.add_entity("ent1")
+    dia.add_entity("ent2")
+    assert dia.has_entity("ent1")
+    assert dia.has_entity("ent2")
+    assert not dia.has_entity("ent3")
+    dia.add_entity("ent3")
+    assert dia.has_entity("ent1")
+    assert dia.has_entity("ent2")
+    assert dia.has_entity("ent3")
 
 def test_dia_get_entity():
     dia = Diagram()
@@ -31,6 +47,24 @@ def test_dia_delete_entity():
     dia.delete_entity("ent1")
     assert not dia.has_entity("ent1")
 
+def test_dia_delete_multiple_entities():
+    dia = Diagram()
+    dia.add_entity("ent1")
+    dia.add_entity("ent2")
+    dia.add_entity("ent3")
+    assert dia.has_entity("ent1")
+    assert dia.has_entity("ent2")
+    assert dia.has_entity("ent3")
+    dia.delete_entity("ent1")
+    dia.delete_entity("ent2")
+    assert not dia.has_entity("ent1")
+    assert not dia.has_entity("ent2")
+    assert dia.has_entity("ent3")
+    dia.delete_entity("ent3")
+    assert not dia.has_entity("ent1")
+    assert not dia.has_entity("ent2")
+    assert not dia.has_entity("ent3")
+
 def test_dia_rename_entity():
     dia = Diagram()
     dia.add_entity("ent1")
@@ -39,6 +73,22 @@ def test_dia_rename_entity():
     dia.rename_entity("ent1", "ent2")
     assert not dia.has_entity("ent1")
     assert dia.has_entity("ent2")
+
+def test_dia_rename_multiple_entities():
+    dia = Diagram()
+    dia.add_entity("ent1")
+    dia.add_entity("ent2")
+    assert dia.has_entity("ent1")
+    assert dia.has_entity("ent2")
+    assert not dia.has_entity("ent3")
+    assert not dia.has_entity("ent4")
+    dia.rename_entity("ent1", "ent3")
+    dia.rename_entity("ent2", "ent4")
+    assert not dia.has_entity("ent1")
+    assert not dia.has_entity("ent2")
+    assert dia.has_entity("ent3")
+    assert dia.has_entity("ent4")
+
 
 def test_dia_add_relation():
     dia = Diagram()
