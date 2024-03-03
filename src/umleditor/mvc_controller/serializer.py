@@ -144,11 +144,13 @@ def deserialize(diagram: Diagram, path: str) -> None:
         for saved_relationship in obj['relationships']:
             loaded_relationship = Relation()
             # relationship source
-            # loaded_relationship._source = saved_relationship['source']
-            loaded_relationship._source = [entity for entity in loaded_classes if entity._name == saved_relationship['source']][0]
+            for entity in loaded_classes:
+                if entity._name == saved_relationship['source']:
+                    loaded_relationship._source = entity
             # relationship destination
-            # loaded_relationship._destination = saved_relationship['destination']
-            loaded_relationship._destination = [entity for entity in loaded_classes if entity._name == saved_relationship['destination']][0]
+            for entity in loaded_classes:
+                if entity._name == saved_relationship['destination']:
+                    loaded_relationship._destination = entity
             # relationship type
             loaded_relationship._type = saved_relationship['type']
             loaded_relationships.append(loaded_relationship)
