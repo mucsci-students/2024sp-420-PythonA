@@ -95,20 +95,24 @@ def deserialize(diagram: Diagram, path: str) -> None:
     - (CustomExceptions.SavedDataError): If file data is not consistent with the Diagram
     '''
     content = read_file(path)
+
     try:
         obj = json.loads(content)
     except Exception:
         raise CE.JsonDecodeError(filepath=path)
+    
     try:
         # classes
         loaded_classes = []
         for saved_class in obj['classes']:
+            # class
             loaded_class = Entity()
             # class name
             loaded_class._name = saved_class['name']
             # class fields
             loaded_fields = []
             for saved_field in saved_class['fields']:
+                # class field
                 loaded_field = str() # str is the type of field
                 # class field name
                 loaded_field = saved_field['name']
@@ -119,6 +123,7 @@ def deserialize(diagram: Diagram, path: str) -> None:
             # class methods
             loaded_methods = []
             for saved_method in saved_class['methods']:
+                # class method
                 loaded_method = UML_Method()
                 # class method name
                 loaded_method._name = saved_method['name']
@@ -127,6 +132,7 @@ def deserialize(diagram: Diagram, path: str) -> None:
                 # class method params
                 loaded_params = []
                 for saved_param in saved_method['params']:
+                    # class method param
                     loaded_param = str() # str is the type of param
                     # class method param name
                     loaded_param = saved_param['name']
@@ -141,6 +147,7 @@ def deserialize(diagram: Diagram, path: str) -> None:
         # relationships
         loaded_relationships = []
         for saved_relationship in obj['relationships']:
+            # relationship
             loaded_relationship = Relation()
             # relationship source
             for entity in loaded_classes:
