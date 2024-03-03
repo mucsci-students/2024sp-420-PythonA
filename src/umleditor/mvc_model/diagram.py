@@ -212,7 +212,7 @@ class Diagram:
         
         to_add = Relation(type, src, dst)
         for rel in self._relations:
-            if rel == to_add:
+            if rel.equal_without_type(to_add):
                 raise CustomExceptions.RelationExistsError(source, destination)
         # Pass entity objects to relation and add relation to list of existing relations
         self._relations.append(to_add)

@@ -141,7 +141,7 @@ class Entity:
             *params: Variable-length argument list representing the parameters for the method.
         """
         self.add_method(method_name)
-        self.get_method(method_name).add_parameters([params])
+        self.get_method(method_name).add_parameters(list(params))
 
     def edit_method(self, old_method: str, new_method: str,  *params):
         deleted_method = self.get_method(old_method) 
