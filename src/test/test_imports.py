@@ -94,18 +94,26 @@ def test_import_entity():
     assert Entity.list_fields
     assert Entity.list_methods
 
+def test_import_uml_method():
+    from umleditor.mvc_model.entity import UML_Method
+    assert UML_Method
+    assert UML_Method.get_method_name
+    assert UML_Method.set_method_name
+    assert UML_Method.add_parameters
+    assert UML_Method.remove_parameters
+    assert UML_Method.change_parameters
+
 def test_import_help():
     from umleditor.mvc_model.help_command import help_menu
     assert help_menu
 
-def test_import_method():
-    from umleditor.mvc_model import UML_Method
-    assert UML_Method
-
 def test_import_relation():
     from umleditor.mvc_model import Relation
     assert Relation
-
+    assert Relation.get_source
+    assert Relation.get_destination
+    assert Relation.set_type
+    assert Relation.contains
 
 #===============================================================================#
                         #Import From View Tests#
