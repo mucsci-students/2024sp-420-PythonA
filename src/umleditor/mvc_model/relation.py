@@ -79,6 +79,20 @@ class Relation:
             return True
         else:
             return False
+        
+    def equal_without_type(self, other):
+        '''
+        Checks if equal to other Relation without checking type equivalence.
+            
+        Return: 
+            True if all fields except for type are equivalent, false otherwise.
+        '''
+        if self._source != other._source:
+            return False
+        
+        if self._destination != other._destination:
+            return False
+        return True
 
     def __str__(self):
         """
