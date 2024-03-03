@@ -121,6 +121,31 @@ def test_import_relation():
 def test_import_class_card():
     from umleditor.mvc_view.gui_view.class_card import ClassCard
     assert ClassCard
+    assert ClassCard.set_name
+    assert ClassCard.initUI
+    assert ClassCard.connect_menus
+    assert ClassCard.set_styles
+    assert ClassCard.show_class_menu
+    assert ClassCard.show_row_menu
+    assert ClassCard.rename_action_clicked
+    assert ClassCard.confirm_rename_clicked
+    assert ClassCard.accept_new_name
+    assert ClassCard.edit_action_clicked
+    assert ClassCard.delete_action_clicked
+    assert ClassCard.confirm_delete_class
+    assert ClassCard.menu_action_clicked
+    assert ClassCard.eventFilter
+    assert ClassCard.escape_from_row
+    assert ClassCard.enable_context_menus
+    assert ClassCard.verify_input
+    assert ClassCard.split_relation
+    assert ClassCard.deselect_line
+    assert ClassCard.get_selected_line
+    assert ClassCard.get_task_signal
+    assert ClassCard.get_enable_signal
+    assert ClassCard.add_field
+    assert ClassCard.add_method
+    assert ClassCard.add_relation
 
 def test_import_class_input_dialog():
     from umleditor.mvc_view.gui_view.class_input_dialog import CustomInputDialog
@@ -129,3 +154,20 @@ def test_import_class_input_dialog():
 def test_import_view_gui():
     from umleditor.mvc_view.gui_view.view_GUI import ViewGUI
     assert ViewGUI
+    assert ViewGUI.get_signal
+    assert ViewGUI.connect_menu
+    assert ViewGUI.invalid_input_message
+    assert ViewGUI.forward_signal
+    assert ViewGUI.add_class_click
+    assert ViewGUI.confirm_class_clicked
+    assert ViewGUI.add_class_card
+    assert ViewGUI.delete_class_card
+    assert ViewGUI.delete_all_class_card
+    assert ViewGUI.save_click
+    assert ViewGUI.confirm_save_clicked
+    assert ViewGUI.load_click
+    assert ViewGUI.confirm_load_clicked
+    assert ViewGUI.exit_click
+    assert ViewGUI.help_click
+    assert ViewGUI.enable_widgets
+    
