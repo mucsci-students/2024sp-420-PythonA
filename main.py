@@ -7,9 +7,9 @@ from PyQt6 import QtWidgets
 
 def main():
     #decides which main to run
-    if len(sys.argv) == 2 and sys.argv[1] == 'cli':
+    if len(sys.argv) >= 2 and sys.argv[1] == 'cli':
         mainCLI()
-    elif len(sys.argv) == 2 and sys.argv[1] == 'debug':
+    elif len(sys.argv) >= 2 and sys.argv[1] == 'debug':
         debug_main()
     else:
         mainGUI()
