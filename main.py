@@ -1,4 +1,3 @@
-from umleditor.mvc_controller import Controller
 from umleditor.mvc_controller.cli_controller import CLI_Controller
 from umleditor.mvc_view.gui_view.view_GUI import ViewGUI
 from umleditor.mvc_controller.gui_controller import ControllerGUI
@@ -8,11 +7,9 @@ from PyQt6 import QtWidgets
 
 def main():
     #decides which main to run
-    which_main = sys.argv[1] if len(sys.argv) > 1 else None
-
-    if which_main == 'cli':
+    if len(sys.argv) >= 2 and sys.argv[1] == 'cli':
         mainCLI()
-    elif which_main == '-O':
+    elif len(sys.argv) >= 2 and sys.argv[1] == 'debug':
         debug_main()
     else:
         mainGUI()
@@ -33,7 +30,7 @@ def mainCLI():
     except EOFError:
         # This handles ctrl+D
         pass
-    except Exception as e:
+    except Exception:
         # Never expect errors to be caught here
         print('Oh no! Unexpected Error!')
 
@@ -55,7 +52,7 @@ def mainGUI():
     except EOFError:
         # This handles ctrl+D
         pass
-    except Exception as e:
+    except Exception:
         # Never expect errors to be caught here
         print('Oh no! Unexpected Error!')
 
