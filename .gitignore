@@ -1,2 +1,30 @@
+#generic excludes
 __pycache__
 *.test
+*.egg-info
+*.vscode
+
+#Venv directories and files
+Lib/
+Scripts/
+Include/
+venv.cfg
+pyvenv.cfg
+
+#Linux venv directories
+.venv/
+bin/
+include/
+lib/
+lib64/
+
+#Build directories and files
+build/
+dist/
+main.spec
+
+#pytest 
+.pytest_cache
+
+#Macos specifics
+.DS_Store

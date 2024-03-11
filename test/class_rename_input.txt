@@ -1,9 +1,0 @@
-class -a Class1
-class -a Class2
-list -a
-class -r Class1 Class3
-list -a
-class -r Class1 Class4
-list -a
-class -r NotExist Class4
-list -a
