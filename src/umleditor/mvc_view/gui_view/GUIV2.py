@@ -1,47 +1,128 @@
-from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QMenuBar, QApplication
-from PyQt6.QtGui import QAction
+import os
+
+from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtWidgets import QDialog, QMainWindow, QWidget, QVBoxLayout, QPushButton, QApplication, QGridLayout, \
+    QMessageBox, QHBoxLayout
+from PyQt6.QtGui import QAction  # Corrected import for QAction
 from umleditor.mvc_view.gui_view.class_card import ClassCard
-from .class_input_dialog import CustomInputDialog
+from umleditor.mvc_view.gui_view.class_input_dialog import CustomInputDialog
 from umleditor.mvc_controller.gui_controller import ControllerGUI
 
 
-class GuiV2(QMainWindow):
-    def __init__(self, controller: ControllerGUI):
+class GUIV2(QMainWindow):
+    _process_task_signal = pyqtSignal(str, QWidget)
+
+    def __init__(self):
         super().__init__()
-        self.controller = controller
+        self.gridLayout = QGridLayout()
+        self.centralWidget = QWidget(self)
+        self.controller = ControllerGUI(self)  # Pass self reference to ControllerGUI
+        self.setWindowTitle("UML Editor - GUI V2")
+        self.setGeometry(300, 300, 850, 850)
         self.initUI()
 
+
+    def get_signal(self):
+        """
+        Returns the signal used for processing tasks.
+        """
+        return self._process_task_signal
+
     def initUI(self):
-        self.setWindowTitle("UML Editor - GUI V2")
-        self.setGeometry(300, 300)
+        stylesheet_path = "src/umleditor/mvc_view/stylesheets/GuiV2Style.qss"
+        print("Stylesheet exists:", os.path.exists(stylesheet_path))
+        # Menu Actions
+        actionAdd_Class = QAction('&Add Class', self)
+        actionSave = QAction('&Save', self)
+        actionLoad = QAction('&Load', self)
+        actionExit = QAction('&Exit', self)
+        actionHelp = QAction('&Help', self)
 
-        central_widget = QWidget(self)
-        self.setCentralWidget(central_widget)
-        layout = QVBoxLayout(central_widget)
+        # Connect actions
+        actionAdd_Class.triggered.connect(self.on_add_class_clicked)
+        actionSave.triggered.connect(lambda: self.controller.run('save', self))
+        actionLoad.triggered.connect(lambda: self.controller.run('load', self))
+        actionExit.triggered.connect(self.close)
+        actionHelp.triggered.connect(self.help_click)
 
-        self.add_class_button = QPushButton("Add a New Class", self)
-        self.add_class_button.clicked.connect(self.on_add_class_clicked)
-        layout.addWidget(self.add_class_button)
+        # Setup menu bar
+        menuBar = self.menuBar()
+        fileMenu = menuBar.addMenu('&File')
+        fileMenu.addAction(actionSave)
+        fileMenu.addAction(actionLoad)
+        fileMenu.addAction(actionExit)
+        editMenu = menuBar.addMenu('&Edit')
+        editMenu.addAction(actionAdd_Class)
 
-        central_widget.setLayout(layout)
+        # Central widget and main layout
+        self.centralWidget = QWidget(self)
+        self.setCentralWidget(self.centralWidget)
+        mainLayout = QHBoxLayout(self.centralWidget)
 
-        # More GUI
+        # Sidebar
+        sidebarWidget = QWidget()  # Sidebar container
+        sidebarLayout = QVBoxLayout(sidebarWidget)
+        sidebarWidget.setLayout(sidebarLayout)
+
+        # Sidebar buttons
+        btnFile = QPushButton("File")
+        btnEdit = QPushButton("Edit")
+        btnClasses = QPushButton("Classes")
+        btnAttributes = QPushButton("Attributes")
+        btnRelationships = QPushButton("Relationships")
+        btnHelp = QPushButton("Help")
+
+        # Add buttons to the sidebar layout
+        sidebarLayout.addWidget(btnFile)
+        sidebarLayout.addWidget(btnEdit)
+        sidebarLayout.addWidget(btnClasses)
+        sidebarLayout.addWidget(btnAttributes)
+        sidebarLayout.addWidget(btnRelationships)
+        sidebarLayout.addWidget(btnHelp)
+
+        # Add sidebar to the main layout
+        mainLayout.addWidget(sidebarWidget)
+        sidebarWidget.setStyleSheet("background-color: red;")
+
+        sidebarWidget.setObjectName("sidebarWidget")
+
+        # Main content area
+        contentWidget = QWidget()  # Container for the content area
+        self.gridLayout = QGridLayout(contentWidget)  # Assign the grid layout to the content widget
+        contentWidget.setLayout(self.gridLayout)
+
+        # Add the content area to the main layout
+        mainLayout.addWidget(contentWidget)
+
+        # Set stretch factors
+        mainLayout.setStretchFactor(sidebarWidget, 1)
+        mainLayout.setStretchFactor(contentWidget, 4)
 
     def on_add_class_clicked(self):
-        # Do add class things
         dialog = CustomInputDialog("Add Class", self)
-        if dialog.exec() == CustomInputDialog.Accepted:
+        if dialog.exec() == QDialog.DialogCode.Accepted:
             class_name = dialog.input_text.text()
-            self.add_class_card(class_name)
+            self.controller.run('class -a ' + class_name, None)
+
+    def help_click(self):
+        QMessageBox.information(self, "Help", "Helpful information goes here.")
 
     def add_class_card(self, class_name: str):
-        # Class card stuff
+        # Ideally, you'll create and display a ClassCard widget
         print(f"Class {class_name} added")
+        # Example: Adding a placeholder for the class card
+        class_card = ClassCard(class_name)
+        self.gridLayout.addWidget(class_card)
 
 
 if __name__ == "__main__":
     app = QApplication([])
-    controller = ControllerGUI()  # Ensure this is initialized correctly for your app
-    gui = GuiV2(controller)
+
+    with open("src/umleditor/mvc_view/stylesheets/GuiV2Style.qss", "r") as f:
+        style = f.read()
+        app.setStyleSheet(style)
+        print("Stylesheet content:", style[:100])
+
+    gui = GUIV2()
     gui.show()
     app.exec()

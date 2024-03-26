@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QApplication, QDialog
 
 from umleditor.mvc_controller.cli_controller import CLI_Controller
-from umleditor.mvc_view.gui_view.GUIV2 import GuiV2
+from umleditor.mvc_view.gui_view.GUIV2 import GUIV2
 from umleditor.mvc_view.gui_view.view_GUI import ViewGUI
 from umleditor.mvc_controller.gui_controller import ControllerGUI
 from umleditor.mvc_view.gui_view.versionDialog import VersionSelectionDialog
@@ -50,10 +50,10 @@ def mainGUI():
             if dialog.selected_version == "1":
                 mainWindow = ViewGUI()
             elif dialog.selected_version == "2":
-                mainWindow = GuiV2()
+                mainWindow = GUIV2()
             else:
                 print("Invalid selection, defaulting to Gui V2.")
-                mainWindow = GuiV2()
+                mainWindow = GUIV2()
 
             controller = ControllerGUI(mainWindow)  # Ensure ControllerGUI is correctly initialized
             mainWindow.show()
