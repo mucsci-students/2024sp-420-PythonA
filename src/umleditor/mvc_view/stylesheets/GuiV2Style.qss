@@ -1,4 +1,4 @@
-/* style.qss */
+/* Not currently functional for some reason.
 QPushButton {
     margin: 5px;
     padding-left: 5px;
@@ -20,4 +20,4 @@ QMainWindow {
 #sidebarWidget {
     background-color:  blue;
     max-width: 200px;
-}
+} */
