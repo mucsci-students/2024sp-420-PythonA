@@ -1,9 +1,9 @@
-
 from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QMenuBar, QApplication
 from PyQt6.QtGui import QAction
-from class_card import ClassCard
-from class_input_dialog import CustomInputDialog
+from umleditor.mvc_view.gui_view.class_card import ClassCard
+from .class_input_dialog import CustomInputDialog
 from umleditor.mvc_controller.gui_controller import ControllerGUI
+
 
 class GuiV2(QMainWindow):
     def __init__(self, controller: ControllerGUI):
@@ -19,14 +19,13 @@ class GuiV2(QMainWindow):
         self.setCentralWidget(central_widget)
         layout = QVBoxLayout(central_widget)
 
-
         self.add_class_button = QPushButton("Add a New Class", self)
         self.add_class_button.clicked.connect(self.on_add_class_clicked)
         layout.addWidget(self.add_class_button)
 
         central_widget.setLayout(layout)
 
-        #More GUI
+        # More GUI
 
     def on_add_class_clicked(self):
         # Do add class things
@@ -46,9 +45,3 @@ if __name__ == "__main__":
     gui = GuiV2(controller)
     gui.show()
     app.exec()
-
-
-
-
-
-
