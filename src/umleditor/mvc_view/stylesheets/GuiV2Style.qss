@@ -1,0 +1,23 @@
+/* Not currently functional for some reason.
+QPushButton {
+    margin: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 2px;
+    padding-top: 2px;
+    background-color: #f0f0f0;
+    border: 1px solid #c0c0c0;
+}
+
+QPushButton:hover {
+    background-color: #e0e0e0;
+}
+
+QMainWindow {
+    background-color: red;
+}
+
+#sidebarWidget {
+    background-color:  blue;
+    max-width: 200px;
+} */
