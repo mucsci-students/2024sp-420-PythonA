@@ -1,0 +1,22 @@
+  name: uml-editor
+  # Will run unit tests every time someone makes a pull request.
+  on: pull_request
+  # Runs unit tests on Windows, macOS, and Linux.
+  jobs:
+    windows:
+      runs-on: windows-latest
+      steps:
+        - name: unit-tests
+          run: pytest
+
+    mac:
+      runs-on: macos-latest
+      steps:
+        - name: unit-tests
+          run: pytest
+
+    linux:
+      runs-on: ubuntu-latest
+      steps:
+        - name: unit-tests
+          run: pytest
