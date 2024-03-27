@@ -1,4 +1,13 @@
 # 2024sp-420-CWorld
+# NOTES:
+    build is weird, on windows you need to unrestrict scripts with 
+    Win Powershell: run  as admin Get-ExecutionPolicy
+                    and add Get-ExecutionPolicy
+                    change build because this is so much jank
+
+                    ON WINDOWS IT SHOWS UP AS pyvenv.cfg
+                    ON MACOS (Intel) IT SHOWS UP AS A /venv directory
+                    ON LINUX WHO KNOWS???
 
 This readme contains the steps to launch the **CWorld UML Editor**. This is a terminal based program that allows users to create a Class Diagram with Relations, Classes, and Attributes. Once the program is running, type 'help' for a list of commands.
 
