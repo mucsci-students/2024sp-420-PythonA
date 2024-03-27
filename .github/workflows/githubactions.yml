@@ -4,17 +4,23 @@ jobs:
   windows:
     runs-on: windows-latest
     steps:
+      - name: install-pytest-windows
+        run: pip install pytest
       - name: unit-tests-windows
         run: pytest
 
   mac:
     runs-on: macos-latest
     steps:
+      - name: install-pytest-mac
+        run: pip install pytest
       - name: unit-tests-mac
         run: pytest
 
   linux:
     runs-on: ubuntu-latest
     steps:
+      - name: install-pytest-linux
+        run: pip install pytest
       - name: unit-tests-linux
         run: pytest
