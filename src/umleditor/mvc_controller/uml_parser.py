@@ -1,7 +1,7 @@
 from umleditor.mvc_model import CustomExceptions as CE
 from .uml_lexer import lex_input as lex
 from umleditor.mvc_model import Diagram, Entity, Relation, UML_Method, help_command
-
+from umleditor.usability.autofill import get_args
 import re
 
 #list of all classes that need to be searched for commands
@@ -66,6 +66,7 @@ def parse (c, input:str) -> list:
         obj = help_command
     
     #build and return the callable + args
+    get_args(args)
     return [getattr(obj, command_str)] + args
 
 def __split_list(args:list[str]) -> list[list[str]]:

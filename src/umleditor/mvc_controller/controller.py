@@ -5,33 +5,58 @@ from umleditor.mvc_controller.uml_parser import parse
 from umleditor.mvc_model import CustomExceptions as CE
 from umleditor.mvc_model.diagram import Diagram
 from umleditor.mvc_controller.uml_parser import check_args
+from umleditor.usability.momento import Momento
 import os
 import sys
+
 
 class Controller:
     def __init__(self, d:Diagram = Diagram(), q:bool = False) -> None:
         self._should_quit = q
         self._diagram = d
+        self.momento = Momento(self)
+        self.command_count_tracker = 0
 
-    def run(self, line:str) -> str:
+    def run(self, line: str) -> str:
         if len(line.strip()) > 0:
             try:
-                #parse the command
+                # Parse the command
                 input = parse(self, line)
-
-                #return from parse call is [function object, arg1,...,argn]
+                # The return from parse call is [function object, arg1,...,argn]
                 command = input[0]
                 args = input[1:]
 
-                #execute the command
+                # Get the command name using the function's __name__ attribute
+                command_name = command.__name__.lower() if hasattr(command, '__name__') else None
+
+                # Check if the command is not one of the non-state-changing commands
+                if command_name and command_name not in self.momento.non_state_changing_commands():
+                    # Save the initial state and overwrite states everytime a valid command is taken.
+                    self.momento.save_state(self.command_count_tracker)
+                    self.command_count_tracker += 1
+
+                # Execute the command
                 return command(*args)
-            
+
             except TypeError as t:
+                self.command_count_tracker -= 1
                 raise CE.InvalidArgCountError(t)
             except ValueError as v:
+                self.command_count_tracker -= 1
                 raise CE.NeedsMoreInput()
             except Exception as e:
+                self.command_count_tracker -= 1
                 raise e
+
+    def undo(self):
+        self.momento.save_state(self.command_count_tracker)
+        if self.command_count_tracker > 0:
+            self.command_count_tracker -= 1
+            self.momento.load_state(self.command_count_tracker)
+
+    def redo(self):
+        self.command_count_tracker += 1
+        self.momento.load_state(self.command_count_tracker)
 
     def quit(self):
         '''Basic Quit Routine. Prompts user to save, where to save, 
@@ -42,6 +67,8 @@ class Controller:
             If name is invalid, returns invalid filename exception
             If filepath is invalid, returns invalid filepath exception
         '''
+        # Remove all temp json state files
+        self.momento.cleanup_states()
         self._should_quit = True
         while True:
             answer = read_line('Would you like to save before quit? [Y]/n: ').strip()
