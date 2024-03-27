@@ -1,26 +1,26 @@
-from umleditor.mvc_view.gui_view.gui_cworld.view_GUI import ViewGUI
 from umleditor.mvc_model.diagram import Diagram
 from PyQt6 import QtWidgets
 from umleditor.mvc_controller.controller import Controller
 
+# This file began as a direct copy of gui_controller.py, Authored by Adam.
 
-class ControllerGUI (Controller):
+class ControllerGUI(Controller):
     """
-    ControllerGui - Runs tasks signaled by ViewGui
+    ControllerGui - Runs tasks signaled by GUIV2
         Run commands require updates to the gui e.g. methods found
         in run() 
 
     Parameters:
-        window (ViewGUI): The window instance of ViewGUI.
+        window (GUIV2): The window instance of GUIV2.
     """
 
-    def __init__(self, window: ViewGUI) -> None:
+    def __init__(self, window) -> None:
         """
         Initializes Diagram, sets the view as a class variable,
         Connects signal that runs tasks
 
         Parameters:
-            window (ViewGUI): The window instance of ViewGUI.
+            window (GUIV2): The window instance of GUIV2.
         """
         super().__init__()
         self._window = window
@@ -40,7 +40,7 @@ class ControllerGUI (Controller):
             out = super().run(task)
         except Exception as e:
             # Ignore attempting to delete things that don't exist
-            #if isinstance(e, CE.FieldNotFoundError) or isinstance(e, CE.RelationDoesNotExistError):
+            # if isinstance(e, CE.FieldNotFoundError) or isinstance(e, CE.RelationDoesNotExistError):
             #    return
             self._window.invalid_input_message(str(e))
             return
@@ -52,7 +52,7 @@ class ControllerGUI (Controller):
             self.load_file(widget)
             return
         if 'class -r' in task:
-            self.rename_class(task,widget)
+            self.rename_class(task, widget)
             return
         if "class -a" in task:
             self.add_class(task, widget)
@@ -97,7 +97,7 @@ class ControllerGUI (Controller):
     def rename_class(self, task: str, widget: QtWidgets):
         words = task.split()
         widget.accept_new_name(words[-1])
-    
+
     def add_class(self, task: str, widget: QtWidgets):
         """
         Closes dialog and creates class card.
@@ -132,4 +132,3 @@ class ControllerGUI (Controller):
         widget.enable_context_menus(True)
         widget.deselect_line()
         self._window.enable_widgets(True, self)
-        

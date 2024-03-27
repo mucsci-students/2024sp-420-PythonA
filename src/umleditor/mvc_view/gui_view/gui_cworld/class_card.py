@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QListWidget, QMenu, QLineEdit, QLabel, QListWidgetItem
 from PyQt6.QtGui import QAction
 from PyQt6.QtCore import Qt, pyqtSignal, QEvent
-from umleditor.mvc_view.gui_view.class_input_dialog import CustomInputDialog
+from umleditor.mvc_view.gui_view.gui_cworld.class_input_dialog import CustomInputDialog
 
 class ClassCard(QWidget):
     """

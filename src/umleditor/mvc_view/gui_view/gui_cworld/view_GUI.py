@@ -1,11 +1,11 @@
 import os
 import sys
-from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6 import QtWidgets
 from PyQt6 import uic
 from PyQt6.QtWidgets import QMessageBox, QWidget, QMenuBar, QGridLayout
 from PyQt6.QtCore import pyqtSignal
-from umleditor.mvc_view.gui_view.class_input_dialog import CustomInputDialog
-from umleditor.mvc_view.gui_view.class_card import ClassCard
+from umleditor.mvc_view.gui_view.gui_cworld.class_input_dialog import CustomInputDialog
+from umleditor.mvc_view.gui_view.gui_cworld.class_card import ClassCard
 
 class ViewGUI(QtWidgets.QMainWindow):
     """
