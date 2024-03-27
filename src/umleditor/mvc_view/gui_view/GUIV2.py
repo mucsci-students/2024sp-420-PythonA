@@ -48,11 +48,17 @@ class GUIV2(QMainWindow):
 
         self.centralWidget = QWidget(self)
         self.setCentralWidget(self.centralWidget)
-        mainLayout = QHBoxLayout(self.centralWidget)
 
+        # Main layout for the entire window
+        mainLayout = QHBoxLayout(self.centralWidget)
+        mainLayout.setContentsMargins(0, 0, 0, 0)  # Remove margins to allow content to fill the window
+
+        # Sidebar setup
         sidebarWidget = QWidget()
+        sidebarWidget.setMaximumWidth(200)  # Maximum width of 200px
+        sidebarWidget.setStyleSheet("background-color: #212121;")  # Example, adjust as needed
         sidebarLayout = QVBoxLayout(sidebarWidget)
-        sidebarWidget.setLayout(sidebarLayout)
+        sidebarLayout.setContentsMargins(10, 10, 10, 10)  # Remove margins inside the sidebar
 
         # Define button info with actions
         buttons_info = [
