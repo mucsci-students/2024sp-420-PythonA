@@ -6,12 +6,8 @@ jobs:
     steps:
       - name: windows-clone-repo
         run: git clone https://github.com/mucsci-students/2024sp-420-PythonA
-      - name: windows-cd1
-        run: cd 2024sp-420-PythonA
-      - name: windows-cd2
-        run: cd src
-      - name: windows-cd3
-        run: cd test
+      - name: windows-cd
+        run: cd 2024sp-420-PythonA/src/test
       - name: install-pytest-windows
         run: pip install pytest
       - name: unit-tests-windows
@@ -22,12 +18,8 @@ jobs:
     steps:
       - name: mac-clone-repo
         run: git clone https://github.com/mucsci-students/2024sp-420-PythonA
-      - name: mac-cd1
-        run: cd 2024sp-420-PythonA
-      - name: mac-cd2
-        run: cd src
-      - name: mac-cd3
-        run: cd test
+      - name: mac-cd
+        run: cd 2024sp-420-PythonA/src/test
       - name: install-pytest-mac
         run: pip install pytest
       - name: unit-tests-mac
@@ -38,12 +30,8 @@ jobs:
     steps:
       - name: linux-clone-repo
         run: git clone https://github.com/mucsci-students/2024sp-420-PythonA
-      - name: linux-cd1
-        run: cd 2024sp-420-PythonA
-      - name: linux-cd2
-        run: cd src
-      - name: linux-cd3
-        run: cd test
+      - name: linux-cd
+        run: cd 2024sp-420-PythonA/src/test
       - name: install-pytest-linux
         run: pip install pytest
       - name: unit-tests-linux
