@@ -4,6 +4,10 @@ jobs:
   windows:
     runs-on: windows-latest
     steps:
+      - name: windows-cd1
+        run: cd src
+      - name: windows-cd2
+        run: cd test
       - name: install-pytest-windows
         run: pip install pytest
       - name: unit-tests-windows
@@ -12,6 +16,10 @@ jobs:
   mac:
     runs-on: macos-latest
     steps:
+      - name: mac-cd1
+        run: cd src
+      - name: mac-cd2
+        run: cd test
       - name: install-pytest-mac
         run: pip install pytest
       - name: unit-tests-mac
@@ -20,6 +28,10 @@ jobs:
   linux:
     runs-on: ubuntu-latest
     steps:
+      - name: linux-cd1
+        run: cd src
+      - name: linux-cd2
+        run: cd test
       - name: install-pytest-linux
         run: pip install pytest
       - name: unit-tests-linux
