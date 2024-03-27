@@ -1,3 +1,5 @@
+import os
+import glob
 from umleditor.mvc_controller.uml_lexer import _command_flag_map
 
 suggestions = list(_command_flag_map.keys())
@@ -31,6 +33,28 @@ def autofill(input_line):
 
 def get_args(args):
     suggestions.extend(args)
+
+
+def get_files():
+    # Get the path
+    save_path = os.path.join(os.path.dirname(__file__), '../', '../', '../', 'save')
+
+    # Resolve the '../' parts
+    normalized_save_path = os.path.normpath(save_path)
+
+    # Search pattern for JSON files
+    search_pattern = os.path.join(normalized_save_path, '*.json')
+
+    # Find all files matching the pattern
+    json_files = glob.glob(search_pattern)
+
+    # Extract just the file names without the .json extension.
+    file_names = [os.path.splitext(os.path.basename(file))[0] for file in json_files]
+
+    return file_names
+
+
+suggestions.extend(get_files())
 
 
 def undo():
