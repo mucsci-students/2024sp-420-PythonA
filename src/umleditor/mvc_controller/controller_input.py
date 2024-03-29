@@ -1,7 +1,6 @@
 from umleditor.mvc_model import CustomExceptions as CE
 from umleditor.usability.autofill import autofill, redo, undo
-import readchar
-
+from readchar import readkey, key
 
 def read_line(s='Command: ') -> str:
     """
@@ -18,8 +17,8 @@ def read_line(s='Command: ') -> str:
     print(s, end='', flush=True)
     input_line = []
     while True:
-        ch = readchar.readkey()
-        if ch == readchar.key.TAB:
+        ch = readkey()
+        if ch == key.TAB:
             # Call autofill with the current input line
             new_input_line = autofill(''.join(input_line))
             # Calculate the number of characters to overwrite (clear)
@@ -36,10 +35,10 @@ def read_line(s='Command: ') -> str:
             print('\r' + s + ''.join(input_line), end='', flush=True)
             print()
             return ''.join(input_line).strip()  # Hitting Enter
-        elif ch == readchar.key.ENTER:
+        elif ch == key.ENTER:
             print()  # Move to the next line
             return ''.join(input_line).strip()  # Hitting Enter
-        elif ch == readchar.key.BACKSPACE:
+        elif ch == key.BACKSPACE:
             if input_line:  # Remove the last character from input_line
                 input_line.pop()
                 print('\r' + s + ''.join(input_line) + ' ', end='', flush=True)  # Refresh the input display
