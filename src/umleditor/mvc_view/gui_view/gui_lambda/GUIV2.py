@@ -5,7 +5,7 @@ from PyQt6.QtWidgets import (QDialog, QMainWindow, QWidget, QVBoxLayout, QPushBu
 from PyQt6.QtGui import QAction
 from dialog_boxes.newClassDialog import NewClassDialog
 from dialog_boxes.deleteClassDialog import DeleteClassDialog
-from umleditor.mvc_view.gui_view.gui_cworld.class_card import ClassCard
+from umleditor.mvc_view.gui_view.gui_lambda.GUIV2_class_card import ClassCard
 from umleditor.mvc_view.gui_view.gui_cworld.class_input_dialog import CustomInputDialog
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.addMethodDialog import AddMethodDialog
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.createRelationshipDialog import CreateRelationshipDialog
@@ -32,7 +32,7 @@ class GUIV2(QMainWindow):
         self.currentFilePath = " "
 
     def get_signal(self):
-        #BACKEND CALLS THIS TO RECIEVE SIGNALS (i think)
+        # BACKEND CALLS THIS TO RECIEVE SIGNALS (i think)
         return self._process_task_signal
 
     def initUI(self):
@@ -44,7 +44,7 @@ class GUIV2(QMainWindow):
     def createActions(self):
         # Adding Classes
         self.actionAdd_Class = QAction('&Add Class', self)
-        self.actionAdd_Class.triggered.connect(self.on_add_class_clicked)
+        self.actionAdd_Class.triggered.connect(self.newClassAction)
 
         # Deleting Classes
         self.actionDelete_Class = QAction('&Delete Class', self)
@@ -129,13 +129,15 @@ class GUIV2(QMainWindow):
         mainLayout = QHBoxLayout(self.centralWidget)
         mainLayout.setContentsMargins(0, 0, 0, 0)  # Removes margins so the page fills the window
 
+        # Setup sidebar part of the layout
         self.setupSidebar(mainLayout)
 
-        contentWidget = QWidget()
-        self.gridLayout = QGridLayout(contentWidget)
-        contentWidget.setLayout(self.gridLayout)
-        mainLayout.addWidget(contentWidget)
-        mainLayout.setStretchFactor(contentWidget, 4)
+        # Initialize DiagramArea and add it directly to the mainLayout
+        self.diagramArea = DiagramArea()
+        mainLayout.addWidget(self.diagramArea)
+        mainLayout.setStretchFactor(self.diagramArea, 4)  # Give the diagram area more space compared to the sidebar
+
+        # Ensure the DiagramArea is properly styled or initialized in its __init__ me
 
     def setupSidebar(self, mainLayout):
         # Sidebar setup
@@ -366,6 +368,8 @@ class GUIV2(QMainWindow):
         dialog = NewClassDialog(self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
             class_name = dialog.getClassname()
+            classCard = ClassCard(class_name)
+            self.diagramArea.addClassCard(classCard)
             print(f"New class created: {class_name}")
             # CLASSES ARE NOT STORED YET "New class created:" IMPLIES THIS CODE IS WORKING, BUT CLASSES ARE NOT STORED
             # Here you can emit a signal or directly call another method to handle the new class creation
@@ -387,7 +391,7 @@ class GUIV2(QMainWindow):
             # Update any UI elements (Redraw) and models
 
     def renameClassAction(self):
-        #REQUIRES A LIST OF CLASS NAMES
+        # REQUIRES A LIST OF CLASS NAMES
         dialog = RenameClassDialog(class_names=self.class_names, parent=self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
             original_class_name = dialog.getSelectedClass()
@@ -803,6 +807,20 @@ class GUIV2(QMainWindow):
             }
         """)
         self.findChild(QLabel, "lblRelationships").setAlignment(Qt.AlignmentFlag.AlignHCenter)
+
+
+class DiagramArea(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.initUI()
+
+    def initUI(self):
+        self.setFixedSize(650, 850)  # Adjust size as necessary
+        self.setStyleSheet("background-color: white;")  # Example styling
+
+    def addClassCard(self, classCard):
+        classCard.setParent(self)
+        classCard.show()
 
 
 if __name__ == "__main__":
