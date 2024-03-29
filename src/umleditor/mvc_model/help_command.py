@@ -1,14 +1,17 @@
-'''Application help menu, to be called when user asks for help.'''
+# Primary: Danish
+# Secondary: Zhang
+
+"""Application help menu, to be called when user asks for help."""
 def help_menu():
     """
     Returns a string that contains the menu.
-    
+
     Args:
         None.
-        
+
     Raises:
         None.
-        
+
     Returns:
         str(): The help list to be printed.
     """
@@ -27,19 +30,19 @@ def help_menu():
         "class -r 'old' 'new' - renames the class named 'old' to 'new'\n"
         #Field Commands
         "Field Commands: \n\t"
-        "fld -a 'class' 'name' - adds a field named 'name' to the class named 'class'\n\t"
-        "fld -d 'class' 'name' - deletes a field named 'name' from the class named 'class'\n\t"
-        "fld -r 'class' 'old' 'new' - renames a field named 'old' to name 'new' in the class 'class'\n"
+        "fld -a 'class' 'name' 'type'- adds a field named 'name' and it's type 'type' to the class named 'class'\n\t"
+        "fld -d 'class' 'name' 'type' - deletes a field named 'name' and it's type 'type' from the class named 'class'\n\t"
+        "fld -r 'class' 'old' 'old_type' 'new' 'new_type' - renames a field named 'old' to name 'new' in the class 'class'\n"
         #Method Commands
         "Method Commands:\n\t"
-        "mthd -a 'class' 'name' - adds a method with the name 'name' to the class 'class'\n\t"
+        "mthd -a 'class' 'name' 'returnType' - adds a method with the name 'name' and returnType 'returnType' to the class 'class'\n\t"
         "mthd -d 'class' 'name' - deletes a method with name 'name' from class 'class'\n\t"
         "mthd -r 'class' 'old 'new' - reames a method form name 'old' to name 'new' in class 'class'\n"
         #Paramater Commands
         "Parameter Commands:\n\t"
-        "prm -a 'class' 'mthd' 'prm' - adds one or more params to a method (seperate each with a space)\n\t"
-        "prm -d 'class' 'mthd' 'prm' - deletes the param from the method if it exists\n\t"
-        "prm -c 'class' 'mthd' 'old' | 'new' - replaces the 'old' param(s) in the method with the 'new' param(s) supplied\n"
+        "prm -a 'class' 'mthd' 'prm' 'prm_type' - adds a param with a type to a method \n\t"
+        "prm -d 'class' 'mthd' 'prm' 'prm_type' - deletes the param with a type from the method if it exists\n\t"
+        "prm -c 'class' 'mthd' 'old' 'prm_type' 'new' 'prm_type' - replaces the 'old' param and it's type in the method with the 'new' param with it's type supplied\n"
         #Relation Commands
         "Relation Commands:\n\t"
         "rel -a 'src' 'dest' 'type' - adds a relationship between class 'src' and class 'dest' of type 'type'\n\t"

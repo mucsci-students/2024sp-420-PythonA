@@ -1,3 +1,6 @@
+# Primary: Danish
+# Secondary: Zhang
+
 import re   #for argc errors
 class CustomExceptions:
     class Error(Exception):
@@ -155,6 +158,18 @@ class CustomExceptions:
         """
         def __init__(self, parameter_name):
             super().__init__(f"Parameter named: '{parameter_name}' occurs more than once.")
+
+    class ParameterInvalidTypeError(Error):
+        """
+        Exception raised when the parameter type mismatched.
+
+        Args:
+        parameter_type (type): The type of the parameter is mismatched or not allowed.
+        """
+
+        def __init__(self, parameter_type):
+            super().__init__(f"Type '{parameter_type}' is not allowed.")
+
 
     #===============================================================================#
                                 #Parser/Controller Exceptions
