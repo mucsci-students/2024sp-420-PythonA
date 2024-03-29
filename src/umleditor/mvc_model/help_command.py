@@ -53,6 +53,10 @@ def help_menu():
         "list -c   - list all classes in the UML Diagram\n\t"
         "list -r   - list all relationships in the UML Diagram\n\t"
         "list -d 'name' - list all contents of class 'name'\n"
+        #Redo&Undo Commands
+        "Undo and Redo Commands:\n\t"
+        "undo - reverts the last change made to the UML Diagram\n\t"
+        "redo - reapplies the last change that was undone\n"
         #Save Commands
         "Save Flags: \n\t"
         "save 'name' - saves the UML Diagram as a JSON file with name 'name'\n"
