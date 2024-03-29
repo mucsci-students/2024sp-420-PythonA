@@ -58,7 +58,7 @@ def mainGUI():
                 mainWindow = GUI3()
             else:
                 print("Invalid selection, defaulting to Gui V2.")
-                mainWindow = GUIV3()
+                mainWindow = GUIV2()
 
               # Ensure ControllerGUI is correctly initialized
             mainWindow.show()

@@ -1,9 +1,20 @@
 from PyQt6.QtCore import pyqtSignal, Qt
 from PyQt6.QtWidgets import (QDialog, QMainWindow, QWidget, QVBoxLayout, QPushButton, QApplication, QGridLayout,
-                             QMessageBox, QHBoxLayout, QRadioButton, QDialogButtonBox, QListWidget, QLabel, QFrame)
+                             QMessageBox, QHBoxLayout, QRadioButton, QDialogButtonBox, QListWidget, QLabel, QFrame,
+                             QFileDialog)
 from PyQt6.QtGui import QAction
+from dialog_boxes.newClassDialog import NewClassDialog
+from dialog_boxes.deleteClassDialog import DeleteClassDialog
 from umleditor.mvc_view.gui_view.gui_cworld.class_card import ClassCard
 from umleditor.mvc_view.gui_view.gui_cworld.class_input_dialog import CustomInputDialog
+from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.addMethodDialog import AddMethodDialog
+from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.createRelationshipDialog import CreateRelationshipDialog
+from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.deleteMethodDialog import RemoveMethodDialog
+from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.deleteRelationshipDialog import RemoveRelationshipDialog
+from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.fieldDialogs import AddFieldDialog, RenameFieldDialog, \
+    RemoveFieldDialog
+from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.renameClassDialog import RenameClassDialog
+from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.renameMethodDialog import RenameMethodDialog
 
 
 class GUIV2(QMainWindow):
@@ -17,8 +28,11 @@ class GUIV2(QMainWindow):
         self.setGeometry(300, 300, 850, 850)
         self.initUI()
         self.applyDarkTheme()
+        self.class_names = ["User", "Order", "Product", "ShoppingCart", "Payment"]
+        self.currentFilePath = " "
 
     def get_signal(self):
+        #BACKEND CALLS THIS TO RECIEVE SIGNALS (i think)
         return self._process_task_signal
 
     def initUI(self):
@@ -28,25 +42,87 @@ class GUIV2(QMainWindow):
         self.setupLayout()
 
     def createActions(self):
+        # Adding Classes
         self.actionAdd_Class = QAction('&Add Class', self)
-        self.actionSave = QAction('&Save', self)
-        self.actionLoad = QAction('&Load', self)
-        self.actionExit = QAction('&Exit', self)
-        self.actionHelp = QAction('&Help', self)
-
         self.actionAdd_Class.triggered.connect(self.on_add_class_clicked)
-        self.actionSave.triggered.connect(self.help_click)
-        self.actionLoad.triggered.connect(self.help_click)
-        self.actionExit.triggered.connect(self.help_click)
+
+        # Deleting Classes
+        self.actionDelete_Class = QAction('&Delete Class', self)
+        self.actionDelete_Class.triggered.connect(self.deleteClassAction)
+
+        # Renaming Classes
+        self.actionRename_Class = QAction('&Rename Class', self)
+        self.actionRename_Class.triggered.connect(self.renameClassAction)
+
+        # Saving and Loading
+        self.actionSave = QAction('&Save', self)
+        self.actionSave.triggered.connect(self.saveFile)
+
+        self.actionSaveAs = QAction('Save &As...', self)
+        self.actionSaveAs.triggered.connect(self.saveAsFile)
+
+        self.actionLoad = QAction('&Load', self)
+        self.actionLoad.triggered.connect(self.openFile)
+
+        self.actionExit = QAction('&Exit', self)
+        self.actionExit.triggered.connect(self.close)  # 'close' is a built-in method to close the window
+
+        self.actionHelp = QAction('&Help', self)
         self.actionHelp.triggered.connect(self.help_click)
 
+        # Managing Relationships
+        self.actionAdd_Relationship = QAction('Add &Relationship', self)
+        self.actionAdd_Relationship.triggered.connect(self.createRelationshipAction)
+
+        self.actionRemove_Relationship = QAction('Remove &Relationship', self)
+        self.actionRemove_Relationship.triggered.connect(self.removeRelationshipAction)
+
+        # Managing Fields
+        self.actionAdd_Field = QAction('Add &Field', self)
+        self.actionAdd_Field.triggered.connect(self.addFieldAction)
+
+        self.actionRemove_Field = QAction('Remove F&ield', self)
+        self.actionRemove_Field.triggered.connect(self.removeFieldAction)
+
+        self.actionRename_Field = QAction('Rename Fie&ld', self)
+        self.actionRename_Field.triggered.connect(self.renameFieldAction)
+
+        # Managing Methods
+        self.actionAdd_Method = QAction('Add &Method', self)
+        self.actionAdd_Method.triggered.connect(self.addMethodAction)
+
+        self.actionRemove_Method = QAction('Remove M&ethod', self)
+        self.actionRemove_Method.triggered.connect(self.removeMethodAction)
+
+        self.actionRename_Method = QAction('Rename &Method', self)
+        self.actionRename_Method.triggered.connect(self.renameMethodAction)
+
+        # Adding actions to the menu
         menuBar = self.menuBar()
         fileMenu = menuBar.addMenu('&File')
         fileMenu.addAction(self.actionSave)
+        fileMenu.addAction(self.actionSaveAs)
         fileMenu.addAction(self.actionLoad)
         fileMenu.addAction(self.actionExit)
+
         editMenu = menuBar.addMenu('&Edit')
         editMenu.addAction(self.actionAdd_Class)
+        editMenu.addAction(self.actionDelete_Class)
+        editMenu.addAction(self.actionRename_Class)
+        editMenu.addSeparator()  # Adds a visual separator between menu items
+        editMenu.addAction(self.actionAdd_Relationship)
+        editMenu.addAction(self.actionRemove_Relationship)
+        editMenu.addSeparator()
+        editMenu.addAction(self.actionAdd_Field)
+        editMenu.addAction(self.actionRemove_Field)
+        editMenu.addAction(self.actionRename_Field)
+        editMenu.addSeparator()
+        editMenu.addAction(self.actionAdd_Method)
+        editMenu.addAction(self.actionRemove_Method)
+        editMenu.addAction(self.actionRename_Method)
+
+        helpMenu = menuBar.addMenu('&Help')
+        helpMenu.addAction(self.actionHelp)
 
     def setupLayout(self):
         # Main layout for the entire window
@@ -151,16 +227,40 @@ class GUIV2(QMainWindow):
     ### FILE ACTION STUBS
 
     def openFile(self):
-        print("Stub: Open a file")
+        filepath, _ = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)")
+        if filepath:
+            print(f"Opening file: {filepath}")
+            with open(filepath, 'r') as file:
+                data = file.read()
+                # Process the file data...
+                print(data)
 
     def newFile(self):
-        print("Stub: Create a new file")
+        # Logic to reset the application state for a new file
+        print("Creating a new file...")
+        # Example: Clearing the UI, resetting data models, etc.
 
     def saveFile(self):
-        print("Stub: Save the current file")
+        # Assuming self.currentFilePath holds the path of the current file
+        if not hasattr(self, 'currentFilePath') or not self.currentFilePath:
+            self.saveAsFile()  # Delegate to 'Save As' if path is not set (file has not been saved before)
+            return
+
+        print(f"Saving file: {self.currentFilePath}")
+        with open(self.currentFilePath, 'w') as file:
+            # Logic to gather data from your application's state and write to the file
+            data = "Some data"  # Placeholder for actual data to save
+            file.write(data)
 
     def saveAsFile(self):
-        print("Stub: Save the current file as...")
+        filepath, _ = QFileDialog.getSaveFileName(self, "Save File As", "", "All Files (*);;Text Files (*.txt)")
+        if filepath:
+            print(f"Saving file as: {filepath}")
+            with open(filepath, 'w') as file:
+                # Logic to gather data from your application and write to the new file
+                data = "Some data"  # Placeholder for actual data to save
+                file.write(data)
+            self.currentFilePath = filepath  # Update the current file path
 
     def redrawDiagram(self):
         print("Stub: Redraw the entire diagram")
@@ -263,13 +363,44 @@ class GUIV2(QMainWindow):
     ### CLASS ACTION STUBS
 
     def newClassAction(self):
-        print("Stub: Create a new class")
+        dialog = NewClassDialog(self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            class_name = dialog.getClassname()
+            print(f"New class created: {class_name}")
+            # CLASSES ARE NOT STORED YET "New class created:" IMPLIES THIS CODE IS WORKING, BUT CLASSES ARE NOT STORED
+            # Here you can emit a signal or directly call another method to handle the new class creation
 
     def deleteClassAction(self):
-        print("Stub: Delete an existing class")
+
+        if not self.class_names:  # Assuming self.classes tracks the names
+            print("No classes available to delete.")
+            return
+
+        # Class_names being a standin for the actual list of classes
+
+        dialog = DeleteClassDialog(self.class_names, self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            selected_class = dialog.getSelectedClass()
+            # remove the selected class from data structure
+            self.class_names.remove(selected_class)
+            print(f"Class {selected_class} deleted")
+            # Update any UI elements (Redraw) and models
 
     def renameClassAction(self):
-        print("Stub: Rename an existing class")
+        #REQUIRES A LIST OF CLASS NAMES
+        dialog = RenameClassDialog(class_names=self.class_names, parent=self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            original_class_name = dialog.getSelectedClass()
+            new_class_name = dialog.getNewClassName()
+
+            if new_class_name and new_class_name not in self.class_names:
+                # Assuming self.class_names is your data structure tracking class names
+                index = self.class_names.index(original_class_name)
+                self.class_names[index] = new_class_name
+                print(f"Renamed class '{original_class_name}' to '{new_class_name}'")
+                # BACKEND: update any necessary UI components (Redraw) and data models as well
+            else:
+                print("Invalid new class name or name already exists.")
 
     def attributesAction(self):
         dialog = QDialog(self)
@@ -336,22 +467,93 @@ class GUIV2(QMainWindow):
     ### ATTRIBUTE ACTION STUBS
 
     def addMethodAction(self):
-        print("Stub: Add a new method")
+        # Example return types
+        return_types = ["void", "int", "String", "bool", "float"]
+
+        dialog = AddMethodDialog(return_types, self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            method_name, return_type = dialog.getMethodInfo()
+            if method_name:  # Basic validation to ensure method name is not empty
+                print(f"Adding method: {method_name} with return type: {return_type}")
+                # BACKEND: Here you should add the method to the selected class
+                # BACKEND: this involves updating data structure and refreshing the UI (Redraw)
+            else:
+                print("Method name cannot be empty.")
 
     def removeMethodAction(self):
-        print("Stub: Remove an existing method")
+        # Example method names for a selected class
+        methods = ["getName", "setName", "calculateTotal", "validateInput"]
+
+        dialog = RemoveMethodDialog(methods, self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            selected_method = dialog.getSelectedMethod()
+            print(f"Removing method: {selected_method}")
+            # BACKEND: remove the selected method from the class
+            # Redraw
 
     def renameMethodAction(self):
-        print("Stub: Rename a selected method")
+        # Example method names for a selected class
+        methods = ["getName", "setName", "calculateTotal", "validateInput"]
+
+        dialog = RenameMethodDialog(methods, self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            original_method_name = dialog.getSelectedMethod()
+            new_method_name = dialog.getNewMethodName()
+
+            if not new_method_name:  # Basic validation to ensure the name isn't empty
+                print("The new method name cannot be empty.")
+                return
+
+            # Here, include logic to check if the new method name already exists
+            if new_method_name in methods:
+                print("A method with this name already exists.")
+                return
+
+            print(f"Renaming method '{original_method_name}' to '{new_method_name}'")
+            # Update the method name in your data structure
+            # Refresh the UI or data models as necessary
 
     def addFieldAction(self):
-        print("Stub: Add a new field")
+        dialog = AddFieldDialog(self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            field_name, field_type = dialog.getFieldInfo()
+            if field_name and field_type:  # Basic validation
+                print(f"Adding field: {field_name} with type: {field_type}")
+                # Proceed with adding the field to the selected class
+            else:
+                print("Field name and type cannot be empty.")
 
     def removeFieldAction(self):
-        print("Stub: Remove an existing field")
+        # Example field names for a selected class
+        fields = ["id", "name", "price", "quantity"]
+
+        dialog = RemoveFieldDialog(fields, self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            selected_field = dialog.getSelectedField()
+            print(f"Removing field: {selected_field}")
+            # Here, remove the selected field from the class
+            # This might involve updating some data structure and refreshing the UI
 
     def renameFieldAction(self):
-        print("Stub: Rename a selected field")
+        # Again, assuming these are field names for the selected class
+        fields = ["id", "name", "price", "quantity"]
+
+        dialog = RenameFieldDialog(fields, self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            original_field_name, new_field_name = dialog.getFieldSelection()
+
+            if not new_field_name:  # Basic validation to ensure the name isn't empty
+                print("The new field name cannot be empty.")
+                return
+
+            # Include logic to check if the new field name already exists
+            if new_field_name in fields:
+                print("A field with this name already exists.")
+                return
+
+            print(f"Renaming field '{original_field_name}' to '{new_field_name}'")
+            # Update the field name in your data structure
+            # Refresh the UI or data models as necessary
 
     def relationshipsAction(self):
         dialog = QDialog(self)
@@ -390,10 +592,30 @@ class GUIV2(QMainWindow):
 
     # Placeholder methods for actions
     def createRelationshipAction(self):
-        print("Create Relationship action")
+        # Assuming 'classes' is a list of class names available for creating relationships
+        classes = ["ClassA", "ClassB", "ClassC", "ClassD"]
+
+        dialog = CreateRelationshipDialog(classes, self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            src_class, dest_class, relationship_type = dialog.getRelationshipInfo()
+            print(f"Creating {relationship_type} relationship from {src_class} to {dest_class}")
+            # Here, you would add the relationship to your model or data structure
 
     def removeRelationshipAction(self):
-        print("Remove Relationship action")
+        # Assuming 'existing_relationships' is a list of strings representing current relationships
+        # Each string could be formatted as "SourceClass -> DestinationClass: RelationshipType"
+        existing_relationships = [
+            "ClassA -> ClassB: Aggregation",
+            "ClassB -> ClassC: Composition",
+            "ClassC -> ClassD: Inheritance",
+            "ClassD -> ClassA: Realization"
+        ]
+
+        dialog = RemoveRelationshipDialog(existing_relationships, self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            selected_relationship = dialog.getSelectedRelationship()
+            print(f"Removing relationship: {selected_relationship}")
+            # Here, remove the selected relationship from your model or data structure
 
     def helpAction(self):
         dialog = QDialog(self)
@@ -456,6 +678,7 @@ class GUIV2(QMainWindow):
         layout.addWidget(btnHelpAttributes)
 
         dialog.exec()
+
     ###STUBS FOR HELP
     def loadReadmeAction(self):
         print("Load README action")
