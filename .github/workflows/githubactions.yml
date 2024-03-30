@@ -10,8 +10,10 @@ jobs:
         run: cd 2024sp-420-PythonA/src/test
       - name: install-pytest-windows
         run: pip install pytest
+      - name: install-pytest-cov-windows
+        run: pip install pytest-cov
       - name: unit-tests-windows
-        run: pytest
+        run: pytest --cov-fail-under=80 .
 
   mac:
     runs-on: macos-latest
@@ -22,8 +24,10 @@ jobs:
         run: cd 2024sp-420-PythonA/src/test
       - name: install-pytest-mac
         run: pip install pytest
+      - name: install-pytest-cov-mac
+        run: pip install pytest-cov
       - name: unit-tests-mac
-        run: pytest
+        run: pytest --cov-fail-under=80 .
 
   linux:
     runs-on: ubuntu-latest
@@ -34,5 +38,7 @@ jobs:
         run: cd 2024sp-420-PythonA/src/test
       - name: install-pytest-linux
         run: pip install pytest
+      - name: install-pytest-cov-linux
+        run: pip install pytest-cov
       - name: unit-tests-linux
-        run: pytest
+        run: pytest --cov-fail-under=80 .
