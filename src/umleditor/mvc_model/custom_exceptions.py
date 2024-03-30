@@ -1,6 +1,3 @@
-# Primary: Danish
-# Secondary: Zhang
-
 import re   #for argc errors
 class CustomExceptions:
     class Error(Exception):
@@ -59,18 +56,7 @@ class CustomExceptions:
         """
         def __init__(self, field_name):
             super().__init__(f"Field with name '{field_name}' does not exist.")
-
-    class FieldtypeNotFoundError(Error):
-        """Exception raised when a field with a given name is not found.
-
-        Args:
-            field_name (str): The name of the field not found.
-        """
-
-        def __init__(self, field_name:type):
-            self.field_type = field_name
-            super().__init__(f"Field with name '{field_name}' does not exist.")
-
+                        
     #===============================================================================#
                                 #Relation Exceptions
     #===============================================================================#
@@ -179,18 +165,6 @@ class CustomExceptions:
         """
         def __init__(self, parameter_name):
             super().__init__(f"Parameter named: '{parameter_name}' occurs more than once.")
-
-    class ParameterInvalidTypeError(Error):
-        """
-        Exception raised when the parameter type mismatched.
-
-        Args:
-        parameter_type (type): The type of the parameter is mismatched or not allowed.
-        """
-
-        def __init__(self, parameter_type):
-            super().__init__(f"Type '{parameter_type}' is not allowed.")
-
 
     #===============================================================================#
                                 #Parser/Controller Exceptions
@@ -320,4 +294,3 @@ class CustomExceptions:
         def __init__(self, filepath: str) -> None:
             fmt = 'Failed to load save data: "{}".(Data in this save is no longer valid)'
             super().__init__(fmt.format(filepath))
-
