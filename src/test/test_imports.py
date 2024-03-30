@@ -119,7 +119,7 @@ def test_import_relation():
                         #Import From View Tests#
 #===============================================================================#
 def test_import_class_card():
-    from umleditor.mvc_view.gui_view.class_card import ClassCard
+    from umleditor.mvc_view.gui_view.gui_cworld.class_card import ClassCard
     assert ClassCard
     assert ClassCard.set_name
     assert ClassCard.initUI
@@ -148,11 +148,11 @@ def test_import_class_card():
     assert ClassCard.add_relation
 
 def test_import_class_input_dialog():
-    from umleditor.mvc_view.gui_view.class_input_dialog import CustomInputDialog
+    from umleditor.mvc_view.gui_view.gui_cworld.class_input_dialog import CustomInputDialog
     assert CustomInputDialog
 
 def test_import_view_gui():
-    from umleditor.mvc_view.gui_view.view_GUI import ViewGUI
+    from umleditor.mvc_view.gui_view.gui_cworld.view_GUI import ViewGUI
     assert ViewGUI
     assert ViewGUI.get_signal
     assert ViewGUI.connect_menu

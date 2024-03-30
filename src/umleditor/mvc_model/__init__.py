@@ -1,5 +1,8 @@
-from .custom_exceptions import CustomExceptions
-from .diagram import Diagram
-from .entity import Entity, UML_Method
-from .help_command import help_menu
-from .relation import Relation
+import sys
+sys.path.append('src/umleditor/mvc_model')
+
+from .custom_exceptions import *
+from .diagram import *
+from .entity import *
+from .help_command import *
+from .relation import *
