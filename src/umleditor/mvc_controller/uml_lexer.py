@@ -10,6 +10,8 @@ _command_flag_map = {
     "prm"   : ["a","d","c"],
     "rel"   : ["a","t","d", "e"],
 
+    "undo"  : [""],
+    "redo"  : [""],
     "save"  : [""],
     "load"  : [""],
     "exit"  : [""],
@@ -26,6 +28,8 @@ _command_function_map = {
     "mthd"  : ["add_method","delete_method","rename_method","add_method_and_params","edit_method"],
     "prm"   : ["add_parameters", "remove_parameters", "change_parameters"],
     "rel"   : ["add_relation", "change_relation_type", "delete_relation", "edit_relation"],
+    "undo"  : ["undo"],
+    "redo"  : ["redo"],
     "save"  : ["save"],
     "load"  : ["load"],
     "exit"  : ["quit"],

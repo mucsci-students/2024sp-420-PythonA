@@ -7,6 +7,16 @@ class CustomExceptions:
         """Base class for other exceptions."""
         pass
 
+    # ===============================================================================#
+                             # Redo State Unfounded
+    # ===============================================================================#
+    class RedoStateError(Error):
+        """Exception raised when redo state is undefined by any prior undo actions.
+
+        """
+        def __init__(self) -> None:
+            super().__init__(f"Redo state not defined!")
+
     #===============================================================================#
                                 #Entity Exceptions
     #===============================================================================#

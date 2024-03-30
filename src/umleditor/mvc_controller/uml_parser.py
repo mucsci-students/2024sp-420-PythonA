@@ -4,7 +4,7 @@
 from umleditor.mvc_model import CustomExceptions as CE
 from .uml_lexer import lex_input as lex
 from umleditor.mvc_model import Diagram, Entity, Relation, UML_Method, help_command
-
+from umleditor.usability.autofill import get_args
 import re
 
 # list of all classes that need to be searched for commands
@@ -39,7 +39,7 @@ def parse(c, input_str: str) -> list:
     elif command_class == UML_Method and command_str == "add_parameters":
         if len(bits) < 6:
             raise CE.NeedsMoreInput()
-
+            
         entity_name, method_name, parameter_name, parameter_type = bits[2:6]
         ent = c._diagram.get_entity(entity_name)
         obj = ent.get_method(method_name)

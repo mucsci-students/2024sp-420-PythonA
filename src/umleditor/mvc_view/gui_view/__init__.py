@@ -1,3 +1,4 @@
-from .view_GUI import ViewGUI
-from .class_card import ClassCard
-from .class_input_dialog import CustomInputDialog
+import sys
+sys.path.append('src/umleditor/mvc_view/gui_view')
+
+from .gui_lambda import *
