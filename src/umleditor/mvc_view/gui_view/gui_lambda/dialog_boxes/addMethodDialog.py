@@ -1,17 +1,29 @@
-from PyQt6.QtWidgets import QDialog, QVBoxLayout, QLabel, QLineEdit, QComboBox, QPushButton
+from PyQt6.QtWidgets import QDialog, QVBoxLayout, QLabel, QLineEdit, QComboBox, QPushButton, QHBoxLayout
 
 
 class AddMethodDialog(QDialog):
-    def __init__(self, return_types, parent=None):
+    def __init__(self, classes, return_types, parent=None):
         super().__init__(parent)
         self.setWindowTitle("Add New Method")
 
         layout = QVBoxLayout(self)
 
+        # Class selection
+        layout.addWidget(QLabel("Class:"))
+        self.classComboBox = QComboBox(self)
+        self.classComboBox.addItems(classes)  # Populate with class names
+        layout.addWidget(self.classComboBox)
+
         # Method name input
         layout.addWidget(QLabel("Method Name:"))
         self.methodNameLineEdit = QLineEdit(self)
         layout.addWidget(self.methodNameLineEdit)
+
+        # Method parameters input with instructions for comma-separated values
+        paramsLabel = QLabel("Parameters (optional, separate by commas):")
+        layout.addWidget(paramsLabel)
+        self.parametersLineEdit = QLineEdit(self)
+        layout.addWidget(self.parametersLineEdit)
 
         # Return type selection
         layout.addWidget(QLabel("Return Type:"))
@@ -19,15 +31,20 @@ class AddMethodDialog(QDialog):
         self.returnTypeComboBox.addItems(return_types)  # Populate with possible return types
         layout.addWidget(self.returnTypeComboBox)
 
-        # Add button
+        # Buttons layout
+        buttonsLayout = QHBoxLayout()
         addButton = QPushButton("Add", self)
         addButton.clicked.connect(self.accept)
-        layout.addWidget(addButton)
+        buttonsLayout.addWidget(addButton)
 
-        # Cancel button
         cancelButton = QPushButton("Cancel", self)
         cancelButton.clicked.connect(self.reject)
-        layout.addWidget(cancelButton)
+        buttonsLayout.addWidget(cancelButton)
+
+        layout.addLayout(buttonsLayout)
 
     def getMethodInfo(self):
-        return self.methodNameLineEdit.text(), self.returnTypeComboBox.currentText()
+        # Return information as is, caller will handle splitting parameters if needed
+        return (self.classComboBox.currentText(), self.methodNameLineEdit.text(),
+                self.parametersLineEdit.text(), self.returnTypeComboBox.currentText())
+

@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QDialog, QVBoxLayout, QLabel, QComboBox, QLineEdit, QPushButton
+from PyQt6.QtWidgets import QDialog, QVBoxLayout, QLabel, QComboBox, QLineEdit, QPushButton, QHBoxLayout
 
 
 class RenameMethodDialog(QDialog):
@@ -19,18 +19,18 @@ class RenameMethodDialog(QDialog):
         self.newNameLineEdit = QLineEdit(self)
         layout.addWidget(self.newNameLineEdit)
 
-        # Rename button
+
+        # Buttons layout
+        buttonsLayout = QHBoxLayout()
         renameButton = QPushButton("Rename", self)
         renameButton.clicked.connect(self.accept)
-        layout.addWidget(renameButton)
+        buttonsLayout.addWidget(renameButton)
 
-        # Cancel button
         cancelButton = QPushButton("Cancel", self)
         cancelButton.clicked.connect(self.reject)
-        layout.addWidget(cancelButton)
+        buttonsLayout.addWidget(cancelButton)
 
-    def getSelectedMethod(self):
-        return self.methodComboBox.currentText()
+        layout.addLayout(buttonsLayout)
 
-    def getNewMethodName(self):
-        return self.newNameLineEdit.text().strip()
+    def getMethodSelection(self):
+        return self.methodComboBox.currentText(), self.newNameLineEdit.text().strip(), self.parametersLineEdit.text().strip()
