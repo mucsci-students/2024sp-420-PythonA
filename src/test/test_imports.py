@@ -2,22 +2,22 @@
                         #Import From Controller Tests#
 #===============================================================================#
 def test_import_cli_controller():
-    from umleditor.mvc_controller.cli_controller import CLI_Controller
+    from src.umleditor.mvc_controller.cli_controller import CLI_Controller
     assert CLI_Controller
     assert CLI_Controller.run
 
 def test_import_controller_input():
-    from umleditor.mvc_controller.controller_input import read_line, read_file
+    from src.umleditor.mvc_controller.controller_input import read_line, read_file
     assert read_line
     assert read_file
 
 def test_import_controller_output():
-    from umleditor.mvc_controller.controller_output import write, write_file
+    from src.umleditor.mvc_controller.controller_output import write, write_file
     assert write
     assert write_file
 
 def test_import_controller():
-    from umleditor.mvc_controller import Controller
+    from src.umleditor.mvc_controller import Controller
     assert Controller
     assert Controller.run
     assert Controller.quit
@@ -25,7 +25,7 @@ def test_import_controller():
     assert Controller.load
 
 def test_import_gui_controller():
-    from umleditor.mvc_controller.gui_controller import ControllerGUI
+    from src.umleditor.mvc_controller.gui_controller import ControllerGUI
     assert ControllerGUI
     assert ControllerGUI.run
     assert ControllerGUI.save_file
@@ -36,19 +36,19 @@ def test_import_gui_controller():
     assert ControllerGUI.acceptance_state
 
 def test_import_serialzer():
-    from umleditor.mvc_controller.serializer import CustomJSONEncoder, serialize, deserialize
+    from src.umleditor.mvc_controller.serializer import CustomJSONEncoder, serialize, deserialize
     assert CustomJSONEncoder
     assert serialize
     assert deserialize
 
 def test_import_uml_lexer():
-    from umleditor.mvc_controller.uml_lexer import _command_flag_map, _command_function_map, lex_input
+    from src.umleditor.mvc_controller.uml_lexer import _command_flag_map, _command_function_map, lex_input
     assert _command_flag_map
     assert _command_function_map
     assert lex_input
 
 def test_import_uml_parser():
-    from umleditor.mvc_controller.uml_parser import parse, check_args
+    from src.umleditor.mvc_controller.uml_parser import parse, check_args
     assert parse
     assert check_args
 
@@ -56,11 +56,11 @@ def test_import_uml_parser():
                         #Import From Model Tests#
 #===============================================================================#
 def test_import_custom_exceptions():
-    from umleditor.mvc_model.custom_exceptions import CustomExceptions
+    from src.umleditor.mvc_model.custom_exceptions import CustomExceptions
     assert CustomExceptions
 
 def test_import_diagram():
-    from umleditor.mvc_model import Diagram
+    from src.umleditor.mvc_model import Diagram
     assert Diagram
     assert Diagram.add_entity
     assert Diagram.get_entity
@@ -78,7 +78,7 @@ def test_import_diagram():
     assert Diagram.edit_relation
 
 def test_import_entity():
-    from umleditor.mvc_model import Entity
+    from src.umleditor.mvc_model import Entity
     assert Entity
     assert Entity.get_name
     assert Entity.set_name
@@ -95,7 +95,7 @@ def test_import_entity():
     assert Entity.list_methods
 
 def test_import_uml_method():
-    from umleditor.mvc_model.entity import UML_Method
+    from src.umleditor.mvc_model.entity import UML_Method
     assert UML_Method
     assert UML_Method.get_method_name
     assert UML_Method.set_method_name
@@ -104,11 +104,11 @@ def test_import_uml_method():
     assert UML_Method.change_parameters
 
 def test_import_help():
-    from umleditor.mvc_model.help_command import help_menu
+    from src.umleditor.mvc_model.help_command import help_menu
     assert help_menu
 
 def test_import_relation():
-    from umleditor.mvc_model import Relation
+    from src.umleditor.mvc_model import Relation
     assert Relation
     assert Relation.get_source
     assert Relation.get_destination
@@ -119,7 +119,7 @@ def test_import_relation():
                         #Import From View Tests#
 #===============================================================================#
 def test_import_class_card():
-    from umleditor.mvc_view.gui_view.gui_cworld.class_card import ClassCard
+    from src.umleditor.mvc_view.gui_view.gui_cworld.class_card import ClassCard
     assert ClassCard
     assert ClassCard.set_name
     assert ClassCard.initUI
@@ -148,11 +148,11 @@ def test_import_class_card():
     assert ClassCard.add_relation
 
 def test_import_class_input_dialog():
-    from umleditor.mvc_view.gui_view.gui_cworld.class_input_dialog import CustomInputDialog
+    from src.umleditor.mvc_view.gui_view.gui_cworld.class_input_dialog import CustomInputDialog
     assert CustomInputDialog
 
 def test_import_view_gui():
-    from umleditor.mvc_view.gui_view.gui_cworld.view_GUI import ViewGUI
+    from src.umleditor.mvc_view.gui_view.gui_cworld.view_GUI import ViewGUI
     assert ViewGUI
     assert ViewGUI.get_signal
     assert ViewGUI.connect_menu

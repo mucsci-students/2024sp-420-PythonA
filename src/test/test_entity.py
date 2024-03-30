@@ -1,4 +1,4 @@
-from umleditor.mvc_model import Entity
+from src.umleditor.mvc_model import Entity
 
 def test_create_entity():
     ent1 = Entity("entity1")
