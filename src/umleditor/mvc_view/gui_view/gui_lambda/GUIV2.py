@@ -8,6 +8,7 @@ from dialog_boxes.deleteClassDialog import DeleteClassDialog
 from umleditor.mvc_view.gui_view.gui_lambda.GUIV2_class_card import ClassCard
 from umleditor.mvc_view.gui_view.gui_cworld.class_input_dialog import CustomInputDialog
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.addMethodDialog import AddMethodDialog
+from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.changeParams import ChangeParamsDialog
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.createRelationshipDialog import CreateRelationshipDialog
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.deleteMethodDialog import RemoveMethodDialog
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.deleteRelationshipDialog import RemoveRelationshipDialog
@@ -22,6 +23,23 @@ class GUIV2(QMainWindow):
 
     def __init__(self):
         super().__init__()
+        self.classes_methods_params = {
+            "User": {
+                "setName": ["String name"],
+                "getName": [],
+                "authenticate": ["String password"]
+            },
+            "Order": {
+                "addItem": ["String item", "int quantity"],
+                "removeItem": ["String item"],
+                "calculateTotal": []
+            },
+            "Product": {
+                "setPrice": ["double price"],
+                "getPrice": []
+            }
+        }
+
         self.lstRelationships = QListWidget()
         self.gridLayout = QGridLayout()
         self.setWindowTitle("UML Editor - GUI V2")
@@ -70,6 +88,9 @@ class GUIV2(QMainWindow):
 
         self.actionHelp = QAction('&Help', self)
         self.actionHelp.triggered.connect(self.help_click)
+
+        self.actionChangeMethodParams = QAction('&Parameters', self)
+        self.actionChangeMethodParams.triggered.connect(self.changeMethodParamsAction)
 
         # Managing Relationships
         self.actionAdd_Relationship = QAction('Add &Relationship', self)
@@ -444,6 +465,10 @@ class GUIV2(QMainWindow):
         btnRenameMethod.clicked.connect(self.renameMethodAction)
         layout.addWidget(btnRenameMethod)
 
+        btnChangeParams = QPushButton("Change Parameters")
+        btnChangeParams.clicked.connect(self.changeMethodParamsAction)
+        layout.addWidget(btnChangeParams)
+
         # Separator
         separator = QFrame()
         separator.setFrameShape(QFrame.Shape.HLine)
@@ -738,6 +763,21 @@ class GUIV2(QMainWindow):
                 self.applyDarkTheme()
             elif self.radio_light_theme.isChecked():
                 self.applyLightTheme()
+
+    def changeMethodParamsAction(self):
+        dialog = ChangeParamsDialog(self.classes_methods_params, self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            className, methodName, newParams, paramsToRemove = dialog.getChanges()
+
+            # Here, you'll need to implement how to add new parameters and remove selected ones.
+            # This might involve updating a model, a database, or directly manipulating code.
+
+            print(f"Class: {className}, Method: {methodName}")
+            print(f"Adding parameters: {newParams}")
+            print(f"Removing parameters: {paramsToRemove}")
+
+            # Example: Update method parameters in the backend
+            # self.backend.updateMethodParams(className, methodName, newParams, paramsToRemove)
 
     def on_add_class_clicked(self):
         dialog = CustomInputDialog("Add Class", self)
