@@ -1,6 +1,12 @@
-from umleditor.mvc_controller.controller import Controller
-from umleditor.mvc_controller.cli_controller import CLI_Controller
-# We probably won't need these, but leaving for quick include later.
-# from controller_input import read_file, read_line
-# from controller_output import write, write_file
-# from serializer import serialize, deserialize
+import sys
+sys.path.append('src/umleditor/mvc_controller')
+
+from .cli_controller import *
+from .GUIV2_controller import *
+from .controller import *
+
+from .uml_lexer import *
+from .uml_parser import *
+from .controller_input import *
+from .controller_output import *
+from .serializer import *
