@@ -1,26 +1,26 @@
-from umleditor.mvc_view.gui_view.gui_cworld.view_GUI import ViewGUI
 from umleditor.mvc_model.diagram import Diagram
 from PyQt6 import QtWidgets
 from umleditor.mvc_controller.controller import Controller
 
+# This file began as a direct copy of gui_controller.py, Authored by Adam.
 
-class ControllerGUI (Controller):
+class ControllerGUI(Controller):
     """
-    ControllerGui - Runs tasks signaled by ViewGui
+    ControllerGui - Runs tasks signaled by GUIV2
         Run commands require updates to the gui e.g. methods found
         in run() 
 
     Parameters:
-        window (ViewGUI): The window instance of ViewGUI.
+        window (GUIV2): The window instance of GUIV2.
     """
 
-    def __init__(self, window: ViewGUI) -> None:
+    def __init__(self, window) -> None:
         """
         Initializes Diagram, sets the view as a class variable,
         Connects signal that runs tasks
 
         Parameters:
-            window (ViewGUI): The window instance of ViewGUI.
+            window (GUIV2): The window instance of GUIV2.
         """
         super().__init__()
         self._window = window
@@ -40,7 +40,7 @@ class ControllerGUI (Controller):
             out = super().run(task)
         except Exception as e:
             # Ignore attempting to delete things that don't exist
-            #if isinstance(e, CE.FieldNotFoundError) or isinstance(e, CE.RelationDoesNotExistError):
+            # if isinstance(e, CE.FieldNotFoundError) or isinstance(e, CE.RelationDoesNotExistError):
             #    return
             self._window.invalid_input_message(str(e))
             return
@@ -51,14 +51,16 @@ class ControllerGUI (Controller):
         if 'load' in task:
             self.load_file(widget)
             return
-        if 'class -r' in task:
-            self.rename_class(task,widget)
+        if "class" in task:
             return
-        if "class -a" in task:
-            self.add_class(task, widget)
-        # No action required after deleting
-        elif "-d" in task:
-            self.delete_class(task, widget)
+        if "mthd" in task:
+            return
+        if "field" in task:
+            return
+        if "prm" in task:
+            return
+        if "rel" in task:
+            return
         else:
             self.acceptance_state(widget)
 
@@ -69,7 +71,6 @@ class ControllerGUI (Controller):
         Parameters:
             widget: ClassInputDialog.
         """
-        widget.reject()
 
     def load_file(self, widget: QtWidgets):
         """
@@ -78,7 +79,7 @@ class ControllerGUI (Controller):
         Parameters:
             widget: ClassInputDialog.
         """
-        widget.reject()
+       
         self._window.delete_all_class_card()
         for entity in self._diagram._entities:
             class_card = self._window.add_class_card(entity._name)
@@ -94,31 +95,7 @@ class ControllerGUI (Controller):
                     s = relation._destination._name + ' ' + relation._type
                     class_card.add_relation(s)
 
-    def rename_class(self, task: str, widget: QtWidgets):
-        words = task.split()
-        widget.accept_new_name(words[-1])
-    
-    def add_class(self, task: str, widget: QtWidgets):
-        """
-        Closes dialog and creates class card.
-
-        Parameters:
-            task (str): Used for class name.
-            widget: ClassInputDialog.
-        """
-        widget.reject()
-        entity_name = task.split()[-1]
-        self._window.add_class_card(entity_name)
-
-    def delete_class(self, task: str, widget: QtWidgets):
-        """
-        Deletes class card.
-
-        Parameters:
-            widget: The widget instance.
-        """
-        class_name = task.split()[-1]
-        self._window.delete_class_card(class_name)
+        
 
     def acceptance_state(self, widget):
         """
@@ -132,4 +109,3 @@ class ControllerGUI (Controller):
         widget.enable_context_menus(True)
         widget.deselect_line()
         self._window.enable_widgets(True, self)
-        
