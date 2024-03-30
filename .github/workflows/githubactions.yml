@@ -1,22 +1,44 @@
-  name: uml-editor
-  # Will run unit tests every time someone makes a pull request.
-  on: pull_request
-  # Runs unit tests on Windows, macOS, and Linux.
-  jobs:
-    windows:
-      runs-on: windows-latest
-      steps:
-        - name: unit-tests
-          run: pytest
+name: github-actions
+on: pull_request
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - name: windows-clone-repo
+        run: git clone https://github.com/mucsci-students/2024sp-420-PythonA
+      - name: windows-cd
+        run: cd 2024sp-420-PythonA/src
+      - name: install-pytest-windows
+        run: pip install pytest
+      - name: install-pytest-cov-windows
+        run: pip install pytest-cov
+      - name: unit-tests-windows
+        run: pytest --cov-fail-under=80 .
 
-    mac:
-      runs-on: macos-latest
-      steps:
-        - name: unit-tests
-          run: pytest
+  mac:
+    runs-on: macos-latest
+    steps:
+      - name: mac-clone-repo
+        run: git clone https://github.com/mucsci-students/2024sp-420-PythonA
+      - name: mac-cd
+        run: cd 2024sp-420-PythonA/src
+      - name: install-pytest-mac
+        run: pip install pytest
+      - name: install-pytest-cov-mac
+        run: pip install pytest-cov
+      - name: unit-tests-mac
+        run: pytest --cov-fail-under=80 .
 
-    linux:
-      runs-on: ubuntu-latest
-      steps:
-        - name: unit-tests
-          run: pytest
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: linux-clone-repo
+        run: git clone https://github.com/mucsci-students/2024sp-420-PythonA
+      - name: linux-cd
+        run: cd 2024sp-420-PythonA/src
+      - name: install-pytest-linux
+        run: pip install pytest
+      - name: install-pytest-cov-linux
+        run: pip install pytest-cov
+      - name: unit-tests-linux
+        run: pytest --cov-fail-under=80 .
