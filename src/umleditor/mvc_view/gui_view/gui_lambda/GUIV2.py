@@ -9,6 +9,7 @@ from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.deleteClassDialog impor
 from umleditor.mvc_view.gui_view.gui_lambda.GUIV2_class_card import ClassCard
 from umleditor.mvc_view.gui_view.gui_cworld.class_input_dialog import CustomInputDialog
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.addMethodDialog import AddMethodDialog
+from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.changeParams import ChangeParamsDialog
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.createRelationshipDialog import CreateRelationshipDialog
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.deleteMethodDialog import RemoveMethodDialog
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.deleteRelationshipDialog import RemoveRelationshipDialog
@@ -31,6 +32,7 @@ class GUIV2(QMainWindow):
         self.initUI()
         self.applyDarkTheme()
         self.currentFilePath = " "
+        self.fields = ["field1", "field2", "field3"]
 
     def get_signal(self):
         return self._process_task_signal
@@ -69,6 +71,9 @@ class GUIV2(QMainWindow):
 
         self.actionHelp = QAction('&Help', self)
         self.actionHelp.triggered.connect(self.help_click)
+
+        self.actionChangeMethodParams = QAction('&Parameters', self)
+        self.actionChangeMethodParams.triggered.connect(self.changeMethodParamsAction)
 
         # Managing Relationships
         self.actionAdd_Relationship = QAction('Add &Relationship', self)
@@ -398,6 +403,10 @@ class GUIV2(QMainWindow):
         btnRenameMethod.clicked.connect(self.renameMethodAction)
         layout.addWidget(btnRenameMethod)
 
+        btnChangeParams = QPushButton("Change Parameters")
+        btnChangeParams.clicked.connect(self.changeMethodParamsAction)
+        layout.addWidget(btnChangeParams)
+
         # Separator
         separator = QFrame()
         separator.setFrameShape(QFrame.Shape.HLine)
@@ -429,90 +438,100 @@ class GUIV2(QMainWindow):
         # Example return types
         return_types = ["void", "int", "String", "bool", "float"]
 
-        dialog = AddMethodDialog(return_types, self)
+        # Pass the list of class names along with return types to the dialog
+        dialog = AddMethodDialog(self.class_names, return_types, self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
-            method_name, return_type = dialog.getMethodInfo()
-            if method_name:  # Basic validation to ensure method name is not empty
-                print(f"Adding method: {method_name} with return type: {return_type}")
-                # TODO BACKEND: Here you should add the method to the selected class
-                # TODO BACKEND: this involves updating data structure and refreshing the UI (Redraw)
+
+            class_name, method_name, parameter_str, return_type = dialog.getMethodInfo()
+
+            # Split parameters by commas to create a list, trimming whitespace around each parameter
+            parameters = [param.strip() for param in parameter_str.split(',') if param.strip()]
+
+            # Basic validation to ensure method name and class name are not empty
+            if class_name and method_name:
+                # Format method information with parameters joined by commas
+                method_info = f"{method_name}({', '.join(parameters)}) : {return_type}"
+                print(f"Adding method to class {class_name}: {method_info}")
+
+                # BACKEND: Here, you should handle the addition of the method to the selected class
+                # Example backend call (this is pseudo-code, replace with your actual backend method call)
+                # self.backend.addClassMethod(class_name, method_name, parameters, return_type)
             else:
-                print("Method name cannot be empty.")
+                print("Class name or method name cannot be empty.")  # Error handling
 
     def removeMethodAction(self):
-        # Example method names for a selected class
-        methods = ["getName", "setName", "calculateTotal", "validateInput"]
+        # Assuming 'classes_with_methods' is a dictionary mapping class names to lists of method names
+        classes_with_methods = {
+            "User": ["getName", "setName"],
+            "Order": ["calculateTotal", "validateInput"],
+            # Add more classes and methods as needed
+        }
 
-        dialog = RemoveMethodDialog(methods, self)
+        dialog = RemoveMethodDialog(classes_with_methods, self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
-            selected_method = dialog.getSelectedMethod()
-            print(f"Removing method: {selected_method}")
-            # TODO BACKEND: remove the selected method from the class
-            # Redraw
+
+            class_name, selected_method = dialog.getSelection()
+            if class_name and selected_method:
+                print(f"Removing method {selected_method} from class {class_name}")
+                # BACKEND: Remove the selected method from the specified class
+                # This might involve calling a backend method and potentially redrawing the UML diagram
+            else:
+                print("No method selected for removal.")
+
 
     def renameMethodAction(self):
         # Example method names for a selected class
-        methods = ["getName", "setName", "calculateTotal", "validateInput"]
+        methods = ["getName()", "setName(String name)", "calculateTotal()", "validateInput(String input)"]
 
         dialog = RenameMethodDialog(methods, self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
-            original_method_name = dialog.getSelectedMethod()
-            new_method_name = dialog.getNewMethodName()
+            original_method_info, new_method_name = dialog.getMethodSelection()
 
-            if not new_method_name:  # Basic validation to ensure the name isn't empty
+            # Split original method info to get the name and parameters
+            original_method_name = original_method_info.split('(')[0]
+
+            # Basic validation to ensure the new method name isn't empty
+            if not new_method_name:
                 print("The new method name cannot be empty.")
                 return
-
-            # Here, include logic to check if the new method name already exists
-            if new_method_name in methods:
-                print("A method with this name already exists.")
-                return
-
-            print(f"Renaming method '{original_method_name}' to '{new_method_name}'")
-            # TODO Update the method name in your data structure
-            # Refresh the UI or data models as necessary
+            print(f"Renaming method '{original_method_name}' to '{new_method_signature}'")
+            # BACKEND: Update the method in data structure with the new name and parameters
 
     def addFieldAction(self):
-        dialog = AddFieldDialog(self)
+        # Pass the list of class names to the dialog
+        dialog = AddFieldDialog(self.class_names, self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
-            field_name, field_type = dialog.getFieldInfo()
-            if field_name and field_type:  # Basic validation
-                print(f"Adding field: {field_name} with type: {field_type}")
+            class_name, field_name, field_type = dialog.getFieldInfo()
+            if class_name and field_name and field_type:
+                print(f"Adding field: {field_name} with type: {field_type} to class {class_name}")
                 # Proceed with adding the field to the selected class
             else:
-                print("Field name and type cannot be empty.")
+                print("Class name, field name, and type cannot be empty.")
 
     def removeFieldAction(self):
-        # Example field names for a selected class
-        fields = ["id", "name", "price", "quantity"]
-
-        dialog = RemoveFieldDialog(fields, self)
+        # Similar update for RemoveFieldDialog...
+        dialog = RemoveFieldDialog(self.class_names, self.fields, self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
-            selected_field = dialog.getSelectedField()
-            print(f"Removing field: {selected_field}")
-            # TODO  Here, remove the selected field from the class
-            # This might involve updating some data structure and refreshing the UI
+            class_name, selected_field = dialog.getSelectedField()
+            print(f"Removing field: {selected_field} from class {class_name}")
+            # Proceed with removing the field from the selected class
+
 
     def renameFieldAction(self):
-        # Again, assuming these are field names for the selected class
-        fields = ["id", "name", "price", "quantity"]
-
-        dialog = RenameFieldDialog(fields, self)
+        # Similar update for RenameFieldDialog...
+        dialog = RenameFieldDialog(self.class_names, self.fields, self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
-            original_field_name, new_field_name = dialog.getFieldSelection()
-
-            if not new_field_name:  # Basic validation to ensure the name isn't empty
+            class_name, original_field_name, new_field_name = dialog.getFieldSelection()
+            if class_name and not new_field_name:
                 print("The new field name cannot be empty.")
                 return
-
-            # Include logic to check if the new field name already exists
             if new_field_name in fields:
-                print("A field with this name already exists.")
+                print("A field with this name already exists in the selected class.")
                 return
 
-            print(f"Renaming field '{original_field_name}' to '{new_field_name}'")
-            # TODO Update the field name in your data structure
-            # Refresh the UI or data models as necessary
+            print(f"Renaming field '{original_field_name}' to '{new_field_name}' in class {class_name}")
+            # Proceed with renaming the field in the selected class
+
 
     def relationshipsAction(self):
         dialog = QDialog(self)
@@ -687,6 +706,21 @@ class GUIV2(QMainWindow):
                 self.applyDarkTheme()
             elif self.radio_light_theme.isChecked():
                 self.applyLightTheme()
+
+    def changeMethodParamsAction(self):
+        dialog = ChangeParamsDialog(self.classes_methods_params, self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            className, methodName, newParams, paramsToRemove = dialog.getChanges()
+
+            # Here, you'll need to implement how to add new parameters and remove selected ones.
+            # This might involve updating a model, a database, or directly manipulating code.
+
+            print(f"Class: {className}, Method: {methodName}")
+            print(f"Adding parameters: {newParams}")
+            print(f"Removing parameters: {paramsToRemove}")
+
+            # Example: Update method parameters in the backend
+            # self.backend.updateMethodParams(className, methodName, newParams, paramsToRemove)
 
     def on_add_class_clicked(self):
         dialog = CustomInputDialog("Add Class", self)
