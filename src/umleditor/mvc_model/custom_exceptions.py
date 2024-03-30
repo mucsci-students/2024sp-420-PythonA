@@ -49,7 +49,18 @@ class CustomExceptions:
         """
         def __init__(self, field_name):
             super().__init__(f"Field with name '{field_name}' does not exist.")
-                        
+
+    class FieldtypeNotFoundError(Error):
+        """Exception raised when a field with a given name is not found.
+
+        Args:
+            field_name (str): The name of the field not found.
+        """
+
+        def __init__(self, field_name:type):
+            self.field_type = field_name
+            super().__init__(f"Field with name '{field_name}' does not exist.")
+
     #===============================================================================#
                                 #Relation Exceptions
     #===============================================================================#
@@ -299,3 +310,4 @@ class CustomExceptions:
         def __init__(self, filepath: str) -> None:
             fmt = 'Failed to load save data: "{}".(Data in this save is no longer valid)'
             super().__init__(fmt.format(filepath))
+

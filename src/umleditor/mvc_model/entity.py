@@ -21,7 +21,7 @@ class Entity:
             "float": float
         }
         self._methods = []
-        self.allowed_return_types = {"void": type(None)}
+        self.allowed_return_types = {"void": None}
 
     def get_name(self):
         """
@@ -64,6 +64,8 @@ class Entity:
                 raise CustomExceptions.FieldtypeNotFoundError(field_type)
 
             else:
+                if isinstance(field_type, str):
+                    field_type = self.allowed_types[field_type]
                 self._fields.append((field_name, field_type))
 
     def delete_field(self, field_name: str, field_type: type):
@@ -85,6 +87,8 @@ class Entity:
         if f_name not in self._fields:
             raise CustomExceptions.FieldNotFoundError(field_name)
         else:
+            if isinstance(field_type, str):
+                field_type = self.allowed_types[field_type]
             self._fields.remove(f_name)
 
     def rename_field(self, old_field: str, old_type: type, new_field: str, new_type: type):
@@ -139,7 +143,7 @@ class Entity:
                 return m
         raise CustomExceptions.MethodNotFoundError(method_name)
 
-    def add_method(self, method_name: str, return_type: type):
+    def add_method(self, method_name: str, return_type: str):
         """
         Adds a new method to the to the list.
 
@@ -155,13 +159,13 @@ class Entity:
         """
         if any(method_name == um.get_method_name() for um in self._methods):
             raise CustomExceptions.MethodExistsError(method_name)
-        else:
-            if return_type not in self.allowed_return_types:
-                raise CustomExceptions.FieldtypeNotFoundError(return_type)
-            new_method = UML_Method(method_name, return_type)
-            self._methods.append(new_method)
+        if return_type not in self.allowed_return_types:
+            raise ValueError(f"Invalid return type: {return_type}")
 
-    def add_method_and_params(self, method_name: str, return_type: type, param_name: str, param_type: type):
+        new_method = UML_Method(method_name, return_type)
+        self._methods.append(new_method)
+
+    def add_method_and_params(self, method_name: str, return_type: str, param_name: str, param_type: type):
         """
         Adds a method with specified parameters to the class.
 
@@ -172,7 +176,7 @@ class Entity:
         self.add_method(method_name, return_type)
         self.get_method(method_name).add_parameters(param_name, param_type)
 
-    def edit_method(self, old_method: str, new_method: str, return_type: type, param_name: str, param_type: type):
+    def edit_method(self, old_method: str, new_method: str, return_type: str, param_name: str, param_type: type):
         deleted_method = self.get_method(old_method)
         self.delete_method(old_method)
         try:
@@ -232,7 +236,7 @@ class Entity:
 
             Return: a comma separated list of all methods in this entity
         """
-        return ", ".join(str(f) for f in self._fields) + '\n'
+        return ", ".join(f"{name}: {ftype.__name__}" for name, ftype in self._fields) + '\n'
 
     def list_methods(self):
         """Lists all the methods of this entity
@@ -268,7 +272,7 @@ class Entity:
 
 class UML_Method:
 
-    def __init__(self, method_name: str = '', return_type: type = None):
+    def __init__(self, method_name: str = '', return_type: str = ''):
         """
         Creates a UML_Method object.
 
@@ -321,6 +325,9 @@ class UML_Method:
             None.
         """
         self._name = new_name
+
+    def get_return_type(self):
+        return self._return_type
 
     def _check_duplicate_parameters(self, param_name: str):
         """
@@ -422,11 +429,11 @@ class UML_Method:
                 its list of parameters.
         """
 
-        result = self.get_method_name()
+        result = f"\n{self.get_method_name()}"
         result_return_type = 'void' if self._return_type is type(None) else self._return_type
         result += f"\n\tReturn Type: {result_return_type}"
         result += "\n\t" + self.get_method_name() + "'s Params: "
-        param_results = ', '.join(f'{name}: {ptype.__name__}' for name, ptype in self._params)
+        param_results = ' '.join(f'{name}: {ptype.__name__}' for name, ptype in self._params)
         return result + param_results
 
     def __eq__(self, other):
@@ -450,4 +457,3 @@ class UML_Method:
                 return False
 
         return True
-
