@@ -51,14 +51,16 @@ class ControllerGUI(Controller):
         if 'load' in task:
             self.load_file(widget)
             return
-        if 'class -r' in task:
-            self.rename_class(task, widget)
+        if "class" in task:
             return
-        if "class -a" in task:
-            self.add_class(task, widget)
-        # No action required after deleting
-        elif "-d" in task:
-            self.delete_class(task, widget)
+        if "mthd" in task:
+            return
+        if "field" in task:
+            return
+        if "prm" in task:
+            return
+        if "rel" in task:
+            return
         else:
             self.acceptance_state(widget)
 
@@ -69,7 +71,6 @@ class ControllerGUI(Controller):
         Parameters:
             widget: ClassInputDialog.
         """
-        widget.reject()
 
     def load_file(self, widget: QtWidgets):
         """
@@ -78,7 +79,7 @@ class ControllerGUI(Controller):
         Parameters:
             widget: ClassInputDialog.
         """
-        widget.reject()
+       
         self._window.delete_all_class_card()
         for entity in self._diagram._entities:
             class_card = self._window.add_class_card(entity._name)
@@ -94,31 +95,7 @@ class ControllerGUI(Controller):
                     s = relation._destination._name + ' ' + relation._type
                     class_card.add_relation(s)
 
-    def rename_class(self, task: str, widget: QtWidgets):
-        words = task.split()
-        widget.accept_new_name(words[-1])
-
-    def add_class(self, task: str, widget: QtWidgets):
-        """
-        Closes dialog and creates class card.
-
-        Parameters:
-            task (str): Used for class name.
-            widget: ClassInputDialog.
-        """
-        widget.reject()
-        entity_name = task.split()[-1]
-        self._window.add_class_card(entity_name)
-
-    def delete_class(self, task: str, widget: QtWidgets):
-        """
-        Deletes class card.
-
-        Parameters:
-            widget: The widget instance.
-        """
-        class_name = task.split()[-1]
-        self._window.delete_class_card(class_name)
+        
 
     def acceptance_state(self, widget):
         """
