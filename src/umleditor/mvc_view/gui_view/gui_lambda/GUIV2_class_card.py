@@ -23,21 +23,14 @@ class ClassCard(QWidget):
             name (str): The name of the class.
         """
         super().__init__()
-        self.set_name(name)
+        self._name = name
         self.initUI()
         # Used for capturing escape key
         self.installEventFilter(self)
         self.moving = False
         self.offset = None
 
-    def set_name(self, name: str):
-        """
-        Sets the name of the class.
-
-        Args:
-            name (str): The name of the class.
-        """
-        self._name = name
+    
 
     def initUI(self):
         """
@@ -81,6 +74,15 @@ class ClassCard(QWidget):
         self._class_label.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self._class_label.customContextMenuRequested.connect(self.show_class_menu)
 
+    def set_name(self, name: str):
+        """
+        Sets the name of the class.
+
+        Args:
+            name (str): The name of the class.
+        """
+        self._name = name
+        self._class_label.setText(name)
     def set_styles(self):
         """
         Sets styles for the widgets.
