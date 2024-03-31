@@ -1,3 +1,6 @@
+# Primary: Danish
+# Secondary: Zhang
+
 import os
 from src.umleditor.mvc_controller.serializer import serialize, deserialize
 from src.umleditor.mvc_model.diagram import Diagram
@@ -18,12 +21,12 @@ def test_empty():
     load_dia.add_entity('Entity2')
     load_dia.add_relation('Entity1', 'Entity2', 'composition')
     load_dia.add_relation('Entity2', 'Entity1', 'realization')
-    load_dia.get_entity('Entity1').add_field('Field1')
-    load_dia.get_entity('Entity2').add_field('Field1')
-    load_dia.get_entity('Entity2').add_field('Field2')
-    load_dia.get_entity('Entity1').add_method_and_params('Method1')
-    load_dia.get_entity('Entity1').add_method_and_params('Method2')
-    load_dia.get_entity('Entity2').add_method_and_params('Method1', 'Param1')
+    load_dia.get_entity('Entity1').add_field('Field1', "int")
+    load_dia.get_entity('Entity2').add_field('Field1',"int")
+    load_dia.get_entity('Entity2').add_field('Field2', "int")
+    load_dia.get_entity('Entity1').add_method_and_params('Method1', "void",'Param1',int)
+    load_dia.get_entity('Entity1').add_method_and_params('Method2', "void",'Param2', bool)
+    load_dia.get_entity('Entity2').add_method_and_params('Method1', "void",'Param3', int)
     deserialize(load_dia, path)
     assert not load_dia.has_entity('Entity1')
     assert not load_dia.has_entity('Entity2')
@@ -39,12 +42,12 @@ def test_entities():
     load_dia.add_entity('Entity2')
     load_dia.add_relation('Entity1', 'Entity2', 'composition')
     load_dia.add_relation('Entity2', 'Entity1', 'realization')
-    load_dia.get_entity('Entity1').add_field('Field1')
-    load_dia.get_entity('Entity2').add_field('Field1')
-    load_dia.get_entity('Entity2').add_field('Field2')
-    load_dia.get_entity('Entity1').add_method_and_params('Method1')
-    load_dia.get_entity('Entity1').add_method_and_params('Method2')
-    load_dia.get_entity('Entity2').add_method_and_params('Method1', 'Param1')
+    load_dia.get_entity('Entity1').add_field('Field1',"int")
+    load_dia.get_entity('Entity2').add_field('Field1',"int")
+    load_dia.get_entity('Entity2').add_field('Field2',"int")
+    load_dia.get_entity('Entity1').add_method_and_params('Method1', "void",'Param1', int)
+    load_dia.get_entity('Entity1').add_method_and_params('Method2', "void",'Param2', str)
+    load_dia.get_entity('Entity2').add_method_and_params('Method3', "void",'Param3', float)
     deserialize(load_dia, path)
     assert not load_dia.has_entity('Entity1')
     assert not load_dia.has_entity('Entity2')
@@ -65,12 +68,12 @@ def test_relations():
     load_dia.add_entity('Entity2')
     load_dia.add_relation('Entity1', 'Entity2', 'composition')
     load_dia.add_relation('Entity2', 'Entity1', 'realization')
-    load_dia.get_entity('Entity1').add_field('Field1')
-    load_dia.get_entity('Entity2').add_field('Field1')
-    load_dia.get_entity('Entity2').add_field('Field2')
-    load_dia.get_entity('Entity1').add_method_and_params('Method1')
-    load_dia.get_entity('Entity1').add_method_and_params('Method2')
-    load_dia.get_entity('Entity2').add_method_and_params('Method1', 'Param1')
+    load_dia.get_entity('Entity1').add_field('Field1',"int")
+    load_dia.get_entity('Entity2').add_field('Field2',"string")
+    load_dia.get_entity('Entity2').add_field('Field3',"bool")
+    load_dia.get_entity('Entity1').add_method_and_params('Method1', "void",'Param1', int)
+    load_dia.get_entity('Entity1').add_method_and_params('Method2', "void",'Param2', int)
+    load_dia.get_entity('Entity2').add_method_and_params('Method2', "void",'Param3', float)
     deserialize(load_dia, path)
     assert not load_dia.has_entity('Entity1')
     assert not load_dia.has_entity('Entity2')
@@ -80,13 +83,14 @@ def test_relations():
     assert Relation('composition', Entity('Class1'), Entity('Class2')) in load_dia._relations
     assert Relation('inheritance', Entity('Class2'), Entity('Class1')) in load_dia._relations
 
+
 def test_fields():
     dia = Diagram()
     dia.add_entity('Class1')
     dia.add_entity('Class2')
-    dia.get_entity('Class1').add_field('Field1')
-    dia.get_entity('Class1').add_field('Field2')
-    dia.get_entity('Class2').add_field('Field1')
+    dia.get_entity('Class1').add_field('Field1', "int")
+    dia.get_entity('Class1').add_field('Field2', "string")
+    dia.get_entity('Class2').add_field('Field1', "float")
     serialize(dia, path)
 
     load_dia = Diagram()
@@ -94,30 +98,30 @@ def test_fields():
     load_dia.add_entity('Entity2')
     load_dia.add_relation('Entity1', 'Entity2', 'composition')
     load_dia.add_relation('Entity2', 'Entity1', 'realization')
-    load_dia.get_entity('Entity1').add_field('Field1')
-    load_dia.get_entity('Entity2').add_field('Field1')
-    load_dia.get_entity('Entity2').add_field('Field2')
-    load_dia.get_entity('Entity1').add_method_and_params('Method1')
-    load_dia.get_entity('Entity1').add_method_and_params('Method2')
-    load_dia.get_entity('Entity2').add_method_and_params('Method1', 'Param1')
+    load_dia.get_entity('Entity1').add_field('Field1',"int")
+    load_dia.get_entity('Entity2').add_field('Field2',"string")
+    load_dia.get_entity('Entity2').add_field('Field3',"float")
+    load_dia.get_entity('Entity1').add_method_and_params('Method1', "void",'Param1', int)
+    load_dia.get_entity('Entity1').add_method_and_params('Method2', "void",'Param2', int)
+    load_dia.get_entity('Entity2').add_method_and_params('Method3', "void",'Param3', float)
     deserialize(load_dia, path)
     assert not load_dia.has_entity('Entity1')
     assert not load_dia.has_entity('Entity2')
 
     assert load_dia.has_entity('Class1')
     assert load_dia.has_entity('Class2')
-    assert 'Field1' in load_dia.get_entity('Class1')._fields
-    assert 'Field2' in load_dia.get_entity('Class1')._fields
-    assert 'Field1' in load_dia.get_entity('Class2')._fields
+    assert 'Field1',"int" in load_dia.get_entity('Class1')._fields
+    assert 'Field2',"string" in load_dia.get_entity('Class1')._fields
+    assert 'Field1',"float" in load_dia.get_entity('Class2')._fields
 
 def test_methods():
     dia = Diagram()
     dia.add_entity('Class1')
     dia.add_entity('Class2')
-    dia.get_entity('Class1').add_method_and_params('Method1')
-    dia.get_entity('Class2').add_method_and_params('Method1', 'Param1')
-    dia.get_entity('Class2').add_method_and_params('Method2')
-    dia.get_entity('Class2').add_method_and_params('Method3', 'Param1', 'Param2', 'Param3')
+    dia.get_entity('Class1').add_method_and_params('Method1', "void",'Param1', "int")
+    dia.get_entity('Class2').add_method_and_params('Method1', "void",'Param1', "int")
+    dia.get_entity('Class2').add_method_and_params('Method2', "void",'Param2', "float")
+    dia.get_entity('Class2').add_method_and_params('Method3', "void",'Param3', "bool")
     serialize(dia, path)
 
     load_dia = Diagram()
@@ -125,12 +129,12 @@ def test_methods():
     load_dia.add_entity('Entity2')
     load_dia.add_relation('Entity1', 'Entity2', 'composition')
     load_dia.add_relation('Entity2', 'Entity1', 'realization')
-    load_dia.get_entity('Entity1').add_field('Field1')
-    load_dia.get_entity('Entity2').add_field('Field1')
-    load_dia.get_entity('Entity2').add_field('Field2')
-    load_dia.get_entity('Entity1').add_method_and_params('Method1')
-    load_dia.get_entity('Entity1').add_method_and_params('Method2')
-    load_dia.get_entity('Entity2').add_method_and_params('Method1', 'Param1')
+    load_dia.get_entity('Entity1').add_field('Field1',"int")
+    load_dia.get_entity('Entity2').add_field('Field1', "int")
+    load_dia.get_entity('Entity2').add_field('Field2',"float")
+    load_dia.get_entity('Entity1').add_method_and_params('Method1', "void",'Param1', "int")
+    load_dia.get_entity('Entity1').add_method_and_params('Method2', "void",'Param2',"int")
+    load_dia.get_entity('Entity2').add_method_and_params('Method1', "void",'Param1',"int")
     deserialize(load_dia, path)
     assert not load_dia.has_entity('Entity1')
     assert not load_dia.has_entity('Entity2')
@@ -139,12 +143,12 @@ def test_methods():
     assert load_dia.has_entity('Class2')
     assert load_dia.get_entity('Class1').get_method('Method1')
     assert load_dia.get_entity('Class2').get_method('Method1')
-    assert 'Param1' in load_dia.get_entity('Class2').get_method('Method1')._params
+    assert 'Param1', "int" in load_dia.get_entity('Class2').get_method('Method1')._params
     assert load_dia.get_entity('Class2').get_method('Method2')
     assert load_dia.get_entity('Class2').get_method('Method3')
-    assert 'Param1' in load_dia.get_entity('Class2').get_method('Method3')._params
-    assert 'Param2' in load_dia.get_entity('Class2').get_method('Method3')._params
-    assert 'Param3' in load_dia.get_entity('Class2').get_method('Method3')._params
+    assert 'Param1', "int" in load_dia.get_entity('Class2').get_method('Method3')._params
+    assert 'Param2', "int" in load_dia.get_entity('Class2').get_method('Method3')._params
+    assert 'Param3', "int" in load_dia.get_entity('Class2').get_method('Method3')._params
 
 def test_all_together():
     dia = Diagram()
@@ -152,13 +156,13 @@ def test_all_together():
     dia.add_entity('Class2')
     dia.add_relation('Class1', 'Class2', 'composition')
     dia.add_relation('Class2', 'Class1', 'inheritance')
-    dia.get_entity('Class1').add_field('Field1')
-    dia.get_entity('Class1').add_field('Field2')
-    dia.get_entity('Class2').add_field('Field1')
-    dia.get_entity('Class1').add_method_and_params('Method1')
-    dia.get_entity('Class2').add_method_and_params('Method1', 'Param1')
-    dia.get_entity('Class2').add_method_and_params('Method2')
-    dia.get_entity('Class2').add_method_and_params('Method3', 'Param1', 'Param2', 'Param3')
+    dia.get_entity('Class1').add_field('Field1',"int")
+    dia.get_entity('Class1').add_field('Field2',"int")
+    dia.get_entity('Class2').add_field('Field1',"int")
+    dia.get_entity('Class1').add_method_and_params('Method1', "void",'Param1', "int")
+    dia.get_entity('Class2').add_method_and_params('Method1', "void",'Param1',"int")
+    dia.get_entity('Class2').add_method_and_params('Method2', "void",'Param1',"int")
+    dia.get_entity('Class2').add_method_and_params('Method3', "void",'Param1',"int")
     serialize(dia, path)
 
     load_dia = Diagram()
@@ -166,12 +170,12 @@ def test_all_together():
     load_dia.add_entity('Entity2')
     load_dia.add_relation('Entity1', 'Entity2', 'composition')
     load_dia.add_relation('Entity2', 'Entity1', 'realization')
-    load_dia.get_entity('Entity1').add_field('Field1')
-    load_dia.get_entity('Entity2').add_field('Field1')
-    load_dia.get_entity('Entity2').add_field('Field2')
-    load_dia.get_entity('Entity1').add_method_and_params('Method1')
-    load_dia.get_entity('Entity1').add_method_and_params('Method2')
-    load_dia.get_entity('Entity2').add_method_and_params('Method1', 'Param1')
+    load_dia.get_entity('Entity1').add_field('Field1',"int")
+    load_dia.get_entity('Entity2').add_field('Field1',"int")
+    load_dia.get_entity('Entity2').add_field('Field2',"int")
+    load_dia.get_entity('Entity1').add_method_and_params('Method1', "void",'Param1',"int")
+    load_dia.get_entity('Entity1').add_method_and_params('Method2', "void",'Param1',"int")
+    load_dia.get_entity('Entity2').add_method_and_params('Method1', "void",'Param1',"int")
     deserialize(load_dia, path)
     assert not load_dia.has_entity('Entity1')
     assert not load_dia.has_entity('Entity2')
@@ -180,14 +184,14 @@ def test_all_together():
     assert load_dia.has_entity('Class2')
     assert Relation('composition', Entity('Class1'), Entity('Class2')) in load_dia._relations
     assert Relation('inheritance', Entity('Class2'), Entity('Class1')) in load_dia._relations
-    assert 'Field1' in load_dia.get_entity('Class1')._fields
-    assert 'Field2' in load_dia.get_entity('Class1')._fields
-    assert 'Field1' in load_dia.get_entity('Class2')._fields
+    assert 'Field1', "int" in load_dia.get_entity('Class1')._fields
+    assert 'Field2', "int" in load_dia.get_entity('Class1')._fields
+    assert 'Field1', "int" in load_dia.get_entity('Class2')._fields
     assert load_dia.get_entity('Class1').get_method('Method1')
     assert load_dia.get_entity('Class2').get_method('Method1')
-    assert 'Param1' in load_dia.get_entity('Class2').get_method('Method1')._params
+    assert 'Param1', "int" in load_dia.get_entity('Class2').get_method('Method1')._params
     assert load_dia.get_entity('Class2').get_method('Method2')
     assert load_dia.get_entity('Class2').get_method('Method3')
-    assert 'Param1' in load_dia.get_entity('Class2').get_method('Method3')._params
-    assert 'Param2' in load_dia.get_entity('Class2').get_method('Method3')._params
-    assert 'Param3' in load_dia.get_entity('Class2').get_method('Method3')._params
+    assert 'Param1', "int" in load_dia.get_entity('Class2').get_method('Method3')._params
+    assert 'Param2', "int" in load_dia.get_entity('Class2').get_method('Method3')._params
+    assert 'Param3', "int" in load_dia.get_entity('Class2').get_method('Method3')._params
