@@ -9,7 +9,7 @@ jobs:
       - name: windows-cd
         run: cd 2024sp-420-PythonA
       - name: build-project-windows
-        run: pip install -e .
+        run: py -m pip install -e .
       - name: install-pytest-cov-windows
         run: pip install pytest-cov
       - name: unit-tests-windows
@@ -23,7 +23,7 @@ jobs:
       - name: mac-cd
         run: cd 2024sp-420-PythonA
       - name: build-project-mac
-        run: pip install -e .
+        run: python3 -m pip install -e .
       - name: install-pytest-cov-mac
         run: pip install pytest-cov
       - name: unit-tests-mac
@@ -37,7 +37,7 @@ jobs:
       - name: linux-cd
         run: cd 2024sp-420-PythonA
       - name: build-project-linux
-        run: pip install -e .
+        run: python -m pip install -e .
       - name: install-pytest-cov-linux
         run: pip install pytest-cov
       - name: unit-tests-linux
