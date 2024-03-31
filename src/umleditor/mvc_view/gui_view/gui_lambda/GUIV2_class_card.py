@@ -450,7 +450,7 @@ class ClassCard(QWidget):
 
         # Create field and add to list
         item = QListWidgetItem()
-        list.addItem(item)  # !!!
+        list.addItem(item) 
         text = QLineEdit()
         text.setText(method)
         text.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
@@ -466,7 +466,58 @@ class ClassCard(QWidget):
         text.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         text.setReadOnly(True)
+        
+    def getMethods(self):
+        """
+        Returns a list of method names added to the class card.
+        
+        Returns:
+            List[str]: A list containing the names of all methods.
+        """
+        methods = []
+        for index in range(self._list_method.count()):
+            # Retrieve the QListWidgetItem at the given index
+            item = self._list_method.item(index)
+            # Assuming the text of each item is the method name
+            method_name = self._list_method.itemWidget(item).text()
+            methods.append(method_name)
+        return methods
+        
+    def remove_method(self, method_name):
+        """
+        Removes a method from the class card.
 
+        Args:
+            method_name (str): The name of the method to remove.
+        """
+        for i in range(self._list_method.count()):
+            item = self._list_method.item(i)
+            line_edit = self._list_method.itemWidget(item)
+            if line_edit and line_edit.text() == method_name:
+                self._list_method.takeItem(i)
+                break
+    def rename_method(self, old_method_name, new_method_name):
+        """
+        Renames an existing method in the class card.
+
+        Args:
+            old_method_name (str): The current name of the method to be renamed.
+            new_method_name (str): The new name for the method.
+        """
+        for i in range(self._list_method.count()):
+            item = self._list_method.item(i)
+            line_edit = self._list_method.itemWidget(item)
+            if line_edit and line_edit.text().startswith(old_method_name):
+                # Assuming the method's signature format is "methodName : returnType"
+                # and you want to preserve the return type while changing the method name.
+                parts = line_edit.text().split(' : ')
+                if len(parts) > 1:
+                    # Update the method name while preserving the rest of the method signature.
+                    line_edit.setText(f"{new_method_name}: {parts[1].strip()}")
+                else:
+                    # If for some reason the method signature is not in the expected format, just rename.
+                    line_edit.setText(new_method_name)
+                break    
     def add_relation(self, relation):
         """
         Adds a relation.
