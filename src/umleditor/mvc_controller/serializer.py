@@ -20,6 +20,7 @@ from umleditor.mvc_model.entity import Entity, UML_Method
 from umleditor.mvc_model.relation import Relation
 from umleditor.mvc_model.custom_exceptions import CustomExceptions as CE
 
+
 def serialize(diagram: Diagram, path: str) -> None:
     '''
     Serialize a diagram's entities and relations to a JSON file.
@@ -37,31 +38,33 @@ def serialize(diagram: Diagram, path: str) -> None:
         saved_class['name'] = entity._name
         # class fields
         saved_fields = []; saved_class['fields'] = saved_fields
-        for field in entity._fields:
+        for field_name, field_type in entity._fields:
+            if isinstance(field_type, type):
+                field_type = field_type.__name__
             # class field
-            saved_field = {}; saved_fields.append(saved_field)
+                saved_field = {}; saved_fields.append(saved_field)
             # class field name
-            saved_field['name'] = field
+                saved_field['name'] = field_name
             # class field type
-            saved_field['type'] = 'undefined' #TODO
+                saved_field['type'] = field_type
         # class methods
         saved_methods = []; saved_class['methods'] = saved_methods
         for method in entity._methods:
             # class method
             saved_method = {}; saved_methods.append(saved_method)
             # class method name
-            saved_method['name'] = method._name
+            saved_method['name'] =method._name
             # class method return_type
-            saved_method['return_type'] = 'undefined' #TODO
+            saved_method['return_type'] = method._return_type
             # class method params
-            saved_params = []; saved_method['params'] = saved_params
-            for param in method._params:
+            saved_params = [];saved_method['params'] = saved_params
+            for param_name, param_type in method._params:
                 # class method param
                 saved_param = {}; saved_params.append(saved_param)
                 # class method param name
-                saved_param['name'] = param
+                saved_param['name'] = param_name
                 # class method param type
-                saved_param['type'] = 'undefined' # TODO
+                saved_param['type'] = param_type
     # relationships
     saved_relationships = []
     for relation in diagram._relations:
@@ -77,6 +80,7 @@ def serialize(diagram: Diagram, path: str) -> None:
     try:
         obj = {'classes': saved_classes, 'relationships': saved_relationships}
         content = json.dumps(obj=obj, cls=CustomJSONEncoder)
+
     except Exception:
         raise CE.JsonEncodeError(filepath=path)
 
@@ -118,6 +122,7 @@ def deserialize(diagram: Diagram, path: str) -> None:
                 loaded_field = saved_field['name']
                 # class field type
                 # TODO: field type unused
+                loaded_field = saved_field['type']
                 loaded_fields.append(loaded_field)
             loaded_class._fields = loaded_fields
             # class methods
@@ -129,6 +134,7 @@ def deserialize(diagram: Diagram, path: str) -> None:
                 loaded_method._name = saved_method['name']
                 # class method return_type
                 # TODO: return_type unused
+                loaded_method.return_type = saved_method['return_type']
                 # class method params
                 loaded_params = []
                 for saved_param in saved_method['params']:
@@ -138,6 +144,7 @@ def deserialize(diagram: Diagram, path: str) -> None:
                     loaded_param = saved_param['name']
                     # class method param type
                     # TODO: type unused
+                    loaded_param = saved_param['type']
                     loaded_params.append(loaded_param)
                 loaded_method._params = loaded_params
                 loaded_methods.append(loaded_method)
