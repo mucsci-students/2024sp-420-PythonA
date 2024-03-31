@@ -7,9 +7,9 @@ jobs:
       - name: windows-clone-repo
         run: git clone https://github.com/mucsci-students/2024sp-420-PythonA
       - name: windows-cd
-        run: cd 2024sp-420-PythonA
-      - name: install-pytest-windows
-        run: pip install pytest
+        run: cd 2024sp-420-PythonA/src/test
+      - name: build-project-windows
+        run: pip install -e
       - name: install-pytest-cov-windows
         run: pip install pytest-cov
       - name: unit-tests-windows
@@ -21,9 +21,9 @@ jobs:
       - name: mac-clone-repo
         run: git clone https://github.com/mucsci-students/2024sp-420-PythonA
       - name: mac-cd
-        run: cd 2024sp-420-PythonA
-      - name: install-pytest-mac
-        run: pip install pytest
+        run: cd 2024sp-420-PythonA/src/test
+      - name: build-project-mac
+        run: pip install -e
       - name: install-pytest-cov-mac
         run: pip install pytest-cov
       - name: unit-tests-mac
@@ -35,9 +35,9 @@ jobs:
       - name: linux-clone-repo
         run: git clone https://github.com/mucsci-students/2024sp-420-PythonA
       - name: linux-cd
-        run: cd 2024sp-420-PythonA
-      - name: install-pytest-linux
-        run: pip install pytest
+        run: cd 2024sp-420-PythonA/src/test
+      - name: build-project-linux
+        run: pip install -e
       - name: install-pytest-cov-linux
         run: pip install pytest-cov
       - name: unit-tests-linux
