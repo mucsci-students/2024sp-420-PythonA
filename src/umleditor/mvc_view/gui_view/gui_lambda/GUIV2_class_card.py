@@ -425,7 +425,7 @@ class ClassCard(QWidget):
 
         # Create field and add to list
         item = QListWidgetItem()
-        list.addItem(item)  # !!!
+        list.addItem(item) 
         text = QLineEdit()
         text.setText(field)
         text.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
@@ -441,6 +441,57 @@ class ClassCard(QWidget):
         text.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         text.setReadOnly(True)
+        
+    def getFields(self):
+        """
+        Returns a list of fields names added to the class card.
+        
+        Returns:
+            List[str]: A list containing the names of all fields.
+        """
+        fields = []
+        for index in range(self._list_field.count()):
+            # Retrieve the QListWidgetItem at the given index
+            item = self._list_field.item(index)
+            # Assuming the text of each item is the method name
+            field_name = self._list_field.itemWidget(item).text()
+            fields.append(field_name)
+        return fields
+        
+    def remove_field(self, field_name):
+        """
+        Removes a field from the class card.
+
+        Args:
+            field_name (str): The name of the field to remove.
+        """
+        for i in range(self._list_field.count()):
+            item = self._list_field.item(i)
+            line_edit = self._list_field.itemWidget(item)
+            if line_edit and line_edit.text() == field_name:
+                self._list_field.takeItem(i)
+                break
+            
+    def rename_field(self, old_field_name, new_field_name):
+        """
+        Renames an existing field in the class card.
+
+        Args:
+            old_field_name (str): The current name of the field to be renamed.
+            new_field_name (str): The new name for the field.
+        """
+        for i in range(self._list_field.count()):
+            item = self._list_field.item(i)
+            line_edit = self._list_field.itemWidget(item)
+            if line_edit and line_edit.text().startswith(old_field_name):
+                parts = line_edit.text().split(' : ')
+                if len(parts) > 1:
+                    
+                    line_edit.setText(f"{new_field_name}: {parts[1].strip()}")
+                else:
+                    
+                    line_edit.setText(new_field_name)
+                break    
 
     def add_method(self, method):
         """
@@ -476,9 +527,9 @@ class ClassCard(QWidget):
         """
         methods = []
         for index in range(self._list_method.count()):
-            # Retrieve the QListWidgetItem at the given index
+
             item = self._list_method.item(index)
-            # Assuming the text of each item is the method name
+      
             method_name = self._list_method.itemWidget(item).text()
             methods.append(method_name)
         return methods
@@ -508,14 +559,13 @@ class ClassCard(QWidget):
             item = self._list_method.item(i)
             line_edit = self._list_method.itemWidget(item)
             if line_edit and line_edit.text().startswith(old_method_name):
-                # Assuming the method's signature format is "methodName : returnType"
-                # and you want to preserve the return type while changing the method name.
+          
                 parts = line_edit.text().split(' : ')
                 if len(parts) > 1:
-                    # Update the method name while preserving the rest of the method signature.
+                   
                     line_edit.setText(f"{new_method_name}: {parts[1].strip()}")
                 else:
-                    # If for some reason the method signature is not in the expected format, just rename.
+                   
                     line_edit.setText(new_method_name)
                 break    
     def add_relation(self, relation):
