@@ -55,7 +55,7 @@ class ControllerGUI(Controller):
             return
         if "mthd" in task:
             return
-        if "field" in task:
+        if "fld" in task:
             return
         if "prm" in task:
             return
