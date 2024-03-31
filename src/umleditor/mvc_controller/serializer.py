@@ -104,7 +104,7 @@ def deserialize(diagram: Diagram, path: str) -> None:
         obj = json.loads(content)
     except Exception:
         raise CE.JsonDecodeError(filepath=path)
-    
+
     try:
         # classes
         loaded_classes = []
@@ -116,14 +116,16 @@ def deserialize(diagram: Diagram, path: str) -> None:
             # class fields
             loaded_fields = []
             for saved_field in saved_class['fields']:
+
                 # class field
-                loaded_field = str() # str is the type of field
+                    loaded_field = str() # str is the type of field
                 # class field name
-                loaded_field = saved_field['name']
+                    loaded_field = saved_field['name']
                 # class field type
                 # TODO: field type unused
-                loaded_field = saved_field['type']
-                loaded_fields.append(loaded_field)
+                    loaded_field = saved_field['type']
+
+                    loaded_fields.append(loaded_field)
             loaded_class._fields = loaded_fields
             # class methods
             loaded_methods = []
