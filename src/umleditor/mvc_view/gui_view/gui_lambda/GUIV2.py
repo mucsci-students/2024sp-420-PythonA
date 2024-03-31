@@ -492,40 +492,59 @@ class GUIV2(QMainWindow):
                 QMessageBox.warning(self, "Error", "New method name cannot be empty.")
                 
     def addFieldAction(self):
-        # Pass the list of class names to the dialog
-        dialog = AddFieldDialog(self.class_names, self)
+        types = ["int", "string", "bool", "float"]
+        class_names = [entity._name for entity in self._diagram._entities]
+        dialog = AddFieldDialog(class_names, types, self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
-            class_name, field_name, field_type = dialog.getFieldInfo()
-            if class_name and field_name and field_type:
-                print(f"Adding field: {field_name} with type: {field_type} to class {class_name}")
-                # Proceed with adding the field to the selected class
+            class_name, field_name, type_name = dialog.getFieldInfo()
+            
+            if field_name:  # Basic validation
+                self._process_task_signal.emit(f'fld -a {class_name} {field_name} {type_name}', self)
+                for classCard in self.diagramArea.findChildren(ClassCard):
+                    if classCard._name == class_name:
+                        classCard.add_field(f"{field_name} : {type_name}")
+                        break
             else:
-                print("Class name, field name, and type cannot be empty.")
+                QMessageBox.warning(self, "Error", "Field name cannot be empty.")
 
     def removeFieldAction(self):
-        # Similar update for RemoveFieldDialog...
-        dialog = RemoveFieldDialog(self.class_names, self.fields, self)
+        classes_with_fields = {
+            classCard._name: classCard.getFields()
+            for classCard in self.diagramArea.findChildren(ClassCard)
+        }
+
+        dialog = RemoveFieldDialog(classes_with_fields, self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
-            class_name, selected_field = dialog.getSelectedField()
-            print(f"Removing field: {selected_field} from class {class_name}")
-            # Proceed with removing the field from the selected class
+            class_name, field_name_and_type = dialog.getSelection()
+            field_name = field_name_and_type.split(": ")[0]  
+            
+            self._process_task_signal.emit(f'fld -d {class_name} {field_name}', self)
+            for class_card in self.findChildren(ClassCard):
+                if class_card._name == class_name:
+                    class_card.remove_field(field_name_and_type)
+                    break
 
 
     def renameFieldAction(self):
-        # Similar update for RenameFieldDialog...
-        dialog = RenameFieldDialog(self.class_names, self.fields, self)
+        classes_with_fields = {
+            classCard._name: classCard.getFields()
+            for classCard in self.diagramArea.findChildren(ClassCard)
+        }
+           # Create and show the dialog
+        dialog = RenameFieldDialog(classes_with_fields, self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
-            class_name, original_field_name, new_field_name = dialog.getFieldSelection()
-            if class_name and not new_field_name:
-                print("The new field name cannot be empty.")
-                return
-            if new_field_name in fields:
-                print("A field with this name already exists in the selected class.")
-                return
+            class_name, old_field_name_and_type, new_field_name = dialog.getSelection()
+            old_field_name = old_field_name_and_type.split(" : ")[0]  
 
-            print(f"Renaming field '{original_field_name}' to '{new_field_name}' in class {class_name}")
-            # Proceed with renaming the field in the selected class
-
+            # Check for basic validation
+            if new_field_name:
+                self._process_task_signal.emit(f'fld -r {class_name} {old_field_name} {new_field_name}', self)
+                for classCard in self.diagramArea.findChildren(ClassCard):
+                    if classCard._name == class_name:
+                        classCard.rename_field(old_field_name, new_field_name)
+                        break
+            else:
+                QMessageBox.warning(self, "Error", "New field name cannot be empty.")
 
     def relationshipsAction(self):
         dialog = QDialog(self)
