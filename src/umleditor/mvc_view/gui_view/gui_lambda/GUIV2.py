@@ -435,68 +435,62 @@ class GUIV2(QMainWindow):
     ### ATTRIBUTE ACTION STUBS
 
     def addMethodAction(self):
-        # Example return types
-        return_types = ["void", "int", "String", "bool", "float"]
+       
+        class_names = [entity._name for entity in self._diagram._entities]
+        return_types = ["void", "int", "string", "bool", "float"]
 
-        # Pass the list of class names along with return types to the dialog
-        dialog = AddMethodDialog(self.class_names, return_types, self)
+        dialog = AddMethodDialog(class_names, return_types, self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
-
-            class_name, method_name, parameter_str, return_type = dialog.getMethodInfo()
-
-            # Split parameters by commas to create a list, trimming whitespace around each parameter
-            parameters = [param.strip() for param in parameter_str.split(',') if param.strip()]
-
-            # Basic validation to ensure method name and class name are not empty
-            if class_name and method_name:
-                # Format method information with parameters joined by commas
-                method_info = f"{method_name}({', '.join(parameters)}) : {return_type}"
-                print(f"Adding method to class {class_name}: {method_info}")
-
-                # BACKEND: Here, you should handle the addition of the method to the selected class
-                # Example backend call (this is pseudo-code, replace with your actual backend method call)
-                # self.backend.addClassMethod(class_name, method_name, parameters, return_type)
+            class_name, method_name, params, return_type = dialog.getMethodInfo()
+            
+            if method_name:  # Basic validation
+                self._process_task_signal.emit(f'mthd -a {class_name} {method_name} {return_type}', self)
+                for classCard in self.diagramArea.findChildren(ClassCard):
+                    if classCard._name == class_name:
+                        classCard.add_method(f"{method_name} : {return_type}")
+                        break
             else:
-                print("Class name or method name cannot be empty.")  # Error handling
+                QMessageBox.warning(self, "Error", "Method name cannot be empty.")
 
     def removeMethodAction(self):
-        # Assuming 'classes_with_methods' is a dictionary mapping class names to lists of method names
         classes_with_methods = {
-            "User": ["getName", "setName"],
-            "Order": ["calculateTotal", "validateInput"],
-            # Add more classes and methods as needed
+            classCard._name: classCard.getMethods()
+            for classCard in self.diagramArea.findChildren(ClassCard)
         }
 
         dialog = RemoveMethodDialog(classes_with_methods, self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
-
-            class_name, selected_method = dialog.getSelection()
-            if class_name and selected_method:
-                print(f"Removing method {selected_method} from class {class_name}")
-                # BACKEND: Remove the selected method from the specified class
-                # This might involve calling a backend method and potentially redrawing the UML diagram
-            else:
-                print("No method selected for removal.")
+            class_name, method_name_and_type = dialog.getSelection()
+            method_name = method_name_and_type.split(": ")[0]  
+            
+            self._process_task_signal.emit(f'mthd -d {class_name} {method_name}', self)
+            for class_card in self.findChildren(ClassCard):
+                if class_card._name == class_name:
+                    class_card.remove_method(method_name_and_type)
+                    break
 
 
     def renameMethodAction(self):
-        # Example method names for a selected class
-        methods = ["getName()", "setName(String name)", "calculateTotal()", "validateInput(String input)"]
-
-        dialog = RenameMethodDialog(methods, self)
+        classes_with_methods = {
+            classCard._name: classCard.getMethods()
+            for classCard in self.diagramArea.findChildren(ClassCard)
+        }
+           # Create and show the dialog
+        dialog = RenameMethodDialog(classes_with_methods, self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
-            original_method_info, new_method_name = dialog.getMethodSelection()
+            class_name, old_method_name_and_type, new_method_name = dialog.getSelection()
+            old_method_name = old_method_name_and_type.split(" : ")[0]  
 
-            # Split original method info to get the name and parameters
-            original_method_name = original_method_info.split('(')[0]
-
-            # Basic validation to ensure the new method name isn't empty
-            if not new_method_name:
-                print("The new method name cannot be empty.")
-                return
-            print(f"Renaming method '{original_method_name}' to '{new_method_signature}'")
-            # BACKEND: Update the method in data structure with the new name and parameters
-
+            # Check for basic validation
+            if new_method_name:
+                self._process_task_signal.emit(f'mthd -r {class_name} {old_method_name} {new_method_name}', self)
+                for classCard in self.diagramArea.findChildren(ClassCard):
+                    if classCard._name == class_name:
+                        classCard.rename_method(old_method_name, new_method_name)
+                        break
+            else:
+                QMessageBox.warning(self, "Error", "New method name cannot be empty.")
+                
     def addFieldAction(self):
         # Pass the list of class names to the dialog
         dialog = AddFieldDialog(self.class_names, self)
