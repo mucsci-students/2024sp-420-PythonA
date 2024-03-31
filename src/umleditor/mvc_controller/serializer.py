@@ -1,3 +1,5 @@
+# Primary: Danish
+# Secondary: Zhang
 import json
 
 class CustomJSONEncoder(json.JSONEncoder):
