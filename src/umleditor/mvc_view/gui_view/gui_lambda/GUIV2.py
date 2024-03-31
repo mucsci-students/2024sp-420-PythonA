@@ -339,8 +339,10 @@ class GUIV2(QMainWindow):
         dialog = NewClassDialog(self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
             class_name = dialog.getClassname()
-            classCard = ClassCard(class_name)
+            methods = []
+            classCard = ClassCard(class_name, methods)
             self.diagramArea.addClassCard(classCard, class_name)
+            
             self._process_task_signal.emit('class -a ' + class_name, self)
         
     def deleteClassAction(self): 
@@ -354,15 +356,18 @@ class GUIV2(QMainWindow):
 
     def renameClassAction(self):
         class_names = [entity._name for entity in self._diagram._entities]
-        dialog = RenameClassDialog(class_names, self)   
+        dialog = RenameClassDialog(class_names, self)
+        
         if dialog.exec() == QDialog.DialogCode.Accepted:
             selected_class_name = dialog.getSelectedClass()
-        new_class_name = dialog.getNewClassName()
-        if new_class_name and new_class_name not in class_names:
-            self._process_task_signal.emit(f'class -r {selected_class_name} {new_class_name}', self)
-            self.diagramArea.renameClassCard(selected_class_name, new_class_name)
-        else:
-            QMessageBox.warning(self, "Rename Class", "Invalid new class name or name already exists.")
+            new_class_name = dialog.getNewClassName()
+            
+            if new_class_name and new_class_name not in class_names:
+                self._process_task_signal.emit(f'class -r {selected_class_name} {new_class_name}', self)
+                
+                self.diagramArea.renameClassCard(selected_class_name, new_class_name)
+            else:
+                QMessageBox.warning(self, "Rename Class", "Invalid new class name or name already exists.")
          
     
 
@@ -435,19 +440,21 @@ class GUIV2(QMainWindow):
     ### ATTRIBUTE ACTION STUBS
 
     def addMethodAction(self):
-       
         class_names = [entity._name for entity in self._diagram._entities]
         return_types = ["void", "int", "string", "bool", "float"]
 
         dialog = AddMethodDialog(class_names, return_types, self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
             class_name, method_name, params, return_type = dialog.getMethodInfo()
-            
-            if method_name:  # Basic validation
+
+            if method_name:
                 self._process_task_signal.emit(f'mthd -a {class_name} {method_name} {return_type}', self)
+                for param in params:
+                         self._process_task_signal.emit(f'param -a {class_name} {method_name} {param}', self)
+                         
                 for classCard in self.diagramArea.findChildren(ClassCard):
                     if classCard._name == class_name:
-                        classCard.add_method(f"{method_name} : {return_type}")
+                        classCard.add_method(method_name, return_type, params)
                         break
             else:
                 QMessageBox.warning(self, "Error", "Method name cannot be empty.")
@@ -461,9 +468,13 @@ class GUIV2(QMainWindow):
         dialog = RemoveMethodDialog(classes_with_methods, self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
             class_name, method_name_and_type = dialog.getSelection()
-            method_name = method_name_and_type.split(": ")[0]  
-            
+            # Splitting to obtain method name without parameters
+            method_name = method_name_and_type.split(": ")[0]
+
+            # Emitting signal to remove method (assumed to remove parameters as well)
             self._process_task_signal.emit(f'mthd -d {class_name} {method_name}', self)
+            
+            # Updating the GUI to reflect the removal
             for class_card in self.findChildren(ClassCard):
                 if class_card._name == class_name:
                     class_card.remove_method(method_name_and_type)
@@ -492,17 +503,19 @@ class GUIV2(QMainWindow):
                 QMessageBox.warning(self, "Error", "New method name cannot be empty.")
                 
     def addFieldAction(self):
-        types = ["int", "string", "bool", "float"]
         class_names = [entity._name for entity in self._diagram._entities]
+        types = ["void", "int", "string", "bool", "float"]
+
         dialog = AddFieldDialog(class_names, types, self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
-            class_name, field_name, type_name = dialog.getFieldInfo()
-            
-            if field_name:  # Basic validation
-                self._process_task_signal.emit(f'fld -a {class_name} {field_name} {type_name}', self)
+            class_name, field_name, return_type = dialog.getFieldInfo()
+
+            if field_name:
+                self._process_task_signal.emit(f'fld -a {class_name} {field_name} {return_type}', self)
+                         
                 for classCard in self.diagramArea.findChildren(ClassCard):
                     if classCard._name == class_name:
-                        classCard.add_field(f"{field_name} : {type_name}")
+                        classCard.add_field(field_name, return_type,)
                         break
             else:
                 QMessageBox.warning(self, "Error", "Field name cannot be empty.")
@@ -513,35 +526,39 @@ class GUIV2(QMainWindow):
             for classCard in self.diagramArea.findChildren(ClassCard)
         }
 
+        # Show the dialog to select which field to remove
         dialog = RemoveFieldDialog(classes_with_fields, self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
             class_name, field_name_and_type = dialog.getSelection()
-            field_name = field_name_and_type.split(": ")[0]  
+            field_name = field_name_and_type.split(": ")[0]  # Extract just the name
             
+            # Emit backend signal to update model/data
             self._process_task_signal.emit(f'fld -d {class_name} {field_name}', self)
+            
+            # Find and remove the field from the visual representation
             for class_card in self.findChildren(ClassCard):
                 if class_card._name == class_name:
-                    class_card.remove_field(field_name_and_type)
+                    class_card.remove_field(field_name)  # Updated to just use the field name
                     break
-
 
     def renameFieldAction(self):
         classes_with_fields = {
             classCard._name: classCard.getFields()
             for classCard in self.diagramArea.findChildren(ClassCard)
         }
-           # Create and show the dialog
+
         dialog = RenameFieldDialog(classes_with_fields, self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
             class_name, old_field_name_and_type, new_field_name = dialog.getSelection()
             old_field_name = old_field_name_and_type.split(" : ")[0]  
 
-            # Check for basic validation
             if new_field_name:
                 self._process_task_signal.emit(f'fld -r {class_name} {old_field_name} {new_field_name}', self)
+                
+                
                 for classCard in self.diagramArea.findChildren(ClassCard):
                     if classCard._name == class_name:
-                        classCard.rename_field(old_field_name, new_field_name)
+                        classCard.rename_field(old_field_name, new_field_name)  
                         break
             else:
                 QMessageBox.warning(self, "Error", "New field name cannot be empty.")
@@ -836,13 +853,17 @@ class DiagramArea(QWidget):
     def removeClassCard(self, className):
         if className in self.classCards:
             classCard = self.classCards.pop(className)  
-            classCard.deleteLater() 
+            classCard.deleteLater()  
+            self.update()  # Redraw the widget after removing the ClassCard
             
     def renameClassCard(self, old_name, new_name):
-    # Find the class card widget with the old_name
-        for classCard in self.findChildren(ClassCard):
-            if classCard._name == old_name:
-                classCard.set_name(new_name)  
+        # Find the class card widget with the old_name
+        if old_name in self.classCards:
+            classCard = self.classCards[old_name]
+            classCard.set_name(new_name)  # Update the ClassCard with the new name
+            self.classCards[new_name] = self.classCards.pop(old_name)  # Update the dictionary key
+            
+            self.update()  # Redraw the widget to reflect changes 
 
 
 if __name__ == "__main__":
