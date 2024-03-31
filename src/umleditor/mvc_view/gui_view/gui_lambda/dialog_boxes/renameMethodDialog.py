@@ -1,17 +1,22 @@
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QLabel, QComboBox, QLineEdit, QPushButton, QHBoxLayout
 
-
 class RenameMethodDialog(QDialog):
-    def __init__(self, methods, parent=None):
+    def __init__(self, classes_with_methods, parent=None):
         super().__init__(parent)
         self.setWindowTitle("Rename Method")
 
         layout = QVBoxLayout(self)
 
+        # Class selection
+        layout.addWidget(QLabel("Class:"))
+        self.classComboBox = QComboBox(self)
+        self.classComboBox.addItems(list(classes_with_methods.keys()))  # Populate with class names
+        layout.addWidget(self.classComboBox)
+
         # Method selection
         layout.addWidget(QLabel("Select a method to rename:"))
         self.methodComboBox = QComboBox(self)
-        self.methodComboBox.addItems(methods)  # Populate with existing methods
+        self.updateMethods(self.classComboBox.currentText(), classes_with_methods)
         layout.addWidget(self.methodComboBox)
 
         # New name input
@@ -19,6 +24,9 @@ class RenameMethodDialog(QDialog):
         self.newNameLineEdit = QLineEdit(self)
         layout.addWidget(self.newNameLineEdit)
 
+        # Update methods when a different class is selected
+        self.classComboBox.currentTextChanged.connect(
+            lambda: self.updateMethods(self.classComboBox.currentText(), classes_with_methods))
 
         # Buttons layout
         buttonsLayout = QHBoxLayout()
@@ -32,5 +40,10 @@ class RenameMethodDialog(QDialog):
 
         layout.addLayout(buttonsLayout)
 
-    def getMethodSelection(self):
-        return self.methodComboBox.currentText(), self.newNameLineEdit.text().strip(), self.parametersLineEdit.text().strip()
+    def updateMethods(self, class_name, classes_with_methods):
+        self.methodComboBox.clear()
+        methods = classes_with_methods.get(class_name, [])
+        self.methodComboBox.addItems(methods)
+
+    def getSelection(self):
+        return self.classComboBox.currentText(), self.methodComboBox.currentText(), self.newNameLineEdit.text().strip()

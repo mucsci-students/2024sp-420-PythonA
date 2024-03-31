@@ -21,7 +21,13 @@ class Entity:
             "float": float
         }
         self._methods = []
-        self.allowed_return_types = {"void": None}
+        self.allowed_return_types = {
+            "void": None, 
+            "string": str,
+            "int": int,
+            "bool": bool,
+            "float": float
+            }
 
     def get_name(self):
         """
