@@ -98,6 +98,7 @@ def parse(c, input_str: str) -> list:
         elif command_class == help_command:
             obj = help_command
 
+    get_args(args)
     return [getattr(obj, command_str)] + args
 
 
