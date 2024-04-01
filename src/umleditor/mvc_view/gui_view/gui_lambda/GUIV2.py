@@ -530,8 +530,9 @@ class GUIV2(QMainWindow):
         if dialog.exec() == QDialog.DialogCode.Accepted:
             class_name, field_name_and_type = dialog.getSelection()
             field_name = field_name_and_type.split(": ")[0]  
+            field_type = field_name_and_type.split(": ")[1]
             
-            self._process_task_signal.emit(f'fld -d {class_name} {field_name}', self)
+            self._process_task_signal.emit(f'fld -d {class_name} {field_name}{field_type}', self)
             for class_card in self.findChildren(ClassCard):
                 if class_card._name == class_name:
                     class_card.remove_field(field_name_and_type)
