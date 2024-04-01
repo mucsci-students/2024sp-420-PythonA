@@ -4,6 +4,8 @@ jobs:
   windows:
     runs-on: windows-latest
     steps:
+      - name: windows-ls
+        run: ls
       - name: build-project-windows
         run: py -m pip install -e .
       - name: install-pytest-cov-windows
@@ -14,6 +16,8 @@ jobs:
   mac:
     runs-on: macos-latest
     steps:
+      - name: mac-ls
+        run: ls
       - name: build-project-mac
         run: python3 -m pip install -e .
       - name: install-pytest-cov-mac
@@ -24,6 +28,8 @@ jobs:
   linux:
     runs-on: ubuntu-latest
     steps:
+      - name: linux-ls
+        run: ls
       - name: build-project-linux
         run: python -m pip install -e .
       - name: install-pytest-cov-linux
