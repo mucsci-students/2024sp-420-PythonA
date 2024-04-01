@@ -17,6 +17,7 @@ from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.fieldDialogs import Add
     RemoveFieldDialog
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.renameClassDialog import RenameClassDialog
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.renameMethodDialog import RenameMethodDialog
+from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.saveLoadDialog import SaveDialog, LoadDialog
 
 
 class GUIV2(QMainWindow):
@@ -228,7 +229,13 @@ class GUIV2(QMainWindow):
     ### FILE ACTION STUBS
 
     def openFile(self):
-        self._process_task_signal.emit('load')
+        dialog = LoadDialog(self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            save_name = dialog.getFilename()
+            
+            self._process_task_signal.emit(f'load {save_name}', self)
+            self.refreshGUI()
+        
         
     def newFile(self):
         # Logic to reset the application state for a new file
@@ -236,8 +243,11 @@ class GUIV2(QMainWindow):
         # Example: Clearing the UI, resetting data models, etc.
 
     def saveFile(self):
-        # Assuming self.currentFilePath holds the path of the current file
-        self._process_task_signal.emit('save')
+        dialog = SaveDialog(self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            save_name = dialog.getFilename()
+            
+            self._process_task_signal.emit(f'save {save_name}', self)
 
     def editAction(self):
         dialog = QDialog(self)
@@ -284,10 +294,14 @@ class GUIV2(QMainWindow):
     ### EDIT ACTION STUBS
 
     def undoAction(self):
-        print("Stub: Undo the last action")
+        self._process_task_signal.emit('undo', self)
+        self.refreshGUI()
+        
 
     def redoAction(self):
-        print("Stub: Redo the last undone action")
+        self._process_task_signal.emit('redo', self)
+        self.refreshGUIself()
+        
 
     def classesAction(self):
         dialog = QDialog(self)
@@ -829,7 +843,38 @@ class GUIV2(QMainWindow):
         """)
         self.findChild(QLabel, "lblRelationships").setAlignment(Qt.AlignmentFlag.AlignHCenter)
 
+    def refreshGUI(self):
+        """Refreshes the entire GUI to reflect the current state."""
+        for class_name in self._diagram._entities:
+            name = class_name.get_name()
+            classCard = ClassCard(name)
+            self.diagramArea.addClassCard(classCard, name)
+            for field in class_name._fields:
+                field_name, field_type_gen, *rest = field
+                field_type = str(field_type_gen).split("'")[1]  
+                field_str = (f'{field_name} : {field_type}')
+                classCard.add_field(field_str)
+                       
+            for method in class_name._methods:
+                method_str = f"{method.get_method_name()} : {method.get_return_type()}"
+                classCard.add_method(method_str)
+                
+        for relation in self._diagram._relations:
+            src_class, _, dest_class = relation.partition(" -> ")
+            relationship_str = f"{src_class} -> {dest_class}"
+            
+            # Updating ClassCard objects with relations
+            for classCard in self.diagramArea.findChildren(ClassCard):
+                if classCard._name == src_class or classCard._name == dest_class:
+                    classCard.add_relation(relationship_str)
 
+                # Example: Redraw diagram or custom widgets
+                self.diagramArea.update()
+
+                
+                self.statusBar().showMessage("GUI Refreshed")
+
+            
 class DiagramArea(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -883,8 +928,6 @@ class DiagramArea(QWidget):
         self.relationships.remove((src_class_name, dest_class_name))
         self.update()  # Request a repaint to draw the new line
         
-
-
 if __name__ == "__main__":
     app = QApplication([])
 
