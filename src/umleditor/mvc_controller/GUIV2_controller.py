@@ -61,6 +61,10 @@ class ControllerGUI(Controller):
             return
         if "rel" in task:
             return
+        if "undo" in task:
+            return
+        if "redo" in task:
+            return
         else:
             self.acceptance_state(widget)
 
@@ -80,21 +84,7 @@ class ControllerGUI(Controller):
             widget: ClassInputDialog.
         """
        
-        self._window.delete_all_class_card()
-        for entity in self._diagram._entities:
-            class_card = self._window.add_class_card(entity._name)
-            for field in entity._fields:
-                class_card.add_field(field)
-            for method in entity._methods:
-                s = method.get_method_name()
-                for param in method._params:
-                    s += ' ' + param
-                class_card.add_method(s)
-            for relation in self._diagram._relations:
-                if relation._source == entity:
-                    s = relation._destination._name + ' ' + relation._type
-                    class_card.add_relation(s)
-
+       
         
 
     def acceptance_state(self, widget):

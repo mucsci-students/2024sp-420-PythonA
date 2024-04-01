@@ -180,7 +180,7 @@ class Diagram:
         relations_list = []
         for rel in self._relations:
             relations_list.append(str(rel))
-        return '\n'.join(relations_list)
+        return relations_list
     
     def list_entity_relations(self, name:str):
         ''' Lists all relations that contain a specific entity
