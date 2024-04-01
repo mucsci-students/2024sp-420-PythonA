@@ -1,9 +1,10 @@
 from umleditor.mvc_model.diagram import Diagram
-from PyQt6.QtCore import pyqtSignal, Qt, QPoint
+from PyQt6.QtCore import pyqtSignal, Qt, QPoint, QUrl
 from PyQt6.QtWidgets import (QDialog, QMainWindow, QWidget, QVBoxLayout, QPushButton, QApplication, QGridLayout,
                              QMessageBox, QHBoxLayout, QRadioButton, QDialogButtonBox, QListWidget, QLabel, QFrame,
                              QFileDialog)
-from PyQt6.QtGui import QAction, QPainter, QPen, QColor
+from PyQt6.QtGui import QAction, QPainter, QPen, QColor,QDesktopServices
+
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.newClassDialog import NewClassDialog
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.deleteClassDialog import DeleteClassDialog
 from umleditor.mvc_view.gui_view.gui_lambda.GUIV2_class_card import ClassCard
@@ -18,6 +19,7 @@ from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.fieldDialogs import Add
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.renameClassDialog import RenameClassDialog
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.renameMethodDialog import RenameMethodDialog
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.saveLoadDialog import SaveDialog, LoadDialog
+import sys
 
 
 class GUIV2(QMainWindow):
@@ -158,7 +160,7 @@ class GUIV2(QMainWindow):
             ("Attributes", "#C78640", self.attributesAction),
             ("Relationships", "#4882CF", self.relationshipsAction),
             ("Help", "#BB4A83", self.helpAction),
-            ("Themes", "#93C756", self.showThemeDialog)
+            
         ]
 
         for text, color, action in buttons_info:
@@ -700,27 +702,12 @@ class GUIV2(QMainWindow):
         btnLoadReadme.clicked.connect(self.loadReadmeAction)
         layout.addWidget(btnLoadReadme)
 
-        # Button for Help on Classes
-        btnHelpClasses = QPushButton("Help on Classes")
-        btnHelpClasses.clicked.connect(self.helpClassesAction)
-        layout.addWidget(btnHelpClasses)
-
-        # Button for Help on Relationships
-        btnHelpRelationships = QPushButton("Help on Relationships")
-        btnHelpRelationships.clicked.connect(self.helpRelationshipsAction)
-        layout.addWidget(btnHelpRelationships)
-
-        # Button for Help on Attributes
-        btnHelpAttributes = QPushButton("Help on Attributes")
-        btnHelpAttributes.clicked.connect(self.helpAttributesAction)
-        layout.addWidget(btnHelpAttributes)
-
         dialog.exec()
 
     ###STUBS FOR HELP
     def loadReadmeAction(self):
-        print("Load README action")
-        ##TODO
+        url = QUrl('https://github.com/mucsci-students/2024sp-420-PythonA#')
+        QDesktopServices.openUrl(url)
 
     def helpClassesAction(self):
         print("Help on Classes action")
