@@ -13,7 +13,7 @@ def read_line(s='Command: ') -> str:
 
     ## Returns:
     - (str): A line of input with the last word autofilled if Tab is pressed,
-             and 'undo' or 'redo' added if '*' or '**' are pressed, respectively.
+             and 'undo' or 'redo' added if '*' or '&' are pressed, respectively.
     """
     print(s, end='', flush=True)
     input_line = []
@@ -33,7 +33,7 @@ def read_line(s='Command: ') -> str:
             print('\r' + s + ''.join(input_line), end='', flush=True)
             print()
             return ''.join(input_line).strip()  # Hitting Enter
-        elif ch == '**':  # Redo operation
+        elif ch == '&':  # Redo operation
             input_line = list(redo())  # Replace input_line with the result of redo()
             print('\r' + s + ''.join(input_line), end='', flush=True)
             print()
