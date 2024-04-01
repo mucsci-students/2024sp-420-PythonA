@@ -74,7 +74,7 @@ class Entity:
                     field_type = self.allowed_types[field_type]
                 self._fields.append((field_name, field_type))
 
-    def delete_field(self, field_name: str):
+    def delete_field(self, field_name: str,field_type: str):
         """
         Deletes a field from this entity if the field exists.
 
