@@ -74,7 +74,7 @@ class Entity:
                     field_type = self.allowed_types[field_type]
                 self._fields.append((field_name, field_type))
 
-    def delete_field(self, field_name: str, field_type: type):
+    def delete_field(self, field_name: str):
         """
         Deletes a field from this entity if the field exists.
 
@@ -89,13 +89,15 @@ class Entity:
         Returns:
             None.
         """
-        f_name = (field_name, field_type)
-        if f_name not in self._fields:
+        field_found = False
+        for field in self._fields:
+            if field[0] == field_name:  # Compare only the field names
+                self._fields.remove(field)
+                field_found = True
+                break
+
+        if not field_found:
             raise CustomExceptions.FieldNotFoundError(field_name)
-        else:
-            if isinstance(field_type, str):
-                field_type = self.allowed_types[field_type]
-            self._fields.remove(f_name)
 
     def rename_field(self, old_field: str, old_type: type, new_field: str, new_type: type):
         """
