@@ -1,11 +1,8 @@
-from umleditor.mvc_view.gui_view.view_GUI import ViewGUI
+from umleditor.mvc_view.gui_view.gui_cworld.view_GUI import ViewGUI
 from umleditor.mvc_model.diagram import Diagram
 from PyQt6 import QtWidgets
-from PyQt6.QtWidgets import QInputDialog, QLineEdit
-from PyQt6.QtCore import QDir
 from umleditor.mvc_controller.controller import Controller
-from umleditor.mvc_view.gui_view.class_input_dialog import CustomInputDialog
-from umleditor.mvc_model.custom_exceptions import CustomExceptions as CE
+
 
 class ControllerGUI (Controller):
     """

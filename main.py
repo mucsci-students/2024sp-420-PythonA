@@ -1,8 +1,13 @@
+from PyQt6.QtWidgets import QApplication, QDialog
+
 from umleditor.mvc_controller.cli_controller import CLI_Controller
-from umleditor.mvc_view.gui_view.view_GUI import ViewGUI
+from umleditor.mvc_view.gui_view.gui_lambda.GUIV2 import GUIV2
+from umleditor.mvc_view.gui_view.gui_lambda.GUI3 import GUI3
+from umleditor.mvc_view.gui_view.gui_cworld.view_GUI import ViewGUI
 from umleditor.mvc_controller.gui_controller import ControllerGUI
+from umleditor.mvc_controller.GUIV2_controller import ControllerGUI as ControllerGUIV2
+from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.versionDialog import VersionSelectionDialog
 import sys
-from PyQt6 import QtWidgets
 
 
 def main():
@@ -36,25 +41,37 @@ def mainCLI():
 
 
 def mainGUI():
-    #main gui execution
+    app = QApplication(sys.argv)
+
     try:
-        # Create QApplication for running the program
-        app = QtWidgets.QApplication(sys.argv)
-        # Create an instance of our view and pass to controller
-        mainWindow = ViewGUI()
-        controller = ControllerGUI(mainWindow)
-        # Set window to visible and start the application
-        mainWindow.show()
-        app.exec()
+        dialog = VersionSelectionDialog()
+        result = dialog.exec()
+
+        if result == QDialog.DialogCode.Accepted:
+            if dialog.selected_version == "1":
+                mainWindow = ViewGUI()
+                controller = ControllerGUI(mainWindow)
+            elif dialog.selected_version == "2":
+                mainWindow = GUIV2()
+                controller = ControllerGUIV2(mainWindow)
+            elif dialog.selected_version == "3":
+                mainWindow = GUI3()
+            else:
+                print("Invalid selection, defaulting to Gui V2.")
+                mainWindow = GUIV2()
+
+              # Ensure ControllerGUI is correctly initialized
+            mainWindow.show()
+            sys.exit(app.exec())
+        else:
+            print("No selection made, exiting.")
+            sys.exit(0)
     except KeyboardInterrupt:
-        # This handles ctrl+C
-        pass
-    except EOFError:
-        # This handles ctrl+D
-        pass
-    except Exception:
-        # Never expect errors to be caught here
-        print('Oh no! Unexpected Error!')
+        # This handles ctrl+C gracefully
+        print("\nApplication closed.")
+    except Exception as e:
+        # Generic exception handling
+        print(f"Unexpected error occurred: {e}")
 
 if __name__ == '__main__':
     main()

@@ -1,7 +1,8 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QListWidget, QMenu, QLineEdit, QLabel, QListWidgetItem
 from PyQt6.QtGui import QAction
-from PyQt6.QtCore import Qt, pyqtSignal, QEvent
-from umleditor.mvc_view.gui_view.class_input_dialog import CustomInputDialog
+from PyQt6.QtCore import Qt, pyqtSignal, QEvent, QPoint
+from umleditor.mvc_view.gui_view.gui_cworld.class_input_dialog import CustomInputDialog
+
 
 class ClassCard(QWidget):
     """
@@ -13,6 +14,7 @@ class ClassCard(QWidget):
     """
     _process_task_signal = pyqtSignal(str, QWidget)
     _enable_widgets_signal = pyqtSignal(bool, QWidget)
+    cardMoved = pyqtSignal()
 
     def __init__(self, name: str):
         """
@@ -22,19 +24,14 @@ class ClassCard(QWidget):
             name (str): The name of the class.
         """
         super().__init__()
-        self.set_name(name)
+        self._name = name
         self.initUI()
         # Used for capturing escape key
         self.installEventFilter(self)
-    
-    def set_name(self, name: str):
-        """
-        Sets the name of the class.
+        self.moving = False
+        self.offset = None
 
-        Args:
-            name (str): The name of the class.
-        """
-        self._name = name
+    
 
     def initUI(self):
         """
@@ -61,12 +58,12 @@ class ClassCard(QWidget):
         layout.addWidget(self._list_method)
         layout.addWidget(self._list_relation)
 
-        #Set styles
+        # Set styles
         self.set_styles()
 
         # Size and spacing
         layout.setSpacing(0)
-        self.setFixedSize(150,200)
+        self.setFixedSize(150, 200)
 
         self.setLayout(layout)
 
@@ -78,6 +75,15 @@ class ClassCard(QWidget):
         self._class_label.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self._class_label.customContextMenuRequested.connect(self.show_class_menu)
 
+    def set_name(self, name: str):
+        """
+        Sets the name of the class.
+
+        Args:
+            name (str): The name of the class.
+        """
+        self._name = name
+        self._class_label.setText(name)
     def set_styles(self):
         """
         Sets styles for the widgets.
@@ -116,7 +122,8 @@ class ClassCard(QWidget):
         # Add button functionality
         delete_action.triggered.connect(self.confirm_delete_class)
         field_action.triggered.connect(lambda: self.menu_action_clicked(self._list_field, "Enter Field"))
-        method_action.triggered.connect(lambda: self.menu_action_clicked(self._list_method, "e.g. method param1 param2..."))
+        method_action.triggered.connect(
+            lambda: self.menu_action_clicked(self._list_method, "e.g. method param1 param2..."))
         relation_action.triggered.connect(lambda: self.menu_action_clicked(self._list_relation, "e.g. dst type"))
         rename_action.triggered.connect(self.rename_action_clicked)
 
@@ -158,13 +165,12 @@ class ClassCard(QWidget):
 
     def confirm_rename_clicked(self):
         self._process_task_signal.emit("class -r " + self._name + " " + self._rename_dialog.input_text.text(), self)
-    
+
     def accept_new_name(self, new_name: str):
         self._class_label.setText(new_name)
         self.set_name(new_name)
         self._rename_dialog.reject()
 
-    
     def edit_action_clicked(self, widget: QLineEdit):
         """
         Prepares a QLineEdit widget for editing.
@@ -178,13 +184,13 @@ class ClassCard(QWidget):
         # Update selected widget
         self._selected_line = widget
         # Disables unselected interactions
-        self._enable_widgets_signal.emit(False, self) 
+        self._enable_widgets_signal.emit(False, self)
         self._old_text = widget.text()
         self.enable_context_menus(False)
         widget.setStyleSheet("background-color: #ADD8E6;")
         widget.setReadOnly(False)
         widget.setFocus()
-    
+
     def delete_action_clicked(self, widget: QLineEdit):
         """
         Removes the given QLineEdit widget from its parent QListWidget.
@@ -195,8 +201,8 @@ class ClassCard(QWidget):
         class_name = self._class_label.text()
 
         lists = [(self._list_field, self._list_field.count()),
-                (self._list_relation, self._list_relation.count()),
-                (self._list_method, self._list_method.count())]
+                 (self._list_relation, self._list_relation.count()),
+                 (self._list_method, self._list_method.count())]
 
         for list_widget, count in lists:
             for index in range(count):
@@ -217,7 +223,7 @@ class ClassCard(QWidget):
                         list_widget.takeItem(index)
                         return
         # Enable widgets/menus
-        self._enable_widgets_signal.emit(True, self) 
+        self._enable_widgets_signal.emit(True, self)
         self.enable_context_menus(True)
 
     def confirm_delete_class(self):
@@ -231,11 +237,11 @@ class ClassCard(QWidget):
         Adds a field when the "Add ____" action is clicked.
         """
         # Disables unselected interactions
-        self._enable_widgets_signal.emit(False, self)   
+        self._enable_widgets_signal.emit(False, self)
 
         # Create field and add to list
         item = QListWidgetItem()
-        list.addItem(item) #!!!
+        list.addItem(item)  # !!!
         text = QLineEdit()
         self._selected_line = text
         text.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
@@ -276,16 +282,16 @@ class ClassCard(QWidget):
                     self.escape_from_row()
                 return True
         return super().eventFilter(obj, event)
-    
+
     def escape_from_row(self):
         """
         Method to escape from row editing mode. If it's a newly added row, removes the row from the class card.
         Otherwise, returns the row to its original state.
         """
         lists = [(self._list_field, self._list_field.count()),
-                (self._list_relation, self._list_relation.count()),
-                (self._list_method, self._list_method.count())]
-        
+                 (self._list_relation, self._list_relation.count()),
+                 (self._list_method, self._list_method.count())]
+
         # If newly added row, just remove from class card
         if self._old_text == "":
             for list_widget, count in lists:
@@ -303,14 +309,11 @@ class ClassCard(QWidget):
             self._selected_line.setText(self._old_text)
 
         # Return to unselected state
-        self._enable_widgets_signal.emit(True, self) 
+        self._enable_widgets_signal.emit(True, self)
         self.enable_context_menus(True)
         self._selected_line.setReadOnly(True)
         self._selected_line.setStyleSheet("background-color: white;")
 
-
-
-    
     def enable_context_menus(self, enable: bool):
         """
         Enable/disable context menus for all items within the ClassCard
@@ -319,9 +322,9 @@ class ClassCard(QWidget):
         while stack:
             current_widget = stack.pop()
             if enable:
-                current_widget.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)  
+                current_widget.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
             else:
-                current_widget.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)  
+                current_widget.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
             if isinstance(current_widget, QWidget):
                 stack.extend(current_widget.findChildren(QWidget))
 
@@ -339,7 +342,7 @@ class ClassCard(QWidget):
             if self._old_text == "":
                 self._process_task_signal.emit("fld -a " + class_name + " " + new_text, self)
             else:
-                self._process_task_signal.emit("fld -r " + class_name + " " + 
+                self._process_task_signal.emit("fld -r " + class_name + " " +
                                                self._old_text + " " + new_text, self)
         # Relation task signals - (Source, Destination, Type)
         elif list == self._list_relation:
@@ -362,7 +365,6 @@ class ClassCard(QWidget):
                 self._process_task_signal.emit("mthd -e " + class_name + " " + old_name + " " + " ".join(words), self)
             pass
 
-    
     def split_relation(self, text: str):
         """
         Splits a string into two words.
@@ -376,7 +378,7 @@ class ClassCard(QWidget):
         """
         words = text.split()
         while len(words) < 2:
-            words.append("")  
+            words.append("")
         return words
 
     def deselect_line(self):
@@ -394,7 +396,6 @@ class ClassCard(QWidget):
         """
         return self._selected_line
 
-
     def get_task_signal(self):
         """
         Return the task signal to be connected.
@@ -403,7 +404,7 @@ class ClassCard(QWidget):
             pyqtSignal: The signal for task processing.
         """
         return self._process_task_signal
-    
+
     def get_enable_signal(self):
         """
         Return the enable signal to be connected.
@@ -412,10 +413,10 @@ class ClassCard(QWidget):
             pyqtSignal: The signal for widget enabling.
         """
         return self._enable_widgets_signal
-    
-#######################################################################
-    
-    #load
+
+    #######################################################################
+
+    # load
 
     def add_field(self, field):
         """
@@ -425,7 +426,7 @@ class ClassCard(QWidget):
 
         # Create field and add to list
         item = QListWidgetItem()
-        list.addItem(item) #!!!
+        list.addItem(item) 
         text = QLineEdit()
         text.setText(field)
         text.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
@@ -441,7 +442,58 @@ class ClassCard(QWidget):
         text.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         text.setReadOnly(True)
-    
+        
+    def getFields(self):
+        """
+        Returns a list of fields names added to the class card.
+        
+        Returns:
+            List[str]: A list containing the names of all fields.
+        """
+        fields = []
+        for index in range(self._list_field.count()):
+            # Retrieve the QListWidgetItem at the given index
+            item = self._list_field.item(index)
+            # Assuming the text of each item is the method name
+            field_name = self._list_field.itemWidget(item).text()
+            fields.append(field_name)
+        return fields
+        
+    def remove_field(self, field_name):
+        """
+        Removes a field from the class card.
+
+        Args:
+            field_name (str): The name of the field to remove.
+        """
+        for i in range(self._list_field.count()):
+            item = self._list_field.item(i)
+            line_edit = self._list_field.itemWidget(item)
+            if line_edit and line_edit.text() == field_name:
+                self._list_field.takeItem(i)
+                break
+            
+    def rename_field(self, old_field_name, new_field_name):
+        """
+        Renames an existing field in the class card.
+
+        Args:
+            old_field_name (str): The current name of the field to be renamed.
+            new_field_name (str): The new name for the field.
+        """
+        for i in range(self._list_field.count()):
+            item = self._list_field.item(i)
+            line_edit = self._list_field.itemWidget(item)
+            if line_edit and line_edit.text().startswith(old_field_name):
+                parts = line_edit.text().split(' : ')
+                if len(parts) > 1:
+                    
+                    line_edit.setText(f"{new_field_name}: {parts[1].strip()}")
+                else:
+                    
+                    line_edit.setText(new_field_name)
+                break    
+
     def add_method(self, method):
         """
         Adds a method.
@@ -450,7 +502,7 @@ class ClassCard(QWidget):
 
         # Create field and add to list
         item = QListWidgetItem()
-        list.addItem(item) #!!!
+        list.addItem(item) 
         text = QLineEdit()
         text.setText(method)
         text.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
@@ -466,7 +518,57 @@ class ClassCard(QWidget):
         text.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         text.setReadOnly(True)
+        
+    def getMethods(self):
+        """
+        Returns a list of method names added to the class card.
+        
+        Returns:
+            List[str]: A list containing the names of all methods.
+        """
+        methods = []
+        for index in range(self._list_method.count()):
 
+            item = self._list_method.item(index)
+      
+            method_name = self._list_method.itemWidget(item).text()
+            methods.append(method_name)
+        return methods
+        
+    def remove_method(self, method_name):
+        """
+        Removes a method from the class card.
+
+        Args:
+            method_name (str): The name of the method to remove.
+        """
+        for i in range(self._list_method.count()):
+            item = self._list_method.item(i)
+            line_edit = self._list_method.itemWidget(item)
+            if line_edit and line_edit.text() == method_name:
+                self._list_method.takeItem(i)
+                break
+    def rename_method(self, old_method_name, new_method_name):
+        """
+        Renames an existing method in the class card.
+
+        Args:
+            old_method_name (str): The current name of the method to be renamed.
+            new_method_name (str): The new name for the method.
+        """
+        for i in range(self._list_method.count()):
+            item = self._list_method.item(i)
+            line_edit = self._list_method.itemWidget(item)
+            if line_edit and line_edit.text().startswith(old_method_name):
+          
+                parts = line_edit.text().split(' : ')
+                if len(parts) > 1:
+                   
+                    line_edit.setText(f"{new_method_name}: {parts[1].strip()}")
+                else:
+                   
+                    line_edit.setText(new_method_name)
+                break    
     def add_relation(self, relation):
         """
         Adds a relation.
@@ -475,7 +577,7 @@ class ClassCard(QWidget):
 
         # Create field and add to list
         item = QListWidgetItem()
-        list.addItem(item) #!!!
+        list.addItem(item)  # !!!
         text = QLineEdit()
         text.setText(relation)
         text.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
@@ -491,3 +593,35 @@ class ClassCard(QWidget):
         text.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         text.setReadOnly(True)
+
+    def remove_relation(self, relation_to_remove):
+        """
+        Removes a relation based on the provided relation string.
+        """
+        list_widget = self._list_relation
+
+        for index in range(list_widget.count()):
+            item_widget = list_widget.itemWidget(list_widget.item(index))
+            if item_widget and item_widget.text() == relation_to_remove:
+                # Take the item out of the list, which effectively removes it
+                list_widget.takeItem(index)
+                break  # Exit the loop after finding and removing the relation
+                    
+    def mousePressEvent(self, event):
+        if event.button() == Qt.MouseButton.LeftButton:
+            self.moving = True
+            self.offset = event.position()
+
+    def mouseMoveEvent(self, event):
+        if self.moving:
+            # Convert event.position() to QPoint
+            newPos = event.position().toPoint()
+            self.move(self.pos() + newPos - self.offset.toPoint())
+            self.cardMoved.emit()
+
+    def mouseReleaseEvent(self, event):
+        if event.button() == Qt.MouseButton.LeftButton:
+            self.moving = False
+            
+    def centerPos(self):
+         return self.geometry().center()

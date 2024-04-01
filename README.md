@@ -1,6 +1,7 @@
-# 2024sp-420-CWorld
+# Spring 2024 UML Editor
+#### Authored by: LamdaLegion (Sprint 3), CWorld (Sprint 1 & 2) 
 
-This readme contains the steps to launch the **CWorld UML Editor**. This is a terminal based program that allows users to create a Class Diagram with Relations, Classes, and Attributes. Once the program is running, type 'help' for a list of commands.
+This readme contains the steps to launch the **Spring 2024 UML Editor**. This is a GUI/terminal based program that allows users to create a Class Diagram with Relations, Classes, and Attributes.
 
 # Setup Your Environment
 <B>The minimum required version of Python to run this program is 3.8. If your version of python, found in the section below, is less than that, please follow [this](https://www.python.org/downloads/) link to install a newer version. </B>
@@ -36,7 +37,7 @@ If you do not have python installed, install the latest version for your operati
 # Download the Project
 
 ### In a Terminal
-To dowload the project directly into a terminal, git tools will be required. Follow the instructions [here](https://github.com/git-guides/install-git) to install git if it is not already installed.
+To download the project directly into a terminal, git tools will be required. Follow the instructions [here](https://github.com/git-guides/install-git) to install git if it is not already installed.
 
 ### In a Desktop Environment
 Download the zip [here](https://github.com/mucsci-students/2024sp-420-CWorld/archive/refs/heads/main.zip) and extract it.
@@ -50,7 +51,7 @@ Regardless of operating system, this project will install dependencies when it i
 
 <ol>
 <li> Open a terminal and navigate to the folder that the project was cloned/extracted into. Basics of terminal navigation can be found at the links listed below this list. 
-<li> Once you are in the source directory of the project (its name should be 2024sp-420-CWorld), type 'py build.py'. If you get a warning about not being in a virtual environment, hit enter to exit the script then follow the instructions at the top of this section to setup and enter a virtual environment before running 'py build.py' again.
+<li> Once you are in the source directory of the project (its name should be 2024sp-420-PythonA), type 'py build.py'. If you get a warning about not being in a virtual environment, hit enter to exit the script then follow the instructions at the top of this section to setup and enter a virtual environment before running 'py build.py' again.
 <li> Type 'py main.py' to run the program in its default mode, or refer to the flags section below this for other options.
 </ol>
 
@@ -70,5 +71,26 @@ Regardless of operating system, this project will install dependencies when it i
 ### Test the project
 'pytest'         - from the source directory of the project, automatically finds and executes all test files.
 
+## Design Patterns
+
+- Momento
+- Singleton
+- Command
+- MVC
 ## Authors
-Adam Glick-Lynch, Ganga Acharya, Marshall Feng, Peter Freedman, Tim Moser
+
+#### LamdaLegion 
+
+- Zhang Chen
+- Jillian Daggs
+- Katie Dowlin
+- Patrick McCullough
+- Danish Zubari
+
+#### CWorld
+
+- Ganga Acharya
+- Marshall Feng
+- Peter Freedman
+- Adam Glick-Lynch
+- Tim Moser

@@ -4,9 +4,19 @@ from .relation import Relation
 from .custom_exceptions import CustomExceptions
 
 class Diagram:
+    #Singleton Design Pattern
+    _instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super(Diagram, cls).__new__(cls, *args, **kwargs)
+        return cls._instance
+    
     def __init__(self) -> None:
-        self._entities:list[Entity] = []
-        self._relations:list[Relation] = []
+        if not hasattr(self, '_initialized'):  # Prevents reinitialization
+            self._entities: list[Entity] = []
+            self._relations: list[Relation] = []
+            self._initialized = True  # Mark as initialized
 
     #===============================================================================#
                                 #Entity Methods
@@ -170,7 +180,7 @@ class Diagram:
         relations_list = []
         for rel in self._relations:
             relations_list.append(str(rel))
-        return '\n'.join(relations_list)
+        return relations_list
     
     def list_entity_relations(self, name:str):
         ''' Lists all relations that contain a specific entity
@@ -295,3 +305,15 @@ class Diagram:
         else:
             self.add_relation(new_src, new_dst, new_type)
             self.delete_relation(old_src, old_dst)
+            
+    def getInstance(cls):
+        """
+        Returns the singleton instance of the Diagram class.
+        
+        Returns:
+            Diagram: The singleton instance.
+        """
+        if not cls._instance:
+            cls._instance = Diagram()
+        return cls._instance    
+    
