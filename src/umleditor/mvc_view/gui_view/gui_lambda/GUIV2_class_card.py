@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QListWidget, QMenu, QLineEdit, QLabel, QListWidgetItem
 from PyQt6.QtGui import QAction
-from PyQt6.QtCore import Qt, pyqtSignal, QEvent
+from PyQt6.QtCore import Qt, pyqtSignal, QEvent, QPoint
 from umleditor.mvc_view.gui_view.gui_cworld.class_input_dialog import CustomInputDialog
 
 
@@ -14,6 +14,7 @@ class ClassCard(QWidget):
     """
     _process_task_signal = pyqtSignal(str, QWidget)
     _enable_widgets_signal = pyqtSignal(bool, QWidget)
+    cardMoved = pyqtSignal()
 
     def __init__(self, name: str):
         """
@@ -593,6 +594,19 @@ class ClassCard(QWidget):
 
         text.setReadOnly(True)
 
+    def remove_relation(self, relation_to_remove):
+        """
+        Removes a relation based on the provided relation string.
+        """
+        list_widget = self._list_relation
+
+        for index in range(list_widget.count()):
+            item_widget = list_widget.itemWidget(list_widget.item(index))
+            if item_widget and item_widget.text() == relation_to_remove:
+                # Take the item out of the list, which effectively removes it
+                list_widget.takeItem(index)
+                break  # Exit the loop after finding and removing the relation
+                    
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
             self.moving = True
@@ -603,7 +617,11 @@ class ClassCard(QWidget):
             # Convert event.position() to QPoint
             newPos = event.position().toPoint()
             self.move(self.pos() + newPos - self.offset.toPoint())
+            self.cardMoved.emit()
 
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
             self.moving = False
+            
+    def centerPos(self):
+         return self.geometry().center()
