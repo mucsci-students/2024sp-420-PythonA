@@ -4,6 +4,10 @@ jobs:
   windows:
     runs-on: windows-latest
     steps:
+      - name: clone-repo-windows
+        run: git clone https://github.com/mucsci-students/2024sp-420-PythonA
+      - name: cd-windows
+        run: cd 2024sp-420-PythonA
       - name: build-project-windows
         run: py -m pip install -e .
       - name: install-pytest-cov-windows
@@ -14,6 +18,10 @@ jobs:
   mac:
     runs-on: macos-latest
     steps:
+      - name: clone-repo-mac
+        run: git clone https://github.com/mucsci-students/2024sp-420-PythonA
+      - name: cd-mac
+        run: cd 2024sp-420-PythonA
       - name: build-project-mac
         run: python3 -m pip install -e .
       - name: install-pytest-cov-mac
@@ -24,6 +32,10 @@ jobs:
   linux:
     runs-on: ubuntu-latest
     steps:
+      - name: clone-repo-linux
+        run: git clone https://github.com/mucsci-students/2024sp-420-PythonA
+      - name: cd-linux
+        run: cd 2024sp-420-PythonA
       - name: build-project-linux
         run: python -m pip install -e .
       - name: install-pytest-cov-linux
