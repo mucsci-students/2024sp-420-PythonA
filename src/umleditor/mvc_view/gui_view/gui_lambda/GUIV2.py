@@ -302,7 +302,7 @@ class GUIV2(QMainWindow):
 
     def redoAction(self):
         self._process_task_signal.emit('redo', self)
-        self.refreshGUIself()
+        self.refreshGUI()
         
 
     def classesAction(self):
@@ -831,8 +831,13 @@ class GUIV2(QMainWindow):
         """)
         self.findChild(QLabel, "lblRelationships").setAlignment(Qt.AlignmentFlag.AlignHCenter)
 
+    def clearGUI(self):
+            self.diagramArea.clearAll() 
+            self.lstRelationships.clear()
+             
     def refreshGUI(self):
         """Refreshes the entire GUI to reflect the current state."""
+        self.clearGUI()
         for class_name in self._diagram._entities:
             name = class_name.get_name()
             classCard = ClassCard(name)
@@ -864,7 +869,8 @@ class GUIV2(QMainWindow):
 
                 
                 self.statusBar().showMessage("GUI Refreshed")
-
+   
+        
             
 class DiagramArea(QWidget):
     def __init__(self, parent=None):
@@ -898,7 +904,15 @@ class DiagramArea(QWidget):
     # Find the class card widget with the old_name
         for classCard in self.findChildren(ClassCard):
             if classCard._name == old_name:
-                classCard.set_name(new_name) 
+                classCard.set_name(new_name)
+                
+    def clearAll(self):
+        """Clears all visual elements from the diagram area."""
+        for classCard in self.findChildren(ClassCard):
+            classCard.deleteLater()  # Removes the widget and schedules it for deletion
+        self.classCards.clear()  # Clear the tracking dictionary
+        self.relationships.clear()  # Clear any stored relationships
+        self.update()  # Redraw the area
                 
     def paintEvent(self, event):
         super().paintEvent(event)
