@@ -12,7 +12,7 @@
         "name": "setPSI",
         "return_type" : "void",
         "params": [
-            { "name": "new_psi", "type": "string" }
+            { "name": "new_psi" }
         ]
         }
     ]
