@@ -3,7 +3,7 @@ from PyQt6.QtCore import pyqtSignal, Qt, QPoint
 from PyQt6.QtWidgets import (QDialog, QMainWindow, QWidget, QVBoxLayout, QPushButton, QApplication, QGridLayout,
                              QMessageBox, QHBoxLayout, QRadioButton, QDialogButtonBox, QListWidget, QLabel, QFrame,
                              QFileDialog)
-from PyQt6.QtGui import QAction
+from PyQt6.QtGui import QAction, QPainter, QPen, QColor
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.newClassDialog import NewClassDialog
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.deleteClassDialog import DeleteClassDialog
 from umleditor.mvc_view.gui_view.gui_lambda.GUIV2_class_card import ClassCard
@@ -17,6 +17,7 @@ from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.fieldDialogs import Add
     RemoveFieldDialog
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.renameClassDialog import RenameClassDialog
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.renameMethodDialog import RenameMethodDialog
+from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.saveLoadDialog import SaveDialog, LoadDialog
 
 
 class GUIV2(QMainWindow):
@@ -32,8 +33,7 @@ class GUIV2(QMainWindow):
         self.initUI()
         self.applyDarkTheme()
         self.currentFilePath = " "
-        self.fields = ["field1", "field2", "field3"]
-
+        
     def get_signal(self):
         return self._process_task_signal
 
@@ -142,11 +142,11 @@ class GUIV2(QMainWindow):
         mainLayout.addWidget(self.diagramArea)
         mainLayout.setStretchFactor(self.diagramArea, 4)  # Give the diagram area more space compared to the sidebar
 
-
     def setupSidebar(self, mainLayout):
         # Sidebar setup
         sidebarWidget = QWidget()
-        sidebarWidget.setMaximumWidth(200)  # Maximum width of 200px
+        sidebarWidget.setMinimumWidth(250)  # Maximum width of 200px
+        sidebarWidget.setMaximumWidth(600)  # Maximum width of 200px
         sidebarLayout = QVBoxLayout(sidebarWidget)
         sidebarLayout.setContentsMargins(10, 10, 10, 10)  # Remove margins inside the sidebar
 
@@ -175,9 +175,10 @@ class GUIV2(QMainWindow):
         self.lstRelationships.setObjectName("lstRelationships")
         sidebarLayout.addWidget(self.lstRelationships)
 
-        # # Example items (for demonstration purposes)
-        # self.lstRelationships.addItem("Class1 -> Class2")
-        # self.lstRelationships.addItem("Class3 -> Class4")
+        rel_list = self._diagram.list_relations()
+        for rel in rel_list:
+            self.lstRelationships.addItem(rel)
+
 
         mainLayout.addWidget(sidebarWidget)
         sidebarWidget.setObjectName("sidebarWidget")
@@ -225,11 +226,16 @@ class GUIV2(QMainWindow):
 
         dialog.setLayout(layout)
         dialog.exec()
-
     ### FILE ACTION STUBS
 
     def openFile(self):
-        self._process_task_signal.emit('load')
+        dialog = LoadDialog(self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            save_name = dialog.getFilename()
+            
+            self._process_task_signal.emit(f'load {save_name}', self)
+            self.refreshGUI()
+        
         
     def newFile(self):
         # Logic to reset the application state for a new file
@@ -237,11 +243,11 @@ class GUIV2(QMainWindow):
         # Example: Clearing the UI, resetting data models, etc.
 
     def saveFile(self):
-        # Assuming self.currentFilePath holds the path of the current file
-        self._process_task_signal.emit('save')
-
-    # def redrawDiagram(self):
-    #     print("Stub: Redraw the entire diagram")
+        dialog = SaveDialog(self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            save_name = dialog.getFilename()
+            
+            self._process_task_signal.emit(f'save {save_name}', self)
 
     def editAction(self):
         dialog = QDialog(self)
@@ -288,10 +294,14 @@ class GUIV2(QMainWindow):
     ### EDIT ACTION STUBS
 
     def undoAction(self):
-        print("Stub: Undo the last action")
+        self._process_task_signal.emit('undo', self)
+        self.refreshGUI()
+        
 
     def redoAction(self):
-        print("Stub: Redo the last undone action")
+        self._process_task_signal.emit('redo', self)
+        self.refreshGUI()
+        
 
     def classesAction(self):
         dialog = QDialog(self)
@@ -351,7 +361,6 @@ class GUIV2(QMainWindow):
             self.diagramArea.removeClassCard(selected_class_name)
             self._process_task_signal.emit('class -d ' + selected_class_name, self)
                 
-
     def renameClassAction(self):
         class_names = [entity._name for entity in self._diagram._entities]
         dialog = RenameClassDialog(class_names, self)   
@@ -364,8 +373,6 @@ class GUIV2(QMainWindow):
         else:
             QMessageBox.warning(self, "Rename Class", "Invalid new class name or name already exists.")
          
-    
-
     def attributesAction(self):
         dialog = QDialog(self)
         dialog.setWindowTitle("Attributes and Methods")
@@ -469,7 +476,6 @@ class GUIV2(QMainWindow):
                     class_card.remove_method(method_name_and_type)
                     break
 
-
     def renameMethodAction(self):
         classes_with_methods = {
             classCard._name: classCard.getMethods()
@@ -490,42 +496,65 @@ class GUIV2(QMainWindow):
                         break
             else:
                 QMessageBox.warning(self, "Error", "New method name cannot be empty.")
-                
-    def addFieldAction(self):
-        # Pass the list of class names to the dialog
-        dialog = AddFieldDialog(self.class_names, self)
+           
+    def changeMethodParamsAction(self):
+        dialog = ChangeParamsDialog(self.classes_methods_params, self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
-            class_name, field_name, field_type = dialog.getFieldInfo()
-            if class_name and field_name and field_type:
-                print(f"Adding field: {field_name} with type: {field_type} to class {class_name}")
-                # Proceed with adding the field to the selected class
+            className, methodName, newParams, paramsToRemove = dialog.getChanges()
+
+    def addFieldAction(self):
+        types = ["int", "string", "bool", "float"]
+        class_names = [entity._name for entity in self._diagram._entities]
+        dialog = AddFieldDialog(class_names, types, self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            class_name, field_name, type_name = dialog.getFieldInfo()
+            
+            if field_name:  # Basic validation
+                self._process_task_signal.emit(f'fld -a {class_name} {field_name} {type_name}', self)
+                for classCard in self.diagramArea.findChildren(ClassCard):
+                    if classCard._name == class_name:
+                        classCard.add_field(f"{field_name} : {type_name}")
+                        break
             else:
-                print("Class name, field name, and type cannot be empty.")
+                QMessageBox.warning(self, "Error", "Field name cannot be empty.")
 
     def removeFieldAction(self):
-        # Similar update for RemoveFieldDialog...
-        dialog = RemoveFieldDialog(self.class_names, self.fields, self)
-        if dialog.exec() == QDialog.DialogCode.Accepted:
-            class_name, selected_field = dialog.getSelectedField()
-            print(f"Removing field: {selected_field} from class {class_name}")
-            # Proceed with removing the field from the selected class
+        classes_with_fields = {
+            classCard._name: classCard.getFields()
+            for classCard in self.diagramArea.findChildren(ClassCard)
+        }
 
+        dialog = RemoveFieldDialog(classes_with_fields, self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            class_name, field_name_and_type = dialog.getSelection()
+            field_name = field_name_and_type.split(": ")[0]  
+            
+            self._process_task_signal.emit(f'fld -d {class_name} {field_name}', self)
+            for class_card in self.findChildren(ClassCard):
+                if class_card._name == class_name:
+                    class_card.remove_field(field_name_and_type)
+                    break
 
     def renameFieldAction(self):
-        # Similar update for RenameFieldDialog...
-        dialog = RenameFieldDialog(self.class_names, self.fields, self)
+        classes_with_fields = {
+            classCard._name: classCard.getFields()
+            for classCard in self.diagramArea.findChildren(ClassCard)
+        }
+           # Create and show the dialog
+        dialog = RenameFieldDialog(classes_with_fields, self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
-            class_name, original_field_name, new_field_name = dialog.getFieldSelection()
-            if class_name and not new_field_name:
-                print("The new field name cannot be empty.")
-                return
-            if new_field_name in fields:
-                print("A field with this name already exists in the selected class.")
-                return
+            class_name, old_field_name_and_type, new_field_name = dialog.getSelection()
+            old_field_name = old_field_name_and_type.split(" : ")[0]  
 
-            print(f"Renaming field '{original_field_name}' to '{new_field_name}' in class {class_name}")
-            # Proceed with renaming the field in the selected class
-
+            # Check for basic validation
+            if new_field_name:
+                self._process_task_signal.emit(f'fld -r {class_name} {old_field_name} {new_field_name}', self)
+                for classCard in self.diagramArea.findChildren(ClassCard):
+                    if classCard._name == class_name:
+                        classCard.rename_field(old_field_name, new_field_name)
+                        break
+            else:
+                QMessageBox.warning(self, "Error", "New field name cannot be empty.")
 
     def relationshipsAction(self):
         dialog = QDialog(self)
@@ -562,33 +591,70 @@ class GUIV2(QMainWindow):
 
         dialog.exec()
 
-    # Placeholder methods for actions
-    def createRelationshipAction(self):
-        # Assuming 'classes' is a list of class names available for creating relationships
-        classes = ["ClassA", "ClassB", "ClassC", "ClassD"]
 
-        dialog = CreateRelationshipDialog(classes, self)
+    def refreshRelationshipsList(self):
+        self.lstRelationships.clear()
+
+        # Assuming _diagram has a method to get all current relationships
+        current_relationships = self._diagram.list_relations()
+        # Populate the lstRelationships widget with updated relationships
+        for relationship in current_relationships:
+            self.lstRelationships.addItem(relationship)
+            
+    def createRelationshipAction(self):
+        class_names = [entity._name for entity in self._diagram._entities]
+        dialog = CreateRelationshipDialog(class_names, self)
+        
         if dialog.exec() == QDialog.DialogCode.Accepted:
             src_class, dest_class, relationship_type = dialog.getRelationshipInfo()
-            print(f"Creating {relationship_type} relationship from {src_class} to {dest_class}")
-            # TODO Here, you would add the relationship to your model or data structure
+            self._process_task_signal.emit (f'rel -a {src_class} {dest_class} {relationship_type}', self)
+            relationship_str = f"{src_class} -> {dest_class}"
+            
+            for classCard in self.diagramArea.findChildren(ClassCard):
+                if classCard._name == src_class:
+                    
+                    classCard.add_relation(relationship_str)
+                    break
+            for classCard in self.diagramArea.findChildren(ClassCard):
+                if classCard._name == dest_class:
+                    
+                    classCard.add_relation(relationship_str)
+                    break
+                
+        self.refreshRelationshipsList()
+        self.diagramArea.addRelationship(src_class, dest_class)
+        
 
     def removeRelationshipAction(self):
-        # Assuming 'existing_relationships' is a list of strings representing current relationships
-        # Each string could be formatted as "SourceClass -> DestinationClass: RelationshipType"
-        existing_relationships = [
-            "ClassA -> ClassB: Aggregation",
-            "ClassB -> ClassC: Composition",
-            "ClassC -> ClassD: Inheritance",
-            "ClassD -> ClassA: Realization"
-        ]
-
-        dialog = RemoveRelationshipDialog(existing_relationships, self)
+        current_relationships = self._diagram.list_relations()
+        dialog = RemoveRelationshipDialog(current_relationships, self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
             selected_relationship = dialog.getSelectedRelationship()
-            print(f"Removing relationship: {selected_relationship}")
-            # TODO Here, remove the selected relationship from your model or data structure
 
+            src_class, type, dest_class = selected_relationship.split(" -> ")
+
+           
+            self._process_task_signal.emit(f'rel -d {src_class} {dest_class}', self)
+
+            
+            self.refreshRelationshipsList()
+            
+            relationship_str = f"{src_class} -> {dest_class}"
+            
+            for classCard in self.diagramArea.findChildren(ClassCard):
+                if classCard._name == src_class:
+                    
+                    classCard.remove_relation(relationship_str)
+                    break
+            for classCard in self.diagramArea.findChildren(ClassCard):
+                if classCard._name == dest_class:
+                    
+                    classCard.remove_relation(relationship_str)
+                    break
+                
+        self.diagramArea.removeRelationship(src_class, dest_class)
+
+                    
     def helpAction(self):
         dialog = QDialog(self)
         dialog.setWindowTitle("Help")
@@ -701,21 +767,6 @@ class GUIV2(QMainWindow):
             elif self.radio_light_theme.isChecked():
                 self.applyLightTheme()
 
-    def changeMethodParamsAction(self):
-        dialog = ChangeParamsDialog(self.classes_methods_params, self)
-        if dialog.exec() == QDialog.DialogCode.Accepted:
-            className, methodName, newParams, paramsToRemove = dialog.getChanges()
-
-            # Here, you'll need to implement how to add new parameters and remove selected ones.
-            # This might involve updating a model, a database, or directly manipulating code.
-
-            print(f"Class: {className}, Method: {methodName}")
-            print(f"Adding parameters: {newParams}")
-            print(f"Removing parameters: {paramsToRemove}")
-
-            # Example: Update method parameters in the backend
-            # self.backend.updateMethodParams(className, methodName, newParams, paramsToRemove)
-
     def on_add_class_clicked(self):
         dialog = CustomInputDialog("Add Class", self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
@@ -792,7 +843,44 @@ class GUIV2(QMainWindow):
         """)
         self.findChild(QLabel, "lblRelationships").setAlignment(Qt.AlignmentFlag.AlignHCenter)
 
+    def clearGUI(self):
+            self.diagramArea.clearAll() 
+            self.lstRelationships.clear()
+             
+    def refreshGUI(self):
+        """Refreshes the entire GUI to reflect the current state."""
+        self.clearGUI()
+        for class_name in self._diagram._entities:
+            name = class_name.get_name()
+            classCard = ClassCard(name)
+            self.diagramArea.addClassCard(classCard, name)
+            for field in class_name._fields:
+                field_name, field_type_gen, *rest = field
+                field_type = str(field_type_gen).split("'")[1]  
+                field_str = (f'{field_name} : {field_type}')
+                classCard.add_field(field_str)
+                       
+            for method in class_name._methods:
+                method_str = f"{method.get_method_name()} : {method.get_return_type()}"
+                classCard.add_method(method_str)
+                
+        for relation in self._diagram._relations:
+            src_class, _, dest_class = relation.partition(" -> ")
+            relationship_str = f"{src_class} -> {dest_class}"
+            
+            # Updating ClassCard objects with relations
+            for classCard in self.diagramArea.findChildren(ClassCard):
+                if classCard._name == src_class or classCard._name == dest_class:
+                    classCard.add_relation(relationship_str)
 
+                # Example: Redraw diagram or custom widgets
+                self.diagramArea.update()
+
+                
+                self.statusBar().showMessage("GUI Refreshed")
+   
+        
+            
 class DiagramArea(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -800,6 +888,7 @@ class DiagramArea(QWidget):
         self.classCards = {}  # Dictionary to track class cards
         self.lastCardPosition = QPoint(10, 10)  # Initial position for the first card
         self.offsetIncrement = QPoint(15, 15)  # Offset for the next card position
+        self.relationships = []
 
     def initUI(self):
         self.setFixedSize(650, 850)  # Adjust size as necessary
@@ -813,6 +902,7 @@ class DiagramArea(QWidget):
         if self.lastCardPosition.x() > self.width() - 100 or self.lastCardPosition.y() > self.height() - 100:
             self.lastCardPosition = QPoint(10, 10)
         self.classCards[className] = classCard  # Store the class card with its name as the key
+        classCard.cardMoved.connect(self.update)
 
     def removeClassCard(self, className):
         if className in self.classCards:
@@ -823,9 +913,35 @@ class DiagramArea(QWidget):
     # Find the class card widget with the old_name
         for classCard in self.findChildren(ClassCard):
             if classCard._name == old_name:
-                classCard.set_name(new_name)  
+                classCard.set_name(new_name)
+                
+    def clearAll(self):
+        """Clears all visual elements from the diagram area."""
+        for classCard in self.findChildren(ClassCard):
+            classCard.deleteLater()  # Removes the widget and schedules it for deletion
+        self.classCards.clear()  # Clear the tracking dictionary
+        self.relationships.clear()  # Clear any stored relationships
+        self.update()  # Redraw the area
+                
+    def paintEvent(self, event):
+        super().paintEvent(event)
+        painter = QPainter(self)
+        # Set the pen with the correct QColor usage
+        painter.setPen(QPen(QColor('black'), 2)) 
+        for src, dest in self.relationships:
+            if src in self.classCards and dest in self.classCards:
+                src_pos = self.classCards[src].centerPos()
+                dest_pos = self.classCards[dest].centerPos()
+                painter.drawLine(src_pos, dest_pos)
 
-
+    def addRelationship(self, src_class_name, dest_class_name):
+        self.relationships.append((src_class_name, dest_class_name))
+        self.update()  # Request a repaint to draw the new line
+        
+    def removeRelationship(self, src_class_name, dest_class_name):
+        self.relationships.remove((src_class_name, dest_class_name))
+        self.update()  # Request a repaint to draw the new line
+        
 if __name__ == "__main__":
     app = QApplication([])
 

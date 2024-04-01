@@ -107,7 +107,7 @@ class Relation:
         Returns:
             str: A string representation of the relation.
         """
-        return f'{self._source} -> {self._type} -> {self._destination}'
+        return f'{self._source._name} -> {self._type} -> {self._destination._name}'
     
     def __eq__(self, other):
         '''Equality op overload

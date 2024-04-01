@@ -1,7 +1,7 @@
 # Primary: Danish
 # Secondary: Zhang
 from .custom_exceptions import CustomExceptions
-
+from typing import Optional
 
 class Entity:
 
@@ -242,14 +242,14 @@ class Entity:
 
             Return: a comma separated list of all methods in this entity
         """
-        return ", ".join(f"{name}: {ftype.__name__}" for name, ftype in self._fields) + '\n'
+        return ", ".join(f"{name}: {ftype.__name__}" for name, ftype in self._fields)
 
     def list_methods(self):
         """Lists all the methods of this entity
 
             Return: a comma separated list of all methods and their params in this entity
         """
-        return ", ".join(m.__str__() for m in self._methods) + '\n'
+        return ", ".join(m.__str__() for m in self._methods)
 
     def __str__(self) -> str:
         """
@@ -294,7 +294,7 @@ class UML_Method:
         """
         self._name = method_name
         self._return_type = return_type
-        self._params: list[tuple[str, type]] = []
+        self._params: list[tuple[str, Optional[type]]] = []
         self.allowed_types = {
             "string": str,
             "int": int,
@@ -349,7 +349,7 @@ class UML_Method:
             if existing_param_name == param_name:
                 raise CustomExceptions.ParameterExistsError(param_name)
 
-    def add_parameters(self, param_name: str, param_type: type):
+    def add_parameters(self, param_name: str, param_type: Optional[type] = None):
         """
         Adds a list of new parameters to the method.
 
@@ -439,7 +439,7 @@ class UML_Method:
         result_return_type = 'void' if self._return_type is type(None) else self._return_type
         result += f"\n\tReturn Type: {result_return_type}"
         result += "\n\t" + self.get_method_name() + "'s Params: "
-        param_results = ' '.join(f'{name}: {ptype.__name__}' for name, ptype in self._params)
+        param_results = ' '.join(f'{name}: {ptype if ptype else " "}' for name, ptype in self._params)
         return result + param_results
 
     def __eq__(self, other):
