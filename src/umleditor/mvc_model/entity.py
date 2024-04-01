@@ -70,8 +70,6 @@ class Entity:
                 raise CustomExceptions.FieldtypeNotFoundError(field_type)
 
             else:
-                if isinstance(field_type, str):
-                    field_type = self.allowed_types[field_type]
                 self._fields.append((field_name, field_type))
 
     def delete_field(self, field_name: str):
@@ -123,7 +121,6 @@ class Entity:
             raise CustomExceptions.FieldExistsError(new_field)
 
         field_found = False
-
         for index, (field_name, field_type) in enumerate(self._fields):
             if field_name == old_field and field_type == old_type:
                 self._fields[index] = (new_field, new_type)
@@ -244,7 +241,7 @@ class Entity:
 
             Return: a comma separated list of all methods in this entity
         """
-        return ", ".join(f"{name}: {ftype.__name__}" for name, ftype in self._fields)
+        return ", ".join(f"{name}: {ftype}" for name, ftype in self._fields)
 
     def list_methods(self):
         """Lists all the methods of this entity
