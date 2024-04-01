@@ -23,7 +23,7 @@ class CreateRelationshipDialog(QDialog):
         # Relationship type selection
         layout.addWidget(QLabel("Relationship Type:"))
         self.relationshipTypeComboBox = QComboBox(self)
-        relationship_types = ["Aggregation", "Composition", "Inheritance", "Realization"]
+        relationship_types = ["aggregation", "composition", "inheritance", "realization"]
         self.relationshipTypeComboBox.addItems(relationship_types)
         layout.addWidget(self.relationshipTypeComboBox)
 
