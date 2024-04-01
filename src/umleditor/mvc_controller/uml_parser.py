@@ -36,18 +36,38 @@ def parse(c, input_str: str) -> list:
 
         args = [method_name, return_type]
 
+
+
     elif command_class == UML_Method and command_str == "add_parameters":
-        if len(bits) < 6:
+
+        # Minimum length is 4 when the parameter type is not provided
+
+        if len(bits) < 4:
             raise CE.NeedsMoreInput()
-            
-        entity_name, method_name, parameter_name, parameter_type = bits[2:6]
+
+        # Extract parameters based on provided arguments
+
+        entity_name, method_name, parameter_name = bits[2:5]
+
+        # Assign parameter_type only if it's provided
+
+        parameter_type = bits[5] if len(bits) == 6 else None
+
         ent = c._diagram.get_entity(entity_name)
+
         obj = ent.get_method(method_name)
 
-        if parameter_type not in obj.allowed_types:
+        # Validate parameter_type only if it's provided
+
+        if parameter_type and parameter_type not in obj.allowed_types:
             raise CE.ParameterInvalidTypeError(parameter_type)
 
-        args = [parameter_name, obj.allowed_types[parameter_type]]
+        # Prepare arguments for adding a parameter
+
+        args = [parameter_name]
+
+        if parameter_type:
+            args.append(obj.allowed_types[parameter_type])
 
     elif command_class == UML_Method and command_str == "remove_parameters":
         if len(bits) < 6:
