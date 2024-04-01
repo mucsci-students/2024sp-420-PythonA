@@ -244,14 +244,14 @@ class Entity:
 
             Return: a comma separated list of all methods in this entity
         """
-        return ", ".join(f"{name}: {ftype.__name__}" for name, ftype in self._fields) + '\n'
+        return ", ".join(f"{name}: {ftype.__name__}" for name, ftype in self._fields)
 
     def list_methods(self):
         """Lists all the methods of this entity
 
             Return: a comma separated list of all methods and their params in this entity
         """
-        return ", ".join(m.__str__() for m in self._methods) + '\n'
+        return ", ".join(m.__str__() for m in self._methods)
 
     def __str__(self) -> str:
         """
