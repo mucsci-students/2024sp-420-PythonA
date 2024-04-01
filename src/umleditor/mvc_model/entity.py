@@ -439,7 +439,7 @@ class UML_Method:
         result_return_type = 'void' if self._return_type is type(None) else self._return_type
         result += f"\n\tReturn Type: {result_return_type}"
         result += "\n\t" + self.get_method_name() + "'s Params: "
-        param_results = ' '.join(f'{name}: {ptype if ptype else " "}' for name, ptype in self._params)
+        param_results = ' '.join(f'{name}: {ptype.__name__ if ptype else " "}' for name, ptype in self._params)
         return result + param_results
 
     def __eq__(self, other):

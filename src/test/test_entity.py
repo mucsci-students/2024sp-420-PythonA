@@ -1,7 +1,6 @@
 # Primary: Danish
 #Secondary: Zhang
 
-
 from umleditor.mvc_model import Entity
 
 
