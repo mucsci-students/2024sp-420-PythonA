@@ -89,6 +89,7 @@ class Entity:
         Returns:
             None.
         """
+
         field_found = False
         for field in self._fields:
             if field[0] == field_name:  # Compare only the field names
