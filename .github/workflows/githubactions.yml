@@ -32,8 +32,8 @@ jobs:
   linux:
     runs-on: ubuntu-latest
     steps:
-      - name: linux-working-directory
-        run: echo $GITHUB_WORKSPACE
+      - name: linux-ls
+        run: ls
       - name: clone-repo-linux
         run: git clone https://github.com/mucsci-students/2024sp-420-PythonA
       - name: cd-linux
