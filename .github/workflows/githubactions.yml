@@ -32,12 +32,12 @@ jobs:
   linux:
     runs-on: ubuntu-latest
     steps:
-      - name: linux-ls
-        run: ls
       - name: clone-repo-linux
         run: git clone https://github.com/mucsci-students/2024sp-420-PythonA
       - name: cd-linux
         run: cd 2024sp-420-PythonA
+      - name: linux-ls
+        run: ls
       - name: build-project-linux
         run: python -m pip install -e .
       - name: install-pytest-cov-linux
