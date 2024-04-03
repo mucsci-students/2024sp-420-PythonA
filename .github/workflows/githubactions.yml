@@ -35,7 +35,7 @@ jobs:
       - name: create-venv-mac
         run: sudo python3 -m venv /./venv
       - name: activate-venv-mac
-        run: source venv/bin/activate
+        run: source /./venv/bin/activate
       - name: build-project-mac
         run: python3 build.py
       - name: install-pytest-mac
@@ -60,6 +60,8 @@ jobs:
         run: sudo python -m venv /./venv
       - name: activate-venv-linux
         run: source /./venv/bin/activate
+      - name: cd-venv-linux
+        run: cd venv
       - name: build-project-linux
         run: python build.py
       - name: install-pytest-linux
