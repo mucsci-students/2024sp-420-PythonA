@@ -8,6 +8,10 @@ jobs:
         run: git clone https://github.com/mucsci-students/2024sp-420-PythonA .
       - name: ls-windows
         run: ls
+      - name: make-venv-directory-windows
+        run: mkdir venv
+      - name: ls-windows2
+        run: ls
       - name: build-project-windows
         run: py build.py
       - name: install-pytest-windows
@@ -24,6 +28,10 @@ jobs:
         run: git clone https://github.com/mucsci-students/2024sp-420-PythonA .
       - name: ls-mac
         run: ls
+      - name: make-venv-directory-mac
+        run: mkdir venv
+      - name: ls-mac2
+        run: ls
       - name: build-project-mac
         run: python3 build.py
       - name: install-pytest-mac
@@ -39,6 +47,10 @@ jobs:
       - name: clone-repo-linux
         run: git clone https://github.com/mucsci-students/2024sp-420-PythonA .
       - name: ls-linux
+        run: ls
+      - name: make-venv-directory-linux
+        run: mkdir venv
+      - name: ls-linux2
         run: ls
       - name: build-project-linux
         run: python build.py
