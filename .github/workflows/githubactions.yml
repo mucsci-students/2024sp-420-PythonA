@@ -33,7 +33,7 @@ jobs:
       - name: ls-mac2
         run: ls
       - name: create-venv-mac
-        run: python3 -m venv /./venv
+        run: sudo python3 -m venv /./venv
       - name: build-project-mac
         run: python3 build.py
       - name: install-pytest-mac
@@ -55,7 +55,7 @@ jobs:
       - name: ls-linux2
         run: ls
       - name: create-venv-linux
-        run: python -m venv /./venv
+        run: sudo python -m venv /./venv
       - name: build-project-linux
         run: python build.py
       - name: install-pytest-linux
