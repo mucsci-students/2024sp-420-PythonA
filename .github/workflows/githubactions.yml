@@ -8,8 +8,6 @@ jobs:
         run: git clone https://github.com/mucsci-students/2024sp-420-PythonA
       - name: cd-windows
         run: cd 2024sp-420-PythonA
-      - name: build-project-windows
-        run: py build.py
       - name: install-pytest-windows
         run: pip install pytest
       - name: install-pytest-cov-windows
