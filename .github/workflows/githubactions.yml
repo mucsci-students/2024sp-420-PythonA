@@ -8,6 +8,7 @@ jobs:
         run: git clone https://github.com/mucsci-students/2024sp-420-PythonA .
       - name: ls-windows
         run: ls
+      # Probably won't need to make venv directory
       - name: make-venv-directory-windows
         run: mkdir venv
       - name: ls-windows2
@@ -28,12 +29,14 @@ jobs:
         run: git clone https://github.com/mucsci-students/2024sp-420-PythonA .
       - name: ls-mac
         run: ls
-      - name: create-venv-mac
-        run: sudo python3 -m venv venv
-      - name: activate-venv-mac
-        run: source venv/bin/activate
+#      - name: create-venv-mac
+#        run: sudo python3 -m venv venv
+#      - name: activate-venv-mac
+#        run: source venv/bin/activate
+#      - name: build-project-mac
+#        run: python3 build.py
       - name: build-project-mac
-        run: python3 build.py
+        run: pip install -e .
       - name: install-pytest-mac
         run: pip install pytest
       - name: install-pytest-cov-mac
@@ -48,12 +51,14 @@ jobs:
         run: git clone https://github.com/mucsci-students/2024sp-420-PythonA .
       - name: ls-linux
         run: ls
-      - name: create-venv-linux
-        run: sudo python -m venv venv
-      - name: activate-venv-linux
-        run: source venv/bin/activate
+#      - name: create-venv-linux
+#        run: sudo python -m venv venv
+#      - name: activate-venv-linux
+#        run: source venv/bin/activate
+#      - name: build-project-linux
+#        run: python build.py
       - name: build-project-linux
-        run: python build.py
+        run: pip install -e .
       - name: install-pytest-linux
         run: pip install pytest
       - name: install-pytest-cov-linux
