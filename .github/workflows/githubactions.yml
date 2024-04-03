@@ -5,9 +5,9 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: clone-repo-windows
-        run: git clone https://github.com/mucsci-students/2024sp-420-PythonA
-      - name: cd-windows
-        run: cd 2024sp-420-PythonA
+        run: git clone https://github.com/mucsci-students/2024sp-420-PythonA .
+      - name: ls-windows
+        run: ls -a
       - name: build-project-windows
         run: py build.py
       - name: install-pytest-windows
@@ -21,9 +21,9 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: clone-repo-mac
-        run: git clone https://github.com/mucsci-students/2024sp-420-PythonA
-      - name: cd-mac
-        run: cd 2024sp-420-PythonA
+        run: git clone https://github.com/mucsci-students/2024sp-420-PythonA .
+      - name: ls-mac
+        run: ls -a
       - name: build-project-mac
         run: python3 build.py
       - name: install-pytest-mac
@@ -36,16 +36,10 @@ jobs:
   linux:
     runs-on: ubuntu-latest
     steps:
-      - name: linux-ls
-        run: ls -a
       - name: clone-repo-linux
         run: git clone https://github.com/mucsci-students/2024sp-420-PythonA .
-      - name: linux-ls2
+      - name: ls-linux
         run: ls -a
-      - name: check-python-version-linux
-        run: python --version
-      - name: check-git-version-linux
-        run: git --version
       - name: build-project-linux
         run: python build.py
       - name: install-pytest-linux
