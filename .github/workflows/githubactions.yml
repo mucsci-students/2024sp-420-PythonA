@@ -39,9 +39,7 @@ jobs:
       - name: linux-ls
         run: ls -a
       - name: clone-repo-linux
-        run: git clone https://github.com/mucsci-students/2024sp-420-PythonA
-      - name: cd-linux
-        run: cd 2024sp-420-PythonA/2024sp-420-PythonA
+        run: git clone https://github.com/mucsci-students/2024sp-420-PythonA .
       - name: linux-ls2
         run: ls -a
       - name: check-python-version-linux
