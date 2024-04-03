@@ -7,7 +7,7 @@ jobs:
       - name: clone-repo-windows
         run: git clone https://github.com/mucsci-students/2024sp-420-PythonA .
       - name: ls-windows
-        run: ls -a
+        run: ls
       - name: build-project-windows
         run: py build.py
       - name: install-pytest-windows
