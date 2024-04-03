@@ -23,7 +23,7 @@ jobs:
       - name: clone-repo-mac
         run: git clone https://github.com/mucsci-students/2024sp-420-PythonA .
       - name: ls-mac
-        run: ls -a
+        run: ls
       - name: build-project-mac
         run: python3 build.py
       - name: install-pytest-mac
@@ -39,7 +39,7 @@ jobs:
       - name: clone-repo-linux
         run: git clone https://github.com/mucsci-students/2024sp-420-PythonA .
       - name: ls-linux
-        run: ls -a
+        run: ls
       - name: build-project-linux
         run: python build.py
       - name: install-pytest-linux
