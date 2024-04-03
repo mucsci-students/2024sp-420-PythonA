@@ -28,14 +28,10 @@ jobs:
         run: git clone https://github.com/mucsci-students/2024sp-420-PythonA .
       - name: ls-mac
         run: ls
-      - name: make-venv-directory-mac
-        run: mkdir venv
-      - name: ls-mac2
-        run: ls
       - name: create-venv-mac
         run: sudo python3 -m venv venv
       - name: activate-venv-mac
-        run: source /./venv/bin/activate
+        run: source venv/bin/activate
       - name: build-project-mac
         run: python3 build.py
       - name: install-pytest-mac
