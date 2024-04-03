@@ -48,14 +48,10 @@ jobs:
         run: git clone https://github.com/mucsci-students/2024sp-420-PythonA .
       - name: ls-linux
         run: ls
-      - name: make-venv-directory-linux
-        run: mkdir venv
-      - name: ls-linux2
-        run: ls
       - name: create-venv-linux
-        run: sudo python -m venv /./venv
+        run: sudo python -m venv venv
       - name: activate-venv-linux
-        run: source /./venv/bin/activate
+        run: source venv/bin/activate
       - name: build-project-linux
         run: python build.py
       - name: install-pytest-linux
