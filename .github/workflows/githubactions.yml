@@ -8,6 +8,8 @@ jobs:
         run: git clone https://github.com/mucsci-students/2024sp-420-PythonA
       - name: cd-windows
         run: cd 2024sp-420-PythonA
+      - name: build-project-windows
+        run: py build.py
       - name: install-pytest-windows
         run: pip install pytest
       - name: install-pytest-cov-windows
@@ -34,10 +36,16 @@ jobs:
   linux:
     runs-on: ubuntu-latest
     steps:
+      - name: linux-ls
+        run: ls -a
       - name: clone-repo-linux
         run: git clone https://github.com/mucsci-students/2024sp-420-PythonA
       - name: cd-linux
         run: cd 2024sp-420-PythonA
+      - name: check-python-version-linux
+        run: python --version
+      - name: check-git-version-linux
+        run: git --version
       - name: build-project-linux
         run: python build.py
       - name: install-pytest-linux
