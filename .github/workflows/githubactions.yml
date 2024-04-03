@@ -9,12 +9,14 @@ jobs:
       - name: ls-windows
         run: ls
       # Probably won't need to make venv directory
-      - name: make-venv-directory-windows
-        run: mkdir venv
-      - name: ls-windows2
-        run: ls
+#      - name: make-venv-directory-windows
+#        run: mkdir venv
+#      - name: ls-windows2
+#        run: ls
+#      - name: build-project-windows
+#        run: py build.py
       - name: build-project-windows
-        run: py build.py
+        run: pip install -e .
       - name: install-pytest-windows
         run: pip install pytest
       - name: install-pytest-cov-windows
