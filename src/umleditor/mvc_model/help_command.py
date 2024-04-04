@@ -31,7 +31,7 @@ def help_menu():
         #Field Commands
         "Field Commands: \n\t"
         "fld -a 'class' 'name' 'type'- adds a field named 'name' and it's type 'type' to the class named 'class'\n\t"
-        "fld -d 'class' 'name' 'type' - deletes a field named 'name' and it's type 'type' from the class named 'class'\n\t"
+        "fld -d 'class' 'name'  - deletes a field named 'name' and it's type 'type' from the class named 'class'\n\t"
         "fld -r 'class' 'old' 'old_type' 'new' 'new_type' - renames a field named 'old' to name 'new' in the class 'class'\n"
         #Method Commands
         "Method Commands:\n\t"
