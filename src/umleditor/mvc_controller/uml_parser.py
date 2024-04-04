@@ -1,6 +1,5 @@
 # Primary: Danish
 # Secondary: Zhang
-
 from umleditor.mvc_model import CustomExceptions as CE
 from .uml_lexer import lex_input as lex
 from umleditor.mvc_model import Diagram, Entity, Relation, UML_Method, help_command
