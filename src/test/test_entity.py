@@ -31,27 +31,27 @@ def test_set_name():
 
 def test_add_field():
     ent1 = Entity("entity1")
-    assert ("field1",int) not in ent1._fields
+    assert ("field1","int") not in ent1._fields
     ent1.add_field("field1", "int")
-    assert ("field1",int) in ent1._fields
+    assert ("field1","int") in ent1._fields
 
 def test_add_multiple_fields():
     ent1 = Entity("entity1")
     ent1.add_field("field1", "int")
     ent1.add_field("field2", "string")
     ent1.add_field("field3", "bool")
-    assert ("field1", int) in ent1._fields
-    assert ("field2", str) in ent1._fields
-    assert ("field3", bool) in ent1._fields
-    assert ("field4", int) not in ent1._fields
+    assert ("field1", "int") in ent1._fields
+    assert ("field2", "string") in ent1._fields
+    assert ("field3", "bool") in ent1._fields
+    assert ("field4", "int") not in ent1._fields
 
 def test_delete_field():
     ent1 = Entity("entity1")
-    assert ("field1", int) not in ent1._fields
+    assert ("field1", "int") not in ent1._fields
     ent1.add_field("field1", "int")
-    assert ("field1", int) in ent1._fields
-    ent1.delete_field("field1", int)
-    assert ("field1", int) not in ent1._fields
+    assert ("field1", "int") in ent1._fields
+    ent1.delete_field("field1")
+    assert ("field1", "int") not in ent1._fields
 
 def test_delete_multiple_fields():
     ent1 = Entity("entity1")
@@ -59,42 +59,42 @@ def test_delete_multiple_fields():
     ent1.add_field("field2", "string")
     ent1.add_field("field3", "bool")
     ent1.add_field("field4", "float")
-    assert ("field1", int) in ent1._fields
-    assert ("field2", str) in ent1._fields
-    assert ("field3", bool) in ent1._fields
-    assert ("field4", float) in ent1._fields
-    ent1.delete_field("field1", int)
-    ent1.delete_field("field2",str)
-    ent1.delete_field("field3",bool)
-    assert ("field1",int) not in ent1._fields
-    assert ("field2",str) not in ent1._fields
-    assert ("field3",bool) not in ent1._fields
-    assert ("field4",float) in ent1._fields
+    assert ("field1", "int") in ent1._fields
+    assert ("field2", "string") in ent1._fields
+    assert ("field3", "bool") in ent1._fields
+    assert ("field4", "float") in ent1._fields
+    ent1.delete_field("field1")
+    ent1.delete_field("field2")
+    ent1.delete_field("field3")
+    assert ("field1") not in ent1._fields
+    assert ("field2") not in ent1._fields
+    assert ("field3") not in ent1._fields
+    assert ("field4", "float") in ent1._fields
 
 def test_rename_field():
     ent1 = Entity("entity1")
-    assert ("field1",int) not in ent1._fields
+    assert ("field1","int") not in ent1._fields
     ent1.add_field("field1", "int")
-    assert ("field1",int) in ent1._fields
-    assert ("field2",int) not in ent1._fields
-    ent1.rename_field("field1", int,"field2",int)
-    assert ("field1",int) not in ent1._fields
-    assert ("field2",int) in ent1._fields
+    assert ("field1", "int") in ent1._fields
+    assert ("field2", "int") not in ent1._fields
+    ent1.rename_field("field1", "int","field2","int")
+    assert ("field1","int") not in ent1._fields
+    assert ("field2","int") in ent1._fields
 
 def test_rename_multiple_fields():
     ent1 = Entity("entity1")
     ent1.add_field("field1", "int")
-    ent1.add_field("field2", "string")
-    assert ("field1",int) in ent1._fields
-    assert ("field2",str) in ent1._fields
-    assert ("field3",int) not in ent1._fields
-    assert ("field4",str) not in ent1._fields
-    ent1.rename_field("field1", int, "field3", int)
-    ent1.rename_field("field2", str,"field4", str)
-    assert ("field1",int) not in ent1._fields
-    assert ("field2",str) not in ent1._fields
-    assert ("field3",int) in ent1._fields
-    assert ("field4",str) in ent1._fields
+    ent1.add_field("field2", "int")
+    assert ("field1","int") in ent1._fields
+    assert ("field2","int") in ent1._fields
+    assert ("field3","int") not in ent1._fields
+    assert ("field4","int") not in ent1._fields
+    ent1.rename_field("field1", "int", "field3", "int")
+    ent1.rename_field("field2", "int","field4", "int")
+    assert ("field1", "int") not in ent1._fields
+    assert ("field2", "int") not in ent1._fields
+    assert ("field3", "int") in ent1._fields
+    assert ("field4", "int") in ent1._fields
 
 def test_add_method():
     ent1 = Entity("entity1")
