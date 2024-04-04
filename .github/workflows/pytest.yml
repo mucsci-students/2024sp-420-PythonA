@@ -14,9 +14,6 @@ jobs:
           pip install -e .
           pip install pytest-cov
 
-      - name: Install PyQt6 dependencies
-        run: sudo apt-get update && sudo apt-get install -y libegl1-mesa libxkbcommon-x11-0
-
       - name: Run Unit Tests
         run: pytest --cov-fail-under=80 .
 
@@ -32,9 +29,6 @@ jobs:
         run: |
           pip install -e .
           pip install pytest-cov
-
-      - name: Install PyQt6 dependencies
-        run: sudo apt-get update && sudo apt-get install -y libegl1-mesa libxkbcommon-x11-0
 
       - name: Run Unit Tests
         run: pytest --cov-fail-under=80 .
