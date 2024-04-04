@@ -1,6 +1,5 @@
 # Primary: Danish
 # Secondary: Zhang
-
 import json
 
 class CustomJSONEncoder(json.JSONEncoder):
@@ -42,14 +41,12 @@ def serialize(diagram: Diagram, path: str) -> None:
         # class fields
         saved_fields = []; saved_class['fields'] = saved_fields
         for field_name, field_type in entity._fields:
-            if isinstance(field_type, type):
-                field_type = field_type.__name__
             # class field
-                saved_field = {}; saved_fields.append(saved_field)
+            saved_field = {}; saved_fields.append(saved_field)
             # class field name
-                saved_field['name'] = field_name
+            saved_field['name'] = field_name
             # class field type
-                saved_field['type'] = field_type
+            saved_field['type'] = field_type
         # class methods
         saved_methods = []; saved_class['methods'] = saved_methods
         for method in entity._methods:
@@ -109,12 +106,7 @@ def deserialize(diagram: Diagram, path: str) -> None:
         raise CE.JsonDecodeError(filepath=path)
 
     try:
-        type_mapping = {
-            'int': int,
-            'str': str,
-            'float': float,
-            'bool': bool,
-        }
+
 
         # classes
         loaded_classes = []
@@ -130,9 +122,9 @@ def deserialize(diagram: Diagram, path: str) -> None:
                 field_name = saved_field['name']
                 # field type
                 field_type_str = saved_field['type']
-                field_type = type_mapping.get(field_type_str, str)
+                # field_type = type_mapping.get(field_type_str, str)
 
-                loaded_field = (field_name, field_type)
+                loaded_field = (field_name, field_type_str)
                 loaded_fields.append(loaded_field)
 
             # Assign the reconstructed list of fields to the loaded class
