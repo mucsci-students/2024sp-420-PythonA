@@ -14,21 +14,10 @@ class Entity:
             entity_name (str): The name of the entity.
         """
         self._name: str = entity_name
-        self._fields: list[tuple[str, type]] = []
-        self.allowed_types = {
-            "string": str,
-            "int": int,
-            "bool": bool,
-            "float": float
-        }
+        self._fields: list[tuple[str, str]] = []
+        self.allowed_types = ["string", "int", "bool", "float" ]
         self._methods = []
-        self.allowed_return_types = {
-            "void": None, 
-            "string": str,
-            "int": int,
-            "bool": bool,
-            "float": float
-            }
+        self.allowed_return_types = ["void", "string","int","bool","float"]
 
     def get_name(self):
         """
@@ -48,7 +37,7 @@ class Entity:
         """
         self._name = entity_name
 
-    def add_field(self, field_name: str, field_type: type):
+    def add_field(self, field_name: str, field_type: str):
         """
         Adds a new field to the to the list.
 
@@ -98,7 +87,7 @@ class Entity:
         if not field_found:
             raise CustomExceptions.FieldNotFoundError(field_name)
 
-    def rename_field(self, old_field: str, old_type: type, new_field: str, new_type: type):
+    def rename_field(self, old_field: str, old_type: str, new_field: str, new_type: str):
         """
         Renames a field from its old name to a new name
 
@@ -258,8 +247,8 @@ class Entity:
         Returns:
             str: The name of the entity.
         """
-        # return_type_name = 'void' if self.allowed_return_types is type(None) else self.allowed_return_types.__name__
-        return f"{self._name}: {self.allowed_return_types}"
+
+        return self._name
 
     def __eq__(self, other):
         """Equality operator for entities
@@ -294,13 +283,8 @@ class UML_Method:
         """
         self._name = method_name
         self._return_type = return_type
-        self._params: list[tuple[str, Optional[type]]] = []
-        self.allowed_types = {
-            "string": str,
-            "int": int,
-            "bool": bool,
-            "float": float
-        }
+        self._params: list[tuple[str, Optional[str]]] = []
+        self.allowed_types = ["string", "int", "bool", "float" ]
 
     def get_method_name(self):
         """
@@ -349,7 +333,7 @@ class UML_Method:
             if existing_param_name == param_name:
                 raise CustomExceptions.ParameterExistsError(param_name)
 
-    def add_parameters(self, param_name: str, param_type: Optional[type] = None):
+    def add_parameters(self, param_name: str, param_type: Optional[str] = None):
         """
         Adds a list of new parameters to the method.
 
@@ -387,7 +371,7 @@ class UML_Method:
                 return
         raise CustomExceptions.ParameterNotFoundError(param_name)
 
-    def change_parameters(self, op_name: str, old_type: type, np_name: str, new_type: type):
+    def change_parameters(self, op_name: str, old_type: str, np_name: str, new_type: str):
         """
         Changes a parameter in the method by replacing an old parameter with a new parameter.
 
@@ -436,10 +420,10 @@ class UML_Method:
         """
 
         result = f"\n{self.get_method_name()}"
-        result_return_type = 'void' if self._return_type is type(None) else self._return_type
+        result_return_type = 'void' if self._return_type is str(None) else self._return_type
         result += f"\n\tReturn Type: {result_return_type}"
         result += "\n\t" + self.get_method_name() + "'s Params: "
-        param_results = ' '.join(f'{name}: {ptype.__name__ if ptype else " "}' for name, ptype in self._params)
+        param_results = ' '.join(f'{name}: {ptype if ptype else " "}' for name, ptype in self._params)
         return result + param_results
 
     def __eq__(self, other):

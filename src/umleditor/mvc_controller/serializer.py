@@ -41,8 +41,6 @@ def serialize(diagram: Diagram, path: str) -> None:
         # class fields
         saved_fields = []; saved_class['fields'] = saved_fields
         for field_name, field_type in entity._fields:
-            if isinstance(field_type, type):
-                field_type = field_type.__name__
             # class field
             saved_field = {}; saved_fields.append(saved_field)
             # class field name
@@ -66,7 +64,7 @@ def serialize(diagram: Diagram, path: str) -> None:
                 # class method param name
                 saved_param['name'] = param_name
                 # class method param type
-                saved_param['type'] = param_type.__name__ if param_type else 'None'
+                saved_param['type'] = param_type if param_type else 'None'
     # relationships
     saved_relationships = []
     for relation in diagram._relations:
@@ -108,13 +106,7 @@ def deserialize(diagram: Diagram, path: str) -> None:
         raise CE.JsonDecodeError(filepath=path)
 
     try:
-        type_mapping = {
-            'int': int,
-            'str': str,
-            'float': float,
-            'bool': bool,
-            'None': None
-        }
+
 
         # classes
         loaded_classes = []
@@ -153,7 +145,7 @@ def deserialize(diagram: Diagram, path: str) -> None:
                 for saved_param in saved_method['params']:
                     # Extracting param name and type (as string)
                     param_name = saved_param['name']
-                    param_type = None if saved_param['type'] == 'None' else type_mapping.get(saved_param['type'], None)
+                    param_type = None if saved_param['type'] == 'None' else saved_param['type']
                     # Append tuple of param name and type
                     loaded_params.append((param_name, param_type))
                 loaded_method._params = loaded_params
