@@ -15,7 +15,7 @@ def test_has_entity_success():
     dia.add_entity('class')
     assert dia.has_entity('class') == True
 
-def test_has_entity_success():
+def test_has_entity_error():
     dia = Diagram()
     assert dia.has_entity('entity') == False
 
@@ -130,9 +130,19 @@ def test_dia_rename_multiple_entities():
     assert dia.has_entity("ent15")
     assert dia.has_entity("ent16")
 
+def test_dia_list_entity_details_success():
+    dia = Diagram()
+    result =
+    assert dia.list_entity_details("ent1") == result
+
+def test_dia_list_entity_details_error():
+    dia = Diagram()
+    with pytest.raises(CustomExceptions.EntityNotFoundError):
+        dia.list_entity_details("entity")
+
 def test_dia_list_everything():
     dia = Diagram()
-    result = "ent1\nent2\nent3\nent4\nent5\nent6\nent7\ent8\nent9\nent10\nent11\nent12\nent13\nent14\nent15\nent16\nent17\nent18\nent19\nent20\n"
+    result =
     assert dia.list_everything() == result
 
 def test_dia_add_relation():
