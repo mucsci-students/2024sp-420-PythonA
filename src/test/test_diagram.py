@@ -145,6 +145,11 @@ def test_dia_list_everything():
     result = "y"
     assert dia.list_everything() == result
 
+def test_dia_list_entities():
+    dia = Diagram()
+    result = "class, ent1, ent2, ent3, ent4, ent5, ent6, ent7, ent8, ent9, ent10, ent11, ent12, ent13, ent14, ent15, ent16"
+    assert dia.list_entities() == result
+
 def test_dia_add_relation():
     dia = Diagram()
     dia.add_entity("ent17")
