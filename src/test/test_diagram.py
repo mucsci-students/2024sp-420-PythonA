@@ -142,7 +142,7 @@ def test_dia_list_entity_details_error():
 
 def test_dia_list_everything():
     dia = Diagram()
-    result =
+    result = "y"
     assert dia.list_everything() == result
 
 def test_dia_add_relation():
