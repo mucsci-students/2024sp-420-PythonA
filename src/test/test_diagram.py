@@ -215,3 +215,32 @@ def test_dia_delete_relation_that_doesnt_exist():
     dia.add_entity("ent23")
     with pytest.raises(CustomExceptions.RelationDoesNotExistError):
         dia.delete_relation("ent22", "ent23")
+
+def test_change_relation_type_success():
+    dia = Diagram()
+    dia.add_entity("ent24")
+    dia.add_entity("ent25")
+    dia.add_relation("ent24", "ent25", "aggregation")
+    dia.change_relation_type("ent24", "ent25", "composition")
+
+def test_dia_change_relation_type_invalid_type():
+    dia = Diagram()
+    with pytest.raises(CustomExceptions.InvalidRelationTypeError):
+        dia.change_relation_type("ent24", "ent25", "relationship")
+
+def test_change_relation_type_source_doesnt_exist():
+    dia = Diagram()
+    with pytest.raises(CustomExceptions.EntityNotFoundError):
+        dia.delete_relation("entity", "ent25")
+
+def test_change_relation_type_destination_doesnt_exist():
+    dia = Diagram()
+    with pytest.raises(CustomExceptions.EntityNotFoundError):
+        dia.delete_relation("ent24", "entity")
+
+def test_change_relation_type_relation_doesnt_exist():
+    dia = Diagram()
+    dia.add_entity("ent26")
+    dia.add_entity("ent27")
+    with pytest.raises(CustomExceptions.RelationDoesNotExistError):
+        dia.change_relation_type("ent26", "ent27", "composition")
