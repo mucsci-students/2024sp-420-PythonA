@@ -180,12 +180,28 @@ def test_dia_add_relation_invalid_type():
     with pytest.raises(CustomExceptions.InvalidRelationTypeError):
         dia.add_relation("ent19", "ent20", "relationship")
 
-def test_dia_delete_relation():
+def test_dia_delete_relation_success():
     dia = Diagram()
-    dia.add_entity("ent19")
     dia.add_entity("ent20")
-    dia.add_relation("ent19", "ent20", "aggregation")
+    dia.add_entity("ent21")
+    dia.add_relation("ent20", "ent21", "aggregation")
     assert len(dia._relations) == 2
-    dia.delete_relation("ent19", "ent20")
+    dia.delete_relation("ent20", "ent21")
     assert len(dia._relations) == 1
-    
+
+def test_dia_delete_relation_source_doesnt_exist():
+    dia = Diagram()
+    with pytest.raises(CustomExceptions.EntityNotFoundError):
+        dia.delete_relation("entity", "ent21")
+
+def test_dia_delete_relation_destination_doesnt_exist():
+    dia = Diagram()
+    with pytest.raises(CustomExceptions.EntityNotFoundError):
+        dia.delete_relation("ent20", "entity")
+
+def test_dia_delete_relation_that_doesnt_exist():
+    dia = Diagram()
+    dia.add_entity("ent22")
+    dia.add_entity("ent23")
+    with pytest.raises(CustomExceptions.RelationDoesNotExistError):
+        dia.delete_relation("ent22", "ent23")
