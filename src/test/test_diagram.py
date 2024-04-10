@@ -93,7 +93,7 @@ def test_dia_delete_multiple_entities():
     assert not dia.has_entity("ent8")
     assert not dia.has_entity("ent9")
 
-def test_dia_rename_entity():
+def test_dia_rename_entity_success():
     dia = Diagram()
     dia.add_entity("ent10")
     assert dia.has_entity("ent10")
@@ -102,36 +102,49 @@ def test_dia_rename_entity():
     assert not dia.has_entity("ent10")
     assert dia.has_entity("ent11")
 
+def test_dia_rename_entity_old_name_doesnt_exist():
+    dia = Diagram()
+    assert not dia.has_entity("ent12")
+    with pytest.raises(CustomExceptions.EntityNotFoundError):
+        dia.rename_entity("ent12", "ent13")
+
+def test_dia_rename_entity_new_name_already_exists():
+    dia = Diagram()
+    assert not dia.has_entity("ent12")
+    dia.add_entity("ent12")
+    with pytest.raises(CustomExceptions.EntityExistsError):
+        dia.rename_entity("ent11", "ent12")
+
 def test_dia_rename_multiple_entities():
     dia = Diagram()
-    dia.add_entity("ent12")
     dia.add_entity("ent13")
-    assert dia.has_entity("ent12")
+    dia.add_entity("ent14")
     assert dia.has_entity("ent13")
-    assert not dia.has_entity("ent14")
-    assert not dia.has_entity("ent15")
-    dia.rename_entity("ent12", "ent14")
-    dia.rename_entity("ent13", "ent15")
-    assert not dia.has_entity("ent12")
-    assert not dia.has_entity("ent13")
     assert dia.has_entity("ent14")
+    assert not dia.has_entity("ent15")
+    assert not dia.has_entity("ent16")
+    dia.rename_entity("ent13", "ent15")
+    dia.rename_entity("ent14", "ent16")
+    assert not dia.has_entity("ent13")
+    assert not dia.has_entity("ent14")
     assert dia.has_entity("ent15")
+    assert dia.has_entity("ent16")
 
 
 def test_dia_add_relation():
     dia = Diagram()
-    dia.add_entity("ent16")
     dia.add_entity("ent17")
+    dia.add_entity("ent18")
     assert len(dia._relations) == 0
-    dia.add_relation("ent16", "ent17", "aggregation")
+    dia.add_relation("ent17", "ent18", "aggregation")
     assert len(dia._relations) == 1
 
 def test_dia_delete_relation():
     dia = Diagram()
-    dia.add_entity("ent18")
     dia.add_entity("ent19")
-    dia.add_relation("ent18", "ent19", "aggregation")
+    dia.add_entity("ent20")
+    dia.add_relation("ent19", "ent20", "aggregation")
     assert len(dia._relations) == 2
-    dia.delete_relation("ent18", "ent19")
+    dia.delete_relation("ent19", "ent20")
     assert len(dia._relations) == 1
     
