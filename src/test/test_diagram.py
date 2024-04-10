@@ -36,7 +36,7 @@ def test_dia_add_multiple_entities():
     assert dia.has_entity("ent2")
     assert dia.has_entity("ent3")
 
-def test_dia_get_entity_that_exists():
+def test_dia_get_entity_success():
     dia = Diagram()
     assert not dia.has_entity("ent4")
     dia.add_entity("ent4")
@@ -46,15 +46,11 @@ def test_dia_get_entity_that_exists():
     assert ent5.get_name() != "ent5"
     assert dia.has_entity("ent4")
 
-def test_dia_get_entity_that_doesnt_exist():
-    dia = Diagram()
-    assert not dia.has_entity("ent6")
-    assert dia.get_entity("ent6") is None
-
 def test_dia_get_entity_error():
     dia = Diagram()
+    assert not dia.has_entity("ent6")
     with pytest.raises(CustomExceptions.EntityNotFoundError):
-        dia.get_entity()
+        dia.get_entity("ent6")
 
 def test_dia_delete_entity():
     dia = Diagram()
