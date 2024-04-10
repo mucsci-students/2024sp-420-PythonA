@@ -30,11 +30,11 @@ def test_method_equals():
 
 def test_add_parameter():
     md3 = UML_Method("md3")
-    assert "prm1" not in md1._params
-    md3.add_parameters(["prm1"])
+    assert "prm1" not in md3._params
+    md3.add_parameters("prm1")
     assert "prm1" in md3._params
     assert "prm2" not in md3._params
-    md3.add_parameters(["prm2"])
+    md3.add_parameters("prm2")
     assert "prm2" in md3._params
 
 def test_add_multiple_parameters():
