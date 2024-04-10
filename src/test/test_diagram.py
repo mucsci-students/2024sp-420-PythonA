@@ -31,28 +31,26 @@ def test_dia_add_multiple_entities():
 
 def test_dia_get_entity():
     dia = Diagram()
-    #assert not dia.has_entity("ent")
     assert not dia.has_entity("ent4")
-    #dia.add_entity("ent")
     dia.add_entity("ent4")
-    #ent1 = dia.get_entity("ent")
     ent5 = dia.get_entity("ent4")
-    #assert ent1
     assert ent5
-    #assert ent1.get_name() == "ent"
     assert ent5.get_name() == "ent4"
-    #assert ent1.get_name() != "ent1"
     assert ent5.get_name() != "ent5"
-    #assert dia.has_entity("ent")
     assert dia.has_entity("ent4")
 
 def test_dia_delete_entity():
     dia = Diagram()
-    assert not dia.has_entity("ent1")
-    dia.add_entity("ent1")
-    assert dia.has_entity("ent1")
-    dia.delete_entity("ent1")
-    assert not dia.has_entity("ent1")
+    #assert not dia.has_entity("ent1")
+    assert not dia.has_entity("ent6")
+    #dia.add_entity("ent1")
+    dia.add_entity("ent6")
+    #assert dia.has_entity("ent1")
+    assert dia.has_entity("ent6")
+    #dia.delete_entity("ent1")
+    dia.delete_entity("ent6")
+    #assert not dia.has_entity("ent1")
+    assert not dia.has_entity("ent6")
 
 def test_dia_delete_multiple_entities():
     dia = Diagram()
