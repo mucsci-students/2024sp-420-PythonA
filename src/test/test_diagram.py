@@ -100,10 +100,10 @@ def test_dia_add_relation():
 
 def test_dia_delete_relation():
     dia = Diagram()
-    dia.add_entity("ent1")
-    dia.add_entity("ent2")
-    dia.add_relation("ent1", "ent2", "aggregation")
+    dia.add_entity("ent18")
+    dia.add_entity("ent19")
+    dia.add_relation("ent18", "ent19", "aggregation")
     assert len(dia._relations) == 1
-    dia.delete_relation("ent1", "ent2")
+    dia.delete_relation("ent18", "ent19")
     assert len(dia._relations) == 0
     
