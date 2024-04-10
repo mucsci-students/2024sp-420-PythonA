@@ -15,6 +15,10 @@ def test_has_entity_success():
     dia.add_entity('class')
     assert dia.has_entity('class') == True
 
+def test_has_entity_success():
+    dia = Diagram()
+    assert dia.has_entity('entity') == False
+
 def test_dia_add_entity_success():
     dia = Diagram()
     assert not dia.has_entity("ent")
