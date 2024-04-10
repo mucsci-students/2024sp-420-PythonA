@@ -1,4 +1,4 @@
-from src.umleditor.mvc_model import UML_Method
+from umleditor.mvc_model import UML_Method
 
 def test_create_method():
     md1 = UML_Method("method1")

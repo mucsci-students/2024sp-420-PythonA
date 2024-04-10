@@ -2,10 +2,10 @@
 # Secondary: Zhang
 
 import os
-from src.umleditor.mvc_controller.serializer import serialize, deserialize
-from src.umleditor.mvc_model.diagram import Diagram
-from src.umleditor.mvc_model.entity import Entity
-from src.umleditor.mvc_model.relation import Relation
+from umleditor.mvc_controller.serializer import serialize, deserialize
+from umleditor.mvc_model.diagram import Diagram
+from umleditor.mvc_model.entity import Entity
+from umleditor.mvc_model.relation import Relation
 
 path = os.path.join(os.path.dirname(__file__), '../', '../', 'save')
 if not os.path.exists(path):
