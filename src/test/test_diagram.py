@@ -150,6 +150,16 @@ def test_dia_list_entities():
     result = "class, ent1, ent2, ent3, ent4, ent5, ent6, ent7, ent8, ent9, ent10, ent11, ent12, ent13, ent14, ent15, ent16"
     assert dia.list_entities() == result
 
+def test_dia_list_relations():
+    dia = Diagram()
+    result = "y"
+    assert dia.list_relations() == result
+
+def test_dia_list_entity_relations():
+    dia = Diagram()
+    result = "y"
+    assert dia.list_entity_relations() == result
+
 def test_dia_add_relation_success():
     dia = Diagram()
     dia.add_entity("ent17")
