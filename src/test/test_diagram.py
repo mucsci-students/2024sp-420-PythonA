@@ -1,4 +1,6 @@
 from umleditor.mvc_model import Diagram
+from umleditor.mvc_model import CustomExceptions
+import pytest
 """
 These test that the basic functions for Diagram interact
 with the other classes. The individual classes/functions
@@ -8,11 +10,16 @@ def test_create_diagram():
     dia = Diagram()
     assert dia
 
-def test_dia_add_entity():
+def test_dia_add_entity_success():
     dia = Diagram()
     assert not dia.has_entity("ent")
     dia.add_entity("ent")
     assert dia.has_entity("ent")
+
+def test_dia_add_entity_error():
+    dia = Diagram()
+    with pytest.raises(CustomExceptions.EntityExistsError):
+        dia.add_entity("ent")
 
 def test_dia_add_multiple_entities():
     dia = Diagram()
