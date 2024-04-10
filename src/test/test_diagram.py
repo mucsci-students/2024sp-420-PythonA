@@ -52,13 +52,19 @@ def test_dia_get_entity_error():
     with pytest.raises(CustomExceptions.EntityNotFoundError):
         dia.get_entity("ent6")
 
-def test_dia_delete_entity():
+def test_dia_delete_entity_success():
     dia = Diagram()
     assert not dia.has_entity("ent6")
     dia.add_entity("ent6")
     assert dia.has_entity("ent6")
     dia.delete_entity("ent6")
     assert not dia.has_entity("ent6")
+
+def test_dia_delete_entity_error():
+    dia = Diagram()
+    assert not dia.has_entity("ent7")
+    with pytest.raises(CustomExceptions.EntityNotFoundError):
+        dia.delete_entity("ent7")
 
 def test_dia_delete_multiple_entities():
     dia = Diagram()
