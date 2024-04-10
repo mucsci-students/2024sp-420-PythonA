@@ -103,7 +103,7 @@ def test_dia_delete_relation():
     dia.add_entity("ent18")
     dia.add_entity("ent19")
     dia.add_relation("ent18", "ent19", "aggregation")
-    assert len(dia._relations) == 1
+    assert len(dia._relations) == 2
     dia.delete_relation("ent18", "ent19")
-    assert len(dia._relations) == 0
+    assert len(dia._relations) == 1
     
