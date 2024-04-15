@@ -29,12 +29,11 @@ jobs:
       - name: Install Project and Dependencies
         run: |
           pip install -e .
-          pip install pytest-cov
           pip install coverage
 
       - name: Run Unit Tests
 #        run: pytest --cov-report term-missing --cov-fail-under=100 .
-        run: coverage report --source=src pytest --cov-fail-under=100 .
+        run: coverage report --fail-under=100 -m
   linux:
     runs-on: ubuntu-latest
     steps:
