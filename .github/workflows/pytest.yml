@@ -33,7 +33,9 @@ jobs:
 
       - name: Run Unit Tests
 #        run: pytest --cov-report term-missing --cov-fail-under=100 .
-        run: coverage report --fail-under=100 -m
+        run: |
+          coverage run pytest
+          coverage report --fail-under=100 -m
   linux:
     runs-on: ubuntu-latest
     steps:
