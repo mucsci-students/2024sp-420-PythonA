@@ -4,7 +4,6 @@ import sys,os
 from umleditor.mvc_model import CustomExceptions as CE
 from .uml_lexer import lex_input as lex
 from umleditor.mvc_model import Diagram, Entity, Relation, UML_Method, help_command
-from umleditor.usability.autofill import get_args
 import re
 
 # list of all classes that need to be searched for commands
@@ -117,7 +116,6 @@ def parse(c, input_str: str) -> list:
         elif command_class == help_command:
             obj = help_command
 
-    get_args(args)
 
     return [getattr(obj, command_str)] + args
 
