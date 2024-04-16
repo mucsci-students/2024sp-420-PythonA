@@ -13,7 +13,7 @@ def test_create_relation_invalid_type():
     destination = Entity("ent2")
     type = "relationship"
     with pytest.raises(CustomExceptions.InvalidRelationTypeError):
-        rel = Relation(type=type, source=source, destination=destination)
+        Relation(type=type, source=source, destination=destination)
 
 def test_get_source():
     source = Entity("ent1")
@@ -30,6 +30,15 @@ def test_get_destination():
     rel = Relation(type, source, destination)
     assert rel.get_destination().get_name() == "ent2"
     assert rel.get_destination().get_name() != "ent1"
+
+def test_set_type_success():
+    source = Entity("ent3")
+    destination = Entity("ent4")
+    type = next(iter(Relation.RELATIONSHIP_TYPE))
+    rel = Relation(type, source, destination)
+    new_type = "composition"
+    rel.set_type(new_type)
+    assert rel._type == new_type
 
 def test_contains_true():
     source = Entity("ent1")
