@@ -34,11 +34,11 @@ class Controller:
                     self.command_count_tracker += 1
 
                 # Execute the command
+
                 return command(*args)
 
-            except TypeError as t:
+            except TypeError:
                 self.command_count_tracker -= 1
-                raise CE.InvalidArgCountError(t)
             except ValueError as v:
                 self.command_count_tracker -= 1
                 raise CE.NeedsMoreInput()

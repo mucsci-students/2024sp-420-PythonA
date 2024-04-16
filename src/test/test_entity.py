@@ -146,66 +146,66 @@ def test_add_param():
     ent1 = Entity("entity1")
     ent1.add_method("method1", "void")
     method = ent1._methods[0]
-    method.add_parameters("param1", int)
-    assert ("param1", int) in method._params
+    method.add_parameters("param1")
+    assert ("param1") in method._params
 
 
 def test_add_multiple_param():
     ent1 = Entity("entity1")
     ent1.add_method("method1", "void")
     method = ent1._methods[0]
-    method.add_parameters("param1", int)
-    method.add_parameters("param2", str)
-    method.add_parameters("param3", float)
-    method.add_parameters("param4", bool)
-    assert ("param1", int) in method._params
-    assert ("param2", str) in method._params
-    assert ("param3", float) in method._params
-    assert ("param4", bool) in method._params
+    method.add_parameters("param1")
+    method.add_parameters("param2")
+    method.add_parameters("param3")
+    method.add_parameters("param4")
+    assert ("param1") in method._params
+    assert ("param2") in method._params
+    assert ("param3") in method._params
+    assert ("param4") in method._params
 
 def test_delete_param():
     ent1 = Entity("entity1")
     ent1.add_method("method1", "void")
     method = ent1._methods[0]
-    method.add_parameters("param1", int)
-    method.remove_parameters("param1", int)
-    assert ("param1",int) not in method._params
+    method.add_parameters("param1")
+    method.remove_parameters("param1")
+    assert ("param1") not in method._params
 
 def test_remove_multiple_param():
     ent1 = Entity("entity1")
     ent1.add_method("method1", "void")
     method = ent1._methods[0]
-    method.add_parameters("param1", int)
-    method.add_parameters("param2", str)
-    method.add_parameters("param3", float)
-    method.add_parameters("param4", bool)
+    method.add_parameters("param1")
+    method.add_parameters("param2")
+    method.add_parameters("param3")
+    method.add_parameters("param4")
 
-    method.remove_parameters("param1", int)
-    method.remove_parameters("param2", str)
-    method.remove_parameters("param3", float)
-    method.remove_parameters("param4", bool)
-    assert ("param1", int) not in method._params
-    assert ("param2", str) not in method._params
-    assert ("param3", float) not in method._params
-    assert ("param4", bool) not in method._params
+    method.remove_parameters("param1")
+    method.remove_parameters("param2")
+    method.remove_parameters("param3")
+    method.remove_parameters("param4")
+    assert ("param1") not in method._params
+    assert ("param2") not in method._params
+    assert ("param3") not in method._params
+    assert ("param4") not in method._params
 
 def test_change_param():
     ent1 = Entity("entity1")
     ent1.add_method("method1", "void")
     method = ent1._methods[0]
-    method.add_parameters("param1", int)
-    method.change_parameters("param1", int,"param2",int)
-    assert ("param2", int) in method._params
+    method.add_parameters("param1")
+    method.change_parameters("param1","param2")
+    assert ("param2") in method._params
 
 
 def test_change_multiple_param():
     ent1 = Entity("entity1")
     ent1.add_method("method1", "void")
     method = ent1._methods[0]
-    method.add_parameters("param1", int)
-    method.add_parameters("param2", str)
-    method.change_parameters("param1", int, "param3", float)
-    method.change_parameters("param2", str, "param4", bool)
-    assert ("param3", float) in method._params
-    assert ("param4", bool) in method._params
+    method.add_parameters("param1")
+    method.add_parameters("param2")
+    method.change_parameters("param1", "param3")
+    method.change_parameters("param2", "param4")
+    assert ("param3") in method._params
+    assert ("param4") in method._params
 
