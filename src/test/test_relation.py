@@ -31,14 +31,20 @@ def test_get_destination():
     assert rel.get_destination().get_name() == "ent2"
     assert rel.get_destination().get_name() != "ent1"
 
-def test_contains():
+def test_contains_true():
     source = Entity("ent1")
     destination = Entity("ent2")
     type = next(iter(Relation.RELATIONSHIP_TYPE))
     rel = Relation(type, source, destination)
     assert rel.contains(source.get_name()) == True
     assert rel.contains(destination.get_name()) == True
-    assert rel.contains("ent3") == False
+    
+def test_contains_false():
+    source = Entity("ent3")
+    destination = Entity("ent4")
+    type = next(iter(Relation.RELATIONSHIP_TYPE))
+    rel = Relation(type, source, destination)
+    assert rel.contains("ent5") == False
 
 def test_to_string():
     source = Entity("ent1")
