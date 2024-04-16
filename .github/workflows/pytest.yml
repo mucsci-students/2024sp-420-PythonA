@@ -35,7 +35,7 @@ jobs:
 #      - name: Run Unit Tests
 #        run: pytest
       - name: Coverage Report
-        run: coverage report --fail-under=100 --show-missing /Users/runner/work/2024sp-420-PythonA/2024sp-420-PythonA/src/umleditor/mvc_model/* /Users/runner/work/2024sp-420-PythonA/2024sp-420-PythonA/test/*
+        run: coverage report --fail-under=100 --show-missing /Users/runner/work/2024sp-420-PythonA/2024sp-420-PythonA/src/test/*
   linux:
     runs-on: ubuntu-latest
     steps:
