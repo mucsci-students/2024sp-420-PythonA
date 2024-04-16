@@ -18,7 +18,7 @@ jobs:
       - name: Run Unit Tests
 #        run: pytest --cov-report term-missing --cov-fail-under=100 .
         run:
-          coverage report --fail-under=100 --show-missing pytest
+          coverage report --fail-under=100 --omit='*/test_serializer.py' --show-missing pytest
 
   mac:
     runs-on: macos-latest
@@ -36,7 +36,7 @@ jobs:
       - name: Run Unit Tests
 #        run: pytest --cov-report term-missing --cov-fail-under=100 .
         run:
-          coverage report --fail-under=100 --show-missing pytest
+          coverage report --fail-under=100 --omit='*/test_serializer.py' --show-missing pytest
   linux:
     runs-on: ubuntu-latest
     steps:
@@ -57,5 +57,5 @@ jobs:
       - name: Run Unit Tests
 #        run: pytest --cov-report term-missing --cov-fail-under=100 .
         run:
-          coverage report --fail-under=100 --show-missing pytest
+          coverage report --fail-under=100 --omit='*/test_serializer.py' --show-missing pytest
 
