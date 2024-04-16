@@ -1,11 +1,19 @@
-from umleditor.mvc_model import Relation, Entity
+from umleditor.mvc_model import Relation, Entity, CustomExceptions
+import pytest
 
-def test_create_relation():
+def test_create_relation_success():
     source = Entity("ent1")
     destination = Entity("ent2")
     type = next(iter(Relation.RELATIONSHIP_TYPE))
     rel = Relation(type=type, source=source, destination=destination)
     assert rel is not None
+
+def test_create_relation_invalid_type():
+    source = Entity("ent1")
+    destination = Entity("ent2")
+    type = "relationship"
+    with pytest.raises(CustomExceptions.InvalidRelationTypeError):
+        rel = Relation(type=type, source=source, destination=destination)
 
 def test_get_source():
     source = Entity("ent1")
