@@ -244,3 +244,6 @@ def test_change_relation_type_relation_doesnt_exist():
     dia.add_entity("ent27")
     with pytest.raises(CustomExceptions.RelationDoesNotExistError):
         dia.change_relation_type("ent26", "ent27", "composition")
+
+def test_edit_relation_success():
+    dia = Diagram()
