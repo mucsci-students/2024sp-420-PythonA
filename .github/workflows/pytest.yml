@@ -32,8 +32,8 @@ jobs:
           pip install -e .
           pip install coverage
 
-#      - name: Run Unit Tests
-#        run: pytest
+      - name: Run Unit Tests
+        run: pytest
       - name: Coverage Report
         run: coverage report --fail-under=100 --show-missing
   linux:
