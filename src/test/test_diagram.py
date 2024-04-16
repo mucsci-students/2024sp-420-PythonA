@@ -1,4 +1,4 @@
-from src.umleditor.mvc_model import Diagram
+from umleditor.mvc_model import Diagram
 """
 These test that the basic functions for Diagram interact
 with the other classes. The individual classes/functions

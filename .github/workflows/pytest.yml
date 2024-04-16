@@ -1,0 +1,54 @@
+name: github-actions2
+on: pull_request
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - name: Install Project and Dependencies
+        run: |
+          pip install -e .
+          pip install pytest-cov
+
+      - name: Run Unit Tests
+        run: pytest --cov-fail-under=80 .
+
+  mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - name: Install Project and Dependencies
+        run: |
+          pip install -e .
+          pip install pytest-cov
+
+      - name: Run Unit Tests
+        run: pytest --cov-fail-under=80 .
+
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - name: Install Project and Dependencies
+        run: |
+          pip install -e .
+          pip install pytest-cov
+
+      - name: Install PyQt6 dependencies
+        run: sudo apt-get update && sudo apt-get install -y libegl1-mesa libxkbcommon-x11-0
+
+      - name: Run Unit Tests
+        run: pytest --cov-fail-under=80 .
+
