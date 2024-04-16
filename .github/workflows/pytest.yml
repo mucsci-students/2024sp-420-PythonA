@@ -57,5 +57,5 @@ jobs:
       - name: Run Unit Tests
 #        run: pytest --cov-report term-missing --cov-fail-under=100 .
         run:
-          coverage report --fail-under=100 --omit='*/test_serializer.py' --show-missing pytest
+          sudo coverage report --fail-under=100 --omit='*/test_serializer.py' --show-missing src
 
