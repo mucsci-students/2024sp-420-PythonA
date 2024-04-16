@@ -18,24 +18,32 @@ class InitialStrategy(Strategy):
             for command in completer.commands.keys():
                 if not text or command.startswith(words[0]):
                     yield Completion(command, start_position=-len(words[0]) if words else 0)
+        else:
+            pass
 
 
 class LoadFilesStrategy(Strategy):
     def get_completions(self, words, text, completer):
         if words[0] == 'load':
             yield from completer.get_files()
+        else:
+            pass
 
 
 class FlagStrategy(Strategy):
     def get_completions(self, words, text, completer):
         if text.endswith('-'):
             yield from completer.flag_handler(words[0])
+        else:
+            pass
 
 
 class DashCommandStrategy(Strategy):
     def get_completions(self, words, text, completer):
         if len(words) == 1 and text.endswith(' '):
             yield from completer.flag_handler(words[0], prepend_dash=True)
+        else:
+            pass
 
 
 class TwoWordCommandStrategy(Strategy):
@@ -52,7 +60,8 @@ class TwoWordCommandStrategy(Strategy):
                     yield from completer.class_args()
                 else:
                     yield from completer.rel_args()
-
+        else:
+            pass
 
 class ThreeWordCommandStrategy(Strategy):
     def get_completions(self, words, text, completer):
@@ -79,6 +88,8 @@ class ComplexCommandStrategy(Strategy):
                 rel_types = ['aggregation', 'composition', 'inheritance', 'realization']
                 for rel_type in rel_types:
                     yield Completion(rel_type, start_position=0)
+        else:
+            pass
 
 
 class CommandCompleter(Completer):
@@ -130,6 +141,8 @@ class CommandCompleter(Completer):
                     yield Completion('-' + flag, start_position=0)
                 else:
                     yield Completion(flag, start_position=0)
+        else:
+            pass
 
     def class_args(self):
         classes = self.diagram._entities
