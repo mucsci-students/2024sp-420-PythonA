@@ -166,7 +166,7 @@ class CommandCompleter(Completer):
     def prm_args(self, words):
         params = self.diagram.get_entity(words[2]).get_method(words[3])._params
         for parm in params:
-            yield Completion(parm[0], start_position=0, display_meta="(parameter)")
+            yield Completion(parm, start_position=0, display_meta="(parameter)")
 
     def rel_args(self):
         relations = []
