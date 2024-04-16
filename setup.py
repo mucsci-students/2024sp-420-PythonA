@@ -16,7 +16,7 @@ setup(
     install_requires = [
         "pyqt6",
         "pytest",
-        "readchar"
+        "prompt_toolkit"
     ]
 )
 
