@@ -6,6 +6,23 @@ These test that the basic functions for Diagram interact
 with the other classes. The individual classes/functions
 are tested more thoroughly in other test files.
 """
+
+def test_import_diagram():
+    from src.umleditor.mvc_model import Diagram
+    assert Diagram
+    assert Diagram.add_entity
+    assert Diagram.get_entity
+    assert Diagram.delete_entity
+    assert Diagram.has_entity
+    assert Diagram.rename_entity
+    assert Diagram.list_everything
+    assert Diagram.list_entity_details
+    assert Diagram.list_entities
+    assert Diagram.list_relations
+    assert Diagram.list_entity_relations
+    assert Diagram.add_relation
+    assert Diagram.delete_relation
+    assert Diagram.change_relation_type
 def test_create_diagram():
     dia = Diagram()
     assert dia
@@ -245,5 +262,4 @@ def test_change_relation_type_relation_doesnt_exist():
     with pytest.raises(CustomExceptions.RelationDoesNotExistError):
         dia.change_relation_type("ent26", "ent27", "composition")
 
-def test_edit_relation_success():
-    dia = Diagram()
+
