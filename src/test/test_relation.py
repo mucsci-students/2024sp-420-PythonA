@@ -41,6 +41,15 @@ def test_set_type_success():
     assert rel._type != type
     assert rel._type == new_type
 
+def test_set_type_invalid_type():
+    source = Entity("ent3")
+    destination = Entity("ent4")
+    type = next(iter(Relation.RELATIONSHIP_TYPE))
+    rel = Relation(type, source, destination)
+    new_type = "relationship"
+    with pytest.raises(CustomExceptions.InvalidRelationTypeError):
+        rel.set_type(new_type)
+
 def test_contains_true():
     source = Entity("ent1")
     destination = Entity("ent2")
@@ -55,6 +64,18 @@ def test_contains_false():
     type = next(iter(Relation.RELATIONSHIP_TYPE))
     rel = Relation(type, source, destination)
     assert rel.contains("ent5") == False
+
+def test_equal_without_type_true():
+    source1 = Entity("ent1")
+    destination1 = Entity("ent2")
+    type1 = "aggregation"
+    rel1 = Relation(type1, source1, destination1)
+    source2 = Entity("ent1")
+    destination2 = Entity("ent2")
+    type2 = "composition"
+    rel2 = Relation(type2, source2, destination2)
+    assert rel1.equal_without_type(rel2)
+    assert rel2.equal_without_type(rel1)
 
 def test_to_string():
     source = Entity("ent1")
