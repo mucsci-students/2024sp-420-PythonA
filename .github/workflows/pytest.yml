@@ -14,10 +14,10 @@ jobs:
           pip install -e .
           pip install pytest-cov
           pip install coverage
-#      - name: Run Unit Tests
-#        run: pytest
-      - name: Coverage Report
-        run: coverage report --fail-under=100 --show-missing /Users/runner/work/2024sp-420-PythonA/2024sp-420-PythonA/src/umleditor/mvc_model/*
+      - name: Run Unit Tests
+        run: pytest
+#      - name: Coverage Report
+#        run: coverage report --fail-under=100 --show-missing /Users/runner/work/2024sp-420-PythonA/2024sp-420-PythonA/src/umleditor/mvc_model/*
   mac:
     runs-on: macos-latest
     steps:
@@ -31,10 +31,10 @@ jobs:
           pip install -e .
           pip install coverage
 
-#      - name: Run Unit Tests
-#        run: pytest
-      - name: Coverage Report
-        run: coverage report --fail-under=100 --show-missing /Users/runner/work/2024sp-420-PythonA/2024sp-420-PythonA/src/umleditor/mvc_model/*
+      - name: Run Unit Tests
+        run: pytest
+#      - name: Coverage Report
+#        run: coverage report --fail-under=100 --show-missing /Users/runner/work/2024sp-420-PythonA/2024sp-420-PythonA/src/umleditor/mvc_model/*
   linux:
     runs-on: ubuntu-latest
     steps:
