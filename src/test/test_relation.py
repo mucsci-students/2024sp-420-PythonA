@@ -101,6 +101,18 @@ def test_equal_without_type_same_destination():
     assert rel1.equal_without_type(rel2) == False
     assert rel2.equal_without_type(rel1) == False
 
+def test_equal_without_type_everything_different():
+    source1 = Entity("ent1")
+    destination1 = Entity("ent2")
+    type1 = "aggregation"
+    rel1 = Relation(type1, source1, destination1)
+    source2 = Entity("ent3")
+    destination2 = Entity("ent4")
+    type2 = "composition"
+    rel2 = Relation(type2, source2, destination2)
+    assert rel1.equal_without_type(rel2) == False
+    assert rel2.equal_without_type(rel1) == False
+
 def test_to_string():
     source = Entity("ent1")
     destination = Entity("ent2")
@@ -161,12 +173,12 @@ def test_eq_types_not_equal():
 def test_eq_everything_not_equal():
     source1 = Entity("ent1")
     destination1 = Entity("ent2")
-    type1 = "aggregation"
+    type1 = "inheritance"
     rel1 = Relation(type1, source1, destination1)
     source2 = Entity("ent3")
     destination2 = Entity("ent4")
     destination2 = Entity("ent4")
-    type2 = "composition"
+    type2 = "realization"
     rel2 = Relation(type2, source2, destination2)
     assert rel1.__eq__(rel2) == False
     assert rel2.__eq__(rel1) == False
