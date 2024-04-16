@@ -37,7 +37,7 @@ class Diagram:
             None
         """
         if self.has_entity(name):
-                raise CustomExceptions.EntityExistsError(name)
+            raise CustomExceptions.EntityExistsError(name)
         self._entities.append(Entity(name))
 
     def get_entity(self, name: str):
