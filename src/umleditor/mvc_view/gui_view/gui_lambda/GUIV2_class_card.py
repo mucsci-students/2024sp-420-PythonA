@@ -577,7 +577,7 @@ class ClassCard(QWidget):
 
         # Create field and add to list
         item = QListWidgetItem()
-        list.addItem(item)  # !!!
+        list.addItem(item)  
         text = QLineEdit()
         text.setText(relation)
         text.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
