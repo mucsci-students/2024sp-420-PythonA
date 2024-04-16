@@ -74,8 +74,32 @@ def test_equal_without_type_true():
     destination2 = Entity("ent2")
     type2 = "composition"
     rel2 = Relation(type2, source2, destination2)
-    assert rel1.equal_without_type(rel2)
-    assert rel2.equal_without_type(rel1)
+    assert rel1.equal_without_type(rel2) == True
+    assert rel2.equal_without_type(rel1) == True
+
+def test_equal_without_type_same_source():
+    source1 = Entity("ent1")
+    destination1 = Entity("ent2")
+    type1 = "aggregation"
+    rel1 = Relation(type1, source1, destination1)
+    source2 = Entity("ent1")
+    destination2 = Entity("ent3")
+    type2 = "composition"
+    rel2 = Relation(type2, source2, destination2)
+    assert rel1.equal_without_type(rel2) == False
+    assert rel2.equal_without_type(rel1) == False
+    
+def test_equal_without_type_same_destination():
+    source1 = Entity("ent1")
+    destination1 = Entity("ent2")
+    type1 = "aggregation"
+    rel1 = Relation(type1, source1, destination1)
+    source2 = Entity("ent3")
+    destination2 = Entity("ent2")
+    type2 = "composition"
+    rel2 = Relation(type2, source2, destination2)
+    assert rel1.equal_without_type(rel2) == False
+    assert rel2.equal_without_type(rel1) == False
 
 def test_to_string():
     source = Entity("ent1")
@@ -83,3 +107,67 @@ def test_to_string():
     type = "aggregation"
     rel = Relation(type=type, source=source, destination=destination)
     assert str(rel) == "ent1 -> aggregation -> ent2"
+
+def test_eq_everything_equal():
+    source1 = Entity("ent1")
+    destination1 = Entity("ent2")
+    type1 = "aggregation"
+    rel1 = Relation(type1, source1,destination1)
+    source2 = Entity("ent1")
+    destination2 = Entity("ent2")
+    type2 = "aggregation"
+    rel2 = Relation(type2, source2, destination2)
+    assert rel1.__eq__(rel2) == True
+    assert rel2.__eq__(rel1) == True
+
+
+def test_eq_sources_not_equal():
+    source1 = Entity("ent1")
+    destination1 = Entity("ent2")
+    type1 = "aggregation"
+    rel1 = Relation(type1, source1, destination1)
+    source2 = Entity("ent3")
+    destination2 = Entity("ent2")
+    type2 = "aggregation"
+    rel2 = Relation(type2, source2, destination2)
+    assert rel1.__eq__(rel2) == False
+    assert rel2.__eq__(rel1) == False
+
+
+def test_eq_destinations_not_equal():
+    source1 = Entity("ent1")
+    destination1 = Entity("ent2")
+    type1 = "aggregation"
+    rel1 = Relation(type1, source1, destination1)
+    source2 = Entity("ent1")
+    destination2 = Entity("ent3")
+    type2 = "aggregation"
+    rel2 = Relation(type2, source2, destination2)
+    assert rel1.__eq__(rel2) == False
+    assert rel2.__eq__(rel1) == False
+    
+def test_eq_types_not_equal():
+    source1 = Entity("ent1")
+    destination1 = Entity("ent2")
+    type1 = "aggregation"
+    rel1 = Relation(type1, source1, destination1)
+    source2 = Entity("ent1")
+    destination2 = Entity("ent2")
+    type2 = "composition"
+    rel2 = Relation(type2, source2, destination2)
+    assert rel1.__eq__(rel2) == False
+    assert rel2.__eq__(rel1) == False
+    
+def test_eq_everything_not_equal():
+    source1 = Entity("ent1")
+    destination1 = Entity("ent2")
+    type1 = "aggregation"
+    rel1 = Relation(type1, source1, destination1)
+    source2 = Entity("ent3")
+    destination2 = Entity("ent4")
+    destination2 = Entity("ent4")
+    type2 = "composition"
+    rel2 = Relation(type2, source2, destination2)
+    assert rel1.__eq__(rel2) == False
+    assert rel2.__eq__(rel1) == False
+
