@@ -14,70 +14,71 @@ class Strategy(ABC):
 
 class InitialStrategy(Strategy):
     def get_completions(self, words, text, completer):
-        for command in completer.commands.keys():
-            if not text or command.startswith(words[0]):
-                yield Completion(command, start_position=-len(words[0]) if words else 0)
+        if not text or (len(words) == 1 and not text.endswith(' ')):
+            for command in completer.commands.keys():
+                if not text or command.startswith(words[0]):
+                    yield Completion(command, start_position=-len(words[0]) if words else 0)
 
 
 class LoadFilesStrategy(Strategy):
     def get_completions(self, words, text, completer):
-        yield from completer.get_files()
+        if words[0] == 'load':
+            yield from completer.get_files()
 
 
 class FlagStrategy(Strategy):
     def get_completions(self, words, text, completer):
-        yield from completer.flag_handler(words[0])
+        if text.endswith('-'):
+            yield from completer.flag_handler(words[0])
 
 
 class DashCommandStrategy(Strategy):
     def get_completions(self, words, text, completer):
-        yield from completer.flag_handler(words[0], prepend_dash=True)
+        if len(words) == 1 and text.endswith(' '):
+            yield from completer.flag_handler(words[0], prepend_dash=True)
 
 
 class TwoWordCommandStrategy(Strategy):
     def get_completions(self, words, text, completer):
-        if words[0] == 'class' and words[1] in ['-r', '-d']:
-            yield from completer.class_args()
-        elif words[0] in ['fld', 'mthd', 'prm']:
-            yield from completer.class_args()
-        elif words[0] == 'list' and words[1] == '-d':
-            yield from completer.class_args()
-        elif words[0] == 'rel':
-            if words[1] == '-a':
+        if len(words) == 2 and text.endswith(' '):
+            if words[0] == 'class' and words[1] in ['-r', '-d']:
                 yield from completer.class_args()
-            else:
-                yield from completer.rel_args()
-        else:
-            pass
+            elif words[0] in ['fld', 'mthd', 'prm']:
+                yield from completer.class_args()
+            elif words[0] == 'list'and words[1] == '-d':
+                yield from completer.class_args()
+            elif words[0] == 'rel':
+                if words[1] == '-a':
+                    yield from completer.class_args()
+                else:
+                    yield from completer.rel_args()
 
 
 class ThreeWordCommandStrategy(Strategy):
     def get_completions(self, words, text, completer):
-        if words[0] in ['fld', 'mthd'] and words[1] in ['-r', '-d']:
-            yield from completer.field_args(words) if words[0] == 'fld' else completer.method_args(words)
-        elif words[0] == 'prm':
-            yield from completer.method_args(words)
-        elif words[0] == 'rel' and words[1] == '-a':
-            yield from completer.class_args()
-        else:
-            pass
+        if len(words) == 3 and text.endswith(' '):
+            if words[0] in ['fld', 'mthd'] and words[1] in ['-r', '-d']:
+                yield from completer.field_args(words) if words[0] == 'fld' else completer.method_args(words)
+            elif words[0] == 'prm':
+                yield from completer.method_args(words)
+            elif words[0] == 'rel' and words[1] == '-a':
+                yield from completer.class_args()
 
 
 class ComplexCommandStrategy(Strategy):
     def get_completions(self, words, text, completer):
-        if words[0] == 'fld':
-            if words[1] == '-a' or (words[1] == '-r' and len(words) == 6):
-                yield from completer.suggestion_type(words[2])
-        elif words[0] == 'mthd' and words[1] == '-a':
-            yield from completer.suggestion_return_type(words[2])
-        elif words[0] == 'prm' and words[1] in ['-r', '-d']:
-            yield from completer.prm_args(words)
-        elif words[0] == 'rel' and words[1] in ['-a', '-t']:
-            rel_types = ['aggregation', 'composition', 'inheritance', 'realization']
-            for rel_type in rel_types:
-                yield Completion(rel_type, start_position=0)
-        else:
-            pass
+        if (len(words) == 4 or len(words) == 6) and text.endswith(' '):
+            if words[0] == 'fld':
+                if words[1] == '-a' or (words[1] == '-r' and len(words) == 6):
+                    yield from completer.suggestion_type(words[2])
+            elif words[0] == 'mthd' and words[1] == '-a':
+                yield from completer.suggestion_return_type(words[2])
+            elif words[0] == 'prm' and words[1] in ['-r', '-d']:
+                yield from completer.prm_args(words)
+            elif words[0] == 'rel' and words[1] in ['-a', '-t']:
+                rel_types = ['aggregation', 'composition', 'inheritance', 'realization']
+                for rel_type in rel_types:
+                    yield Completion(rel_type, start_position=0)
 
 
 class CommandCompleter(Completer):
