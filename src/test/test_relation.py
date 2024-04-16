@@ -1,6 +1,25 @@
 from umleditor.mvc_model import Relation, Entity, CustomExceptions
 import pytest
 
+def test_import_entity():
+    from src.umleditor.mvc_model import Entity
+    assert Entity
+    assert Entity.get_name
+    assert Entity.set_name
+    assert Entity.add_field
+    assert Entity.delete_field
+    assert Entity.rename_field
+    assert Entity.get_method
+    assert Entity.add_method
+    assert Entity.delete_method
+    assert Entity.rename_method
+    assert Entity.list_fields
+    assert Entity.list_methods
+
+def test_import_custom_exceptions():
+    from src.umleditor.mvc_model.custom_exceptions import CustomExceptions
+    assert CustomExceptions
+
 def test_create_relation_success():
     source = Entity("ent1")
     destination = Entity("ent2")
