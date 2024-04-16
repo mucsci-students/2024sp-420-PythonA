@@ -38,6 +38,7 @@ def test_set_type_success():
     rel = Relation(type, source, destination)
     new_type = "composition"
     rel.set_type(new_type)
+    assert rel._type != type
     assert rel._type == new_type
 
 def test_contains_true():
