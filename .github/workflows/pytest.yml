@@ -17,9 +17,7 @@ jobs:
 #      - name: Run Unit Tests
 #        run: pytest
       - name: Coverage Report
-        run: |
-          cd src
-          coverage report --fail-under=100 --show-missing
+        run: coverage report --fail-under=100 --show-missing
 
   mac:
     runs-on: macos-latest
@@ -37,9 +35,7 @@ jobs:
 #      - name: Run Unit Tests
 #        run: pytest
       - name: Coverage Report
-        run: |
-          cd src
-          coverage report --fail-under=100 --show-missing
+        run: coverage report --fail-under=100 --show-missing
   linux:
     runs-on: ubuntu-latest
     steps:
@@ -59,7 +55,5 @@ jobs:
 #      - name: Run Unit Tests
 #        run: pytest
       - name: Coverage Report
-        run: |
-          cd src
-          coverage report --fail-under=100 --show-missing
+        run: coverage report --fail-under=100 --show-missing
 
