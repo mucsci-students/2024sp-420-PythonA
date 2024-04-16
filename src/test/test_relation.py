@@ -1,4 +1,4 @@
-from src.umleditor.mvc_model import Relation, Entity
+from umleditor.mvc_model import Relation, Entity
 
 def test_create_relation():
     source = Entity("ent1")

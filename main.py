@@ -1,3 +1,4 @@
+import sys,os
 from PyQt6.QtWidgets import QApplication, QDialog
 
 from umleditor.mvc_controller.cli_controller import CLI_Controller
@@ -19,6 +20,9 @@ def main():
     else:
         mainGUI()
 
+def blockGuiTerminal():
+    # will not print anything to the terminal
+    sys.stdout = open(os.devnull, 'w')
 def debug_main():
     #CLI main without some error catching
     app = CLI_Controller()
@@ -41,6 +45,7 @@ def mainCLI():
 
 
 def mainGUI():
+    blockGuiTerminal()
     app = QApplication(sys.argv)
 
     try:
