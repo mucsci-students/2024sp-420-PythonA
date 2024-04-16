@@ -16,7 +16,9 @@ jobs:
           pip install coverage
 
       - name: Run Unit Tests
-        run: pytest --cov-report term-missing --cov-fail-under=100 .
+#        run: pytest --cov-report term-missing --cov-fail-under=100 .
+        run:
+          coverage report --fail-under=100 --show-missing pytest
 
   mac:
     runs-on: macos-latest
@@ -33,9 +35,8 @@ jobs:
 
       - name: Run Unit Tests
 #        run: pytest --cov-report term-missing --cov-fail-under=100 .
-        run: |
-          coverage run --omit='*/test_serializer.py','*/test_imports.py' -m pytest 
-          coverage report --fail-under=100 -m
+        run:
+          coverage report --fail-under=100 --show-missing pytest
   linux:
     runs-on: ubuntu-latest
     steps:
@@ -54,5 +55,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y libegl1-mesa libxkbcommon-x11-0
 
       - name: Run Unit Tests
-        run: pytest --cov-report term-missing --cov-fail-under=100 .
+#        run: pytest --cov-report term-missing --cov-fail-under=100 .
+        run:
+          coverage report --fail-under=100 --show-missing pytest
 
