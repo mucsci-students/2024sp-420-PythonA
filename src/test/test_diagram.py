@@ -132,7 +132,7 @@ def test_dia_rename_multiple_entities():
 
 def test_dia_list_entity_details_success():
     dia = Diagram()
-    result = "ent1:\nent1's Fields:\n \nent1's Methods:\n ent1's Relations:\n "
+    result = "ent1:\nent1's Fields:\n ent1's Methods:\n ent1's Relations:\n "
     assert dia.list_entity_details("ent1") == result
 
 def test_dia_list_entity_details_error():
