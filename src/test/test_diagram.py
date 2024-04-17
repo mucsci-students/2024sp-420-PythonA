@@ -48,89 +48,87 @@ def test_dia_add_multiple_entities():
 
 def test_dia_get_entity_success():
     dia = Diagram()
-    assert not dia.has_entity("ent1")
-    dia.add_entity("ent1")
-    ent2 = dia.get_entity("ent1")
-    assert ent2.get_name() == "ent1"
-    assert ent2.get_name() != "ent2"
-    assert dia.has_entity("ent1")
+    assert not dia.has_entity("ent4")
+    dia.add_entity("ent4")
+    ent5 = dia.get_entity("ent4")
+    assert ent5.get_name() == "ent4"
+    assert ent5.get_name() != "ent5"
+    assert dia.has_entity("ent4")
 
 def test_dia_get_entity_error():
     dia = Diagram()
-    assert not dia.has_entity("ent3")
+    assert not dia.has_entity("ent5")
     with pytest.raises(CustomExceptions.EntityNotFoundError):
-        dia.get_entity("ent3")
+        dia.get_entity("ent5")
 
 def test_dia_delete_entity_success():
     dia = Diagram()
-    assert not dia.has_entity("ent3")
-    dia.add_entity("ent3")
-    assert dia.has_entity("ent3")
-    dia.delete_entity("ent3")
-    assert not dia.has_entity("ent3")
+    assert not dia.has_entity("ent5")
+    dia.add_entity("ent5")
+    assert dia.has_entity("ent5")
+    dia.delete_entity("ent5")
+    assert not dia.has_entity("ent5")
 
 def test_dia_delete_entity_error():
     dia = Diagram()
-    assert not dia.has_entity("ent3")
+    assert not dia.has_entity("ent5")
     with pytest.raises(CustomExceptions.EntityNotFoundError):
-        dia.delete_entity("ent3")
+        dia.delete_entity("ent5")
 
 def test_dia_delete_multiple_entities():
     dia = Diagram()
+    dia.add_entity("ent6")
     dia.add_entity("ent7")
     dia.add_entity("ent8")
-    dia.add_entity("ent9")
+    assert dia.has_entity("ent6")
     assert dia.has_entity("ent7")
     assert dia.has_entity("ent8")
-    assert dia.has_entity("ent9")
+    dia.delete_entity("ent6")
     dia.delete_entity("ent7")
+    assert not dia.has_entity("ent6")
+    assert not dia.has_entity("ent7")
+    assert dia.has_entity("ent8")
     dia.delete_entity("ent8")
+    assert not dia.has_entity("ent6")
     assert not dia.has_entity("ent7")
     assert not dia.has_entity("ent8")
-    assert dia.has_entity("ent9")
-    dia.delete_entity("ent9")
-    assert not dia.has_entity("ent7")
-    assert not dia.has_entity("ent8")
-    assert not dia.has_entity("ent9")
 
 def test_dia_rename_entity_success():
     dia = Diagram()
-    dia.add_entity("ent4")
-    assert dia.has_entity("ent4")
-    assert not dia.has_entity("ent5")
-    dia.rename_entity("ent4", "ent5")
-    assert not dia.has_entity("ent4")
-    assert dia.has_entity("ent5")
+    dia.add_entity("ent6")
+    assert dia.has_entity("ent6")
+    assert not dia.has_entity("ent7")
+    dia.rename_entity("ent6", "ent7")
+    assert not dia.has_entity("ent6")
+    assert dia.has_entity("ent7")
 
 def test_dia_rename_entity_old_name_doesnt_exist():
     dia = Diagram()
-    assert not dia.has_entity("ent4")
+    assert not dia.has_entity("ent6")
     with pytest.raises(CustomExceptions.EntityNotFoundError):
-        dia.rename_entity("ent4", "ent6")
+        dia.rename_entity("ent6", "ent8")
 
 def test_dia_rename_entity_new_name_already_exists():
     dia = Diagram()
-    dia.add_entity("ent1")
     assert dia.has_entity("ent1")
-    dia.add_entity("ent2")
     assert dia.has_entity("ent2")
     with pytest.raises(CustomExceptions.EntityExistsError):
         dia.rename_entity("ent1", "ent2")
 
 def test_dia_rename_multiple_entities():
     dia = Diagram()
-    dia.add_entity("ent13")
-    dia.add_entity("ent14")
-    assert dia.has_entity("ent13")
-    assert dia.has_entity("ent14")
-    assert not dia.has_entity("ent15")
-    assert not dia.has_entity("ent16")
-    dia.rename_entity("ent13", "ent15")
-    dia.rename_entity("ent14", "ent16")
-    assert not dia.has_entity("ent13")
-    assert not dia.has_entity("ent14")
-    assert dia.has_entity("ent15")
-    assert dia.has_entity("ent16")
+    dia.add_entity("ent8")
+    dia.add_entity("ent9")
+    assert dia.has_entity("ent8")
+    assert dia.has_entity("ent9")
+    assert not dia.has_entity("ent10")
+    assert not dia.has_entity("ent11")
+    dia.rename_entity("ent8", "ent10")
+    dia.rename_entity("ent9", "ent11")
+    assert not dia.has_entity("ent8")
+    assert not dia.has_entity("ent9")
+    assert dia.has_entity("ent10")
+    assert dia.has_entity("ent11")
 
 def test_dia_list_entity_details_success():
     dia = Diagram()
