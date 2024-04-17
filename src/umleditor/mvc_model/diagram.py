@@ -124,74 +124,74 @@ class Diagram:
                                 #List Methods
     #===============================================================================#
 
-    def list_everything(self):
-        """
-        Returns a representation of the entire diagram.
-
-        Returns:
-            str: A templated representation of all entities, their attributes,
-                and their relations.
-        """
-        result = ""
-        for entity in self._entities:
-            result += self.list_entity_details(entity.get_name()) + "\n"
-        return result
-        
-    def list_entity_details(self, entity_name):
-        """
-        Returns the fields, methods, params, and relations of the entity.
-        
-        Args:
-            entity_name (str): The name of the entity to get details of.
-            
-        Raises:
-            CustomExceptions.EntityNotFoundError: If an entity with the old name
-                does not exist.
-            
-        Returns:
-            str: A templated string containing the fields, methods, params
-                and relations of an entity.
-        """
-
-        ent = self.get_entity(entity_name)
-        fields = entity_name +":\n" + entity_name + "'s Fields:\n" + ent.list_fields() + '\n'
-        methods = entity_name + "'s Methods:\n" + ent.list_methods()
-        relations = entity_name + "'s Relations:\n" + self.list_entity_relations(entity_name)
-        return fields + methods + relations
-
-    def list_entities(self):
-        """
-
-        Returns the entities in the relation.
-        
-        Returns:
-            str: String containing names of all existing entities.
-        """
-        entity_names = list(str(e) for e in self._entities)
-        return '\n' + ', '.join(entity_names)
-    
-    def list_relations(self):
-        """
-        Lists all existing relations as a string.
-
-        Returns:
-            str: A string representation of all existing relations.
-        """
-        relations_list = []
-        for rel in self._relations:
-            relations_list.append(str(rel))
-        return relations_list
-    
-    def list_entity_relations(self, name:str):
-        ''' Lists all relations that contain a specific entity
-        
-            Return: A string containing all relations
-        '''
-        relations_list = []
-        for rel in self._relations:
-            if(rel.contains(name)):
-                relations_list.append(str(rel))
-        return '\n'.join(relations_list)
+    # def list_everything(self):
+    #     """
+    #     Returns a representation of the entire diagram.
+    #
+    #     Returns:
+    #         str: A templated representation of all entities, their attributes,
+    #             and their relations.
+    #     """
+    #     result = ""
+    #     for entity in self._entities:
+    #         result += self.list_entity_details(entity.get_name()) + "\n"
+    #     return result
+    #
+    # def list_entity_details(self, entity_name):
+    #     """
+    #     Returns the fields, methods, params, and relations of the entity.
+    #
+    #     Args:
+    #         entity_name (str): The name of the entity to get details of.
+    #
+    #     Raises:
+    #         CustomExceptions.EntityNotFoundError: If an entity with the old name
+    #             does not exist.
+    #
+    #     Returns:
+    #         str: A templated string containing the fields, methods, params
+    #             and relations of an entity.
+    #     """
+    #
+    #     ent = self.get_entity(entity_name)
+    #     fields = entity_name +":\n" + entity_name + "'s Fields:\n" + ent.list_fields() + '\n'
+    #     methods = entity_name + "'s Methods:\n" + ent.list_methods()
+    #     relations = entity_name + "'s Relations:\n" + self.list_entity_relations(entity_name)
+    #     return fields + methods + relations
+    #
+    # def list_entities(self):
+    #     """
+    #
+    #     Returns the entities in the relation.
+    #
+    #     Returns:
+    #         str: String containing names of all existing entities.
+    #     """
+    #     entity_names = list(str(e) for e in self._entities)
+    #     return '\n' + ', '.join(entity_names)
+    #
+    # def list_relations(self):
+    #     """
+    #     Lists all existing relations as a string.
+    #
+    #     Returns:
+    #         str: A string representation of all existing relations.
+    #     """
+    #     relations_list = []
+    #     for rel in self._relations:
+    #         relations_list.append(str(rel))
+    #     return relations_list
+    #
+    # def list_entity_relations(self, name:str):
+    #     ''' Lists all relations that contain a specific entity
+    #
+    #         Return: A string containing all relations
+    #     '''
+    #     relations_list = []
+    #     for rel in self._relations:
+    #         if(rel.contains(name)):
+    #             relations_list.append(str(rel))
+    #     return '\n'.join(relations_list)
 
     #===============================================================================#
                                 #Relation Methods
