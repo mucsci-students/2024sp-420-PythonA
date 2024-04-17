@@ -55,7 +55,10 @@ def test_change_one_param():
 
 def test_change_multiple_params():
     md1 = UML_Method("md1")
-    md1.add_parameters("prm1", "prm2", "prm3", "prm4")
+    md1.add_parameters("prm1")
+    md1.add_parameters("prm2")
+    md1.add_parameters("prm3")
+    md1.add_parameters("prm4")
     assert "prm1" in md1._params
     assert "prm2" in md1._params
     assert "prm3" in md1._params
@@ -64,21 +67,15 @@ def test_change_multiple_params():
     assert "prm6" not in md1._params
     assert "prm7" not in md1._params
     assert "prm8" not in md1._params
-    md1.change_parameters("prm1", "prm2", "prm5", "prm6")
+    md1.change_parameters("prm1", "prm5")
+    md1.change_parameters("prm2", "prm6")
+    md1.change_parameters("prm3", "prm7")
+    md1.change_parameters("prm4", "prm8")
     assert "prm1" not in md1._params
-    assert "prm2" not in md1._params
-    assert "prm3" in md1._params
-    assert "prm4" in md1._params
-    assert "prm5" in md1._params
-    assert "prm6" in md1._params
-    assert "prm7" not in md1._params
-    assert "prm8" not in md1._params
-    md1.change_parameters("prm3", "prm4", "prm5", "prm7", "prm8", "prm1")
-    assert "prm1" in md1._params
     assert "prm2" not in md1._params
     assert "prm3" not in md1._params
     assert "prm4" not in md1._params
-    assert "prm5" not in md1._params
+    assert "prm5" in md1._params
     assert "prm6" in md1._params
     assert "prm7" in md1._params
     assert "prm8" in md1._params
