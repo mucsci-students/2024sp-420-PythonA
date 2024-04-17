@@ -1,13 +1,11 @@
 from .controller_input import read_line
-import umleditor.mvc_controller.controller_output as controller_output
 from .serializer import serialize, deserialize
 from umleditor.mvc_controller.uml_parser import parse
 from umleditor.mvc_model import CustomExceptions as CE
 from umleditor.mvc_model.diagram import Diagram
 from umleditor.mvc_controller.uml_parser import check_args
-from umleditor.usability.momento import Momento
+from umleditor.mvc_controller.momento import Momento
 import os
-import sys
 
 
 class Controller:
@@ -36,11 +34,11 @@ class Controller:
                     self.command_count_tracker += 1
 
                 # Execute the command
+
                 return command(*args)
 
-            except TypeError as t:
+            except TypeError:
                 self.command_count_tracker -= 1
-                raise CE.InvalidArgCountError(t)
             except ValueError as v:
                 self.command_count_tracker -= 1
                 raise CE.NeedsMoreInput()

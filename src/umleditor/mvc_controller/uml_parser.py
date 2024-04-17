@@ -1,9 +1,9 @@
 # Primary: Danish
 # Secondary: Zhang
+import sys,os
 from umleditor.mvc_model import CustomExceptions as CE
 from .uml_lexer import lex_input as lex
 from umleditor.mvc_model import Diagram, Entity, Relation, UML_Method, help_command
-from umleditor.usability.autofill import get_args
 import re
 
 # list of all classes that need to be searched for commands
@@ -23,6 +23,7 @@ def parse(c, input_str: str) -> list:
     args = []
 
     if command_class == Entity and command_str == "add_method":
+
         # Validate the number of arguments for adding a method
         if len(bits) < 5:
             raise CE.NeedsMoreInput()
@@ -35,6 +36,18 @@ def parse(c, input_str: str) -> list:
 
         args = [method_name, return_type]
 
+    if command_class == Entity and command_str == "delete_method":
+
+        # Validate the number of arguments for adding a method
+        if len(bits) < 4:
+            raise CE.NeedsMoreInput()
+
+        # Extract the class name and method name
+        class_name = bits[2]
+        method_name = bits[3]
+        obj = c._diagram.get_entity(class_name)
+
+        args = [method_name]
 
 
     elif command_class == UML_Method and command_str == "add_parameters":
@@ -46,59 +59,45 @@ def parse(c, input_str: str) -> list:
 
         # Extract parameters based on provided arguments
 
-        entity_name, method_name, parameter_name = bits[2:5]
+        entity_name = bits[2]
+        method_name = bits[3]
+        parameter_name = bits[4]
 
         # Assign parameter_type only if it's provided
-
-        parameter_type = bits[5] if len(bits) == 6 else None
-
         ent = c._diagram.get_entity(entity_name)
-
         obj = ent.get_method(method_name)
-
-        # Validate parameter_type only if it's provided
-
-        if parameter_type and parameter_type not in obj.allowed_types:
-            raise CE.ParameterInvalidTypeError(parameter_type)
 
         # Prepare arguments for adding a parameter
-
         args = [parameter_name]
 
-        if parameter_type:
-            args.append(obj.allowed_types[parameter_type])
 
     elif command_class == UML_Method and command_str == "remove_parameters":
-        if len(bits) < 6:
+
+        if len(bits) < 4:
             raise CE.NeedsMoreInput()
 
-        entity_name, method_name, parameter_name, parameter_type_str = bits[2:6]
+        entity_name, method_name, parameter_name = bits[2:5]
         ent = c._diagram.get_entity(entity_name)
+
         obj = ent.get_method(method_name)
 
-        # Ensure the parameter type is valid and convert it to the correct type object
-        if parameter_type_str not in obj.allowed_types:
-            raise CE.ParameterInvalidTypeError(parameter_type_str)
 
-        parameter_type = obj.allowed_types[parameter_type_str]
-        args = [parameter_name, parameter_type]
+        # Ensure the parameter type is valid and convert it to the correct type object
+        args = obj.remove_parameters(parameter_name)
+
 
 
     elif command_class == UML_Method and command_str == "change_parameters":
 
-        if len(bits) < 8:
-            raise CE.NeedsMoreInput()
 
-        entity_name, method_name, op_name, old_type_str, np_name, new_type_str = bits[2:8]
+        if len(bits) < 6:
+            raise CE.NeedsMoreInput()
+        entity_name, method_name, op_name, np_name = bits[2:6]
         ent = c._diagram.get_entity(entity_name)
         obj = ent.get_method(method_name)
 
-        if old_type_str not in obj.allowed_types or new_type_str not in obj.allowed_types:
-            raise CE.ParameterInvalidTypeError(old_type_str)
-
-        old_type = obj.allowed_types[old_type_str]
-        new_type = obj.allowed_types[new_type_str]
-        args = [op_name, old_type, np_name, new_type]
+        # obj.change_parameters(op_name,np_name)
+        args = [op_name, np_name]
 
 
     else:
@@ -117,7 +116,6 @@ def parse(c, input_str: str) -> list:
         elif command_class == help_command:
             obj = help_command
 
-    get_args(args)
 
     return [getattr(obj, command_str)] + args
 
@@ -170,7 +168,5 @@ def check_args(args: list):
             The list of args provided if all args are valid
     """
     exp = re.compile('[^a-zA-Z-_0-9]')
-    for arg in args:
-        if len(exp.findall(arg)) > 0:
-            raise CE.InvalidArgumentError(arg)
+    
     return args

@@ -58,13 +58,13 @@ def serialize(diagram: Diagram, path: str) -> None:
             saved_method['return_type'] = method._return_type
             # class method params
             saved_params = [];saved_method['params'] = saved_params
-            for param_name, param_type in method._params:
+            for param_name in method._params:
                 # class method param
                 saved_param = {}; saved_params.append(saved_param)
                 # class method param name
                 saved_param['name'] = param_name
                 # class method param type
-                saved_param['type'] = param_type if param_type else 'None'
+                # saved_param['type'] = param_type if param_type else 'None'
     # relationships
     saved_relationships = []
     for relation in diagram._relations:
@@ -145,9 +145,9 @@ def deserialize(diagram: Diagram, path: str) -> None:
                 for saved_param in saved_method['params']:
                     # Extracting param name and type (as string)
                     param_name = saved_param['name']
-                    param_type = None if saved_param['type'] == 'None' else saved_param['type']
+                    # param_type = None if saved_param['type'] == 'None' else saved_param['type']
                     # Append tuple of param name and type
-                    loaded_params.append((param_name, param_type))
+                    loaded_params.append(param_name)
                 loaded_method._params = loaded_params
                 loaded_methods.append(loaded_method)
             loaded_class._methods = loaded_methods
