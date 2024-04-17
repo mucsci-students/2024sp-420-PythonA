@@ -160,7 +160,7 @@ class Entity:
         new_method = UML_Method(method_name, return_type)
         self._methods.append(new_method)
 
-    def add_method_and_params(self, method_name: str, return_type: str, param_name: str, param_type: type):
+    def add_method_and_params(self, method_name: str, return_type: str, param_name: str):
         """
         Adds a method with specified parameters to the class.
 
@@ -169,13 +169,13 @@ class Entity:
         """
 
         self.add_method(method_name, return_type)
-        self.get_method(method_name).add_parameters(param_name, param_type)
+        self.get_method(method_name).add_parameters(param_name)
 
-    def edit_method(self, old_method: str, new_method: str, return_type: str, param_name: str, param_type: type):
+    def edit_method(self, old_method: str, new_method: str, return_type: str, param_name: str):
         deleted_method = self.get_method(old_method)
         self.delete_method(old_method)
         try:
-            self.add_method_and_params(new_method, return_type, param_name, param_type)
+            self.add_method_and_params(new_method, return_type, param_name)
         except Exception as e:
             self._methods.append(deleted_method)
             raise e
@@ -283,7 +283,7 @@ class UML_Method:
         """
         self._name = method_name
         self._return_type = return_type
-        self._params: list[tuple[str, Optional[str]]] = []
+        self._params = []
         self.allowed_types = ["string", "int", "bool", "float" ]
 
     def get_method_name(self):
@@ -329,17 +329,16 @@ class UML_Method:
         Raises:
             CustomExceptions.DuplicateParametersError: If any of the parameter occurs more than once.
         """
-        for existing_param_name, _ in self._params:
+        for existing_param_name in self._params:
             if existing_param_name == param_name:
                 raise CustomExceptions.ParameterExistsError(param_name)
 
-    def add_parameters(self, param_name: str, param_type: Optional[str] = None):
+    def add_parameters(self, param_name: str):
         """
         Adds a list of new parameters to the method.
 
         Args:
             param_name: The list of new parameters to be added.
-            param_type: The type of new parameters to be added.
 
         Raises:
             CustomExceptions.ParameterExistsError: If any of the parameter already exists in the method.
@@ -347,16 +346,17 @@ class UML_Method:
         Returns:
             None.
         """
-        self._check_duplicate_parameters(param_name)
-        self._params.append((param_name, param_type))
+        if self._check_duplicate_parameters(param_name):
+            raise CustomExceptions.ParameterExistsError(param_name)
+        else:
+            self._params.append(param_name)
 
-    def remove_parameters(self, param_name: str, param_type: type):
+    def remove_parameters(self, param_name: str):
         """
         Removes a list of parameters from the method.
 
         Args:
             param_name: The list of parameters to be removed.
-            param_type: The type of new parameters to be removed.
 
         Raises:
             CustomExceptions.ParameterNotFoundError: If any of the parameter does not exist in the method.
@@ -365,21 +365,18 @@ class UML_Method:
             None.
         """
 
-        for existing_param_name, _ in self._params:
-            if existing_param_name == param_name:
-                self._params.remove((existing_param_name, _))
-                return
-        raise CustomExceptions.ParameterNotFoundError(param_name)
+        try:
+            self._params.remove(param_name)
+        except ValueError:
+            raise CustomExceptions.ParameterNotFoundError(param_name)
 
-    def change_parameters(self, op_name: str, old_type: str, np_name: str, new_type: str):
+    def change_parameters(self, op_name: str, np_name: str):
         """
         Changes a parameter in the method by replacing an old parameter with a new parameter.
 
     Args:
         op_name (str): The name of the parameter to be replaced.
-        old_type (type): The type of the parameter to be replaced.
-        np_name (str): The name of the new parameter to be added.
-        new_type (type): The type of the new parameter to be added.
+
 
     Raises:
         CustomExceptions.ParameterNotFoundError: If the old parameter does not exist in the method.
@@ -394,11 +391,15 @@ class UML_Method:
 
         param_found = False
 
-        for index, (param_name, param_type) in enumerate(self._params):
-            if param_name == op_name and param_type == old_type:
-                self._params[index] = (np_name, new_type)
-                param_found = True
-                break
+        for index, (param_name) in enumerate(self._params):
+            if param_name == op_name:
+
+                if self._check_duplicate_parameters(np_name):
+                    raise CustomExceptions.ParameterExistsError(param_name)
+                else:
+                    self._params[index] = np_name
+                    param_found = True
+                    break
 
         if not param_found:
             raise CustomExceptions.FieldNotFoundError(op_name)
@@ -423,8 +424,8 @@ class UML_Method:
         result_return_type = 'void' if self._return_type is str(None) else self._return_type
         result += f"\n\tReturn Type: {result_return_type}"
         result += "\n\t" + self.get_method_name() + "'s Params: "
-        param_results = ' '.join(f'{name}: {ptype if ptype else " "}' for name, ptype in self._params)
-        return result + param_results
+        param_results = ', '.join(f'{name}'  for name in self._params)
+        return result + param_results + "\n"
 
     def __eq__(self, other):
 
