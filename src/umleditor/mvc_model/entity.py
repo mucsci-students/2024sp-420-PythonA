@@ -2,7 +2,7 @@
 # Secondary: Zhang
 
 from .custom_exceptions import CustomExceptions
-from typing import Optional
+
 
 class Entity:
 
@@ -15,9 +15,9 @@ class Entity:
         """
         self._name: str = entity_name
         self._fields: list[tuple[str, str]] = []
-        self.allowed_types = ["string", "int", "bool", "float" ]
+        self.allowed_types = ["string", "int", "bool", "float"]
         self._methods = []
-        self.allowed_return_types = ["void", "string","int","bool","float"]
+        self.allowed_return_types = ["void", "string", "int", "bool", "float"]
 
     def get_name(self):
         """
@@ -43,7 +43,7 @@ class Entity:
 
         Args:
             field_name (str): The field' name to be added to the entity.
-            field_type (type): The field type to be added to the entity.
+            field_type (str): The field type to be added to the entity.
 
         Raises:
             CustomExceptions.FieldExistsError: If the field already
@@ -56,9 +56,9 @@ class Entity:
             raise CustomExceptions.FieldExistsError(field_name)
 
         else:
-                if field_type not in self.allowed_types:
-                    raise CustomExceptions.FieldtypeNotFoundError(field_type)
-                else:
+            if field_type not in self.allowed_types:
+                raise CustomExceptions.FieldTypeNotFoundError(field_type)
+            else:
                     self._fields.append((field_name, field_type))
 
     def delete_field(self, field_name: str):
@@ -67,7 +67,6 @@ class Entity:
 
         Args:
             field_name (str): The name of the field to be deleted from the entity.
-            field_type (type): The type of the field to be deleted from the entity.
 
         Raises:
             CustomExceptions.FieldNotFoundError: If the specified field
@@ -92,9 +91,9 @@ class Entity:
 
         Args:
             old_field(str): The current name of the field.
-            old_type(type): The current type of the field.
+            old_type(str): The current type of the field.
             new_field (str): The new name for the field.
-            new_type (type): The new type for the field.
+            new_type (str): The new type for the field.
 
         Raises:
             CustomExceptions.FieldNotFoundError: If the old field does
@@ -143,7 +142,7 @@ class Entity:
 
         Args:
             method_name (str): The method's name to be added to the entity.
-            return_type (type): The method's return type to be added to the entity.
+            return_type (str): The method's return type to be added to the entity.
 
         Raises:
             CustomExceptions.MethodExistsError: If the method already
@@ -272,7 +271,7 @@ class UML_Method:
 
         Args:
             method_name (str): The name of the method.
-            return_type (type): The Return type of the method.
+            return_type (str): The Return type of the method.
 
         Raises:
             None.
@@ -283,7 +282,7 @@ class UML_Method:
         self._name = method_name
         self._return_type = return_type
         self._params = []
-        self.allowed_types = ["string", "int", "bool", "float" ]
+        self.allowed_types = ["string", "int", "bool", "float"]
 
     def get_method_name(self):
         """
