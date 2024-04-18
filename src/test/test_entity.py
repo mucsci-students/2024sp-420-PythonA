@@ -137,12 +137,13 @@ def test_rename_multiple_fields():
     assert ("field18", "int") in ent1._fields
     assert ("field19", "int") in ent1._fields
 
-# def test_get_method_success():
-#     ent1 = Entity("entity1")
-#     ent2 = Entity("entity2")
-#     assert not any(um._name == "method" and um._return_type == "string" for um in ent1._methods)
-#     ent1.add_method("method", "string")
-#     assert ent1.get_method("method") == ent2.add_method("method", "string")
+def test_get_method_success():
+    ent1 = Entity("entity1")
+    ent2 = Entity("entity2")
+    ent1.add_method("method1", "string")
+    ent2.add_method("method2", "string")
+    assert ent1.get_method("method1")
+    assert ent2.get_method("method2")
 
 def test_get_method_doesnt_exist():
     ent1 = Entity("entity1")
