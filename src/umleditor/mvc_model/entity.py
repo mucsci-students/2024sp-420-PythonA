@@ -57,7 +57,7 @@ class Entity:
 
         else:
             if field_type not in self.allowed_types:
-                raise CustomExceptions.FieldtypeNotFoundError(field_type)
+                raise CustomExceptions.FieldTypeNotFoundError(field_type)
             else:
                     self._fields.append((field_name, field_type))
 
