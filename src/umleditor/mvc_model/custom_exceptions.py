@@ -65,12 +65,11 @@ class CustomExceptions:
         """Exception raised when a field with a given name is not found.
 
         Args:
-            field_name (str): The name of the field not found.
+            field_type (str): The name of the field not found.
         """
 
-        def __init__(self, field_name:str):
-            self.field_type = field_name
-            super().__init__(f"Field with name '{field_name}' does not exist.")
+        def __init__(self, field_type:str):
+            super().__init__(f"Field type '{field_type}' does not exist.")
 
     #===============================================================================#
                                 #Relation Exceptions
