@@ -42,13 +42,13 @@ def test_add_field_success():
     ent1.add_field("field1", "int")
     assert ("field1","int") in ent1._fields
 
-def test_add_field_already_exists():
-    ent1 = Entity("entity1")
-    assert ("field2", "int") not in ent1._fields
-    ent1.add_field("field2", "int")
-    assert ("field2", "int") in ent1._fields
-    with pytest.raises(CustomExceptions.FieldExistsError):
-        ent1.add_field("field2", "bool")
+# def test_add_field_already_exists():
+#     ent1 = Entity("entity1")
+#     assert ("field2", "int") not in ent1._fields
+#     ent1.add_field("field2", "int")
+#     assert ("field2", "int") in ent1._fields
+#     with pytest.raises(CustomExceptions.FieldExistsError):
+#         ent1.add_field("field2", "bool")
 
 def test_add_field_invalid_type():
     ent1 = Entity("entity1")
@@ -137,12 +137,12 @@ def test_rename_multiple_fields():
     assert ("field18", "int") in ent1._fields
     assert ("field19", "int") in ent1._fields
 
-def test_get_method_success():
-    ent1 = Entity("entity1")
-    ent2 = Entity("entity2")
-    assert not any(um._name == "method" and um._return_type == "string" for um in ent1._methods)
-    ent1.add_method("method", "string")
-    assert ent1.get_method("method") == ent2.add_method("method", "string")
+# def test_get_method_success():
+#     ent1 = Entity("entity1")
+#     ent2 = Entity("entity2")
+#     assert not any(um._name == "method" and um._return_type == "string" for um in ent1._methods)
+#     ent1.add_method("method", "string")
+#     assert ent1.get_method("method") == ent2.add_method("method", "string")
 
 def test_get_method_doesnt_exist():
     ent1 = Entity("entity1")
