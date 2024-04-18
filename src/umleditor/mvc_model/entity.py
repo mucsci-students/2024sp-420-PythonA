@@ -43,7 +43,7 @@ class Entity:
 
         Args:
             field_name (str): The field' name to be added to the entity.
-            field_type (type): The field type to be added to the entity.
+            field_type (str): The field type to be added to the entity.
 
         Raises:
             CustomExceptions.FieldExistsError: If the field already
@@ -67,7 +67,7 @@ class Entity:
 
         Args:
             field_name (str): The name of the field to be deleted from the entity.
-            field_type (type): The type of the field to be deleted from the entity.
+            field_type (str): The type of the field to be deleted from the entity.
 
         Raises:
             CustomExceptions.FieldNotFoundError: If the specified field
@@ -92,9 +92,9 @@ class Entity:
 
         Args:
             old_field(str): The current name of the field.
-            old_type(type): The current type of the field.
+            old_type(str): The current type of the field.
             new_field (str): The new name for the field.
-            new_type (type): The new type for the field.
+            new_type (str): The new type for the field.
 
         Raises:
             CustomExceptions.FieldNotFoundError: If the old field does
@@ -143,7 +143,7 @@ class Entity:
 
         Args:
             method_name (str): The method's name to be added to the entity.
-            return_type (type): The method's return type to be added to the entity.
+            return_type (str): The method's return type to be added to the entity.
 
         Raises:
             CustomExceptions.MethodExistsError: If the method already
@@ -272,7 +272,7 @@ class UML_Method:
 
         Args:
             method_name (str): The name of the method.
-            return_type (type): The Return type of the method.
+            return_type (str): The Return type of the method.
 
         Raises:
             None.

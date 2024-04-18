@@ -185,7 +185,7 @@ class CustomExceptions:
         Exception raised when the parameter type mismatched.
 
         Args:
-        parameter_type (type): The type of the parameter is mismatched or not allowed.
+        parameter_type (str): The type of the parameter is mismatched or not allowed.
         """
 
         def __init__(self, parameter_type):
