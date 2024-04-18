@@ -13,8 +13,8 @@ jobs:
         run: |
           pip install -e .
           pip install coverage
-#      - name: Run Tests
-#        run: coverage run -m pytest
+      - name: Run Unit Tests
+        run: coverage run -m pytest
       - name: Coverage Report
         run: coverage report --fail-under=100 --omit='*/mvc_controller/*','*/mvc_view/*' --show-missing /Users/runner/work/2024sp-420-PythonA/2024sp-420-PythonA/src/umleditor/mvc_model/*
   mac:
@@ -29,11 +29,10 @@ jobs:
         run: |
           pip install -e .
           pip install coverage
-
+      - name: Run Unit Tests
+        run: coverage run -m pytest
       - name: Coverage Report
-        run: |
-          coverage run -m pytest
-          coverage report --fail-under=100 --omit='*/mvc_controller/*','*/mvc_view/*' --show-missing /Users/runner/work/2024sp-420-PythonA/2024sp-420-PythonA/src/umleditor/mvc_model/*
+        run: coverage report --fail-under=100 --omit='*/mvc_controller/*','*/mvc_view/*' --show-missing /Users/runner/work/2024sp-420-PythonA/2024sp-420-PythonA/src/umleditor/mvc_model/*
   linux:
     runs-on: ubuntu-latest
     steps:
@@ -45,12 +44,12 @@ jobs:
       - name: Install Project and Dependencies
         run: |
           pip install -e .
-          pip install pytest-cov
-
+          pip install coverage
       - name: Install PyQt6 dependencies
         run: sudo apt-get update && sudo apt-get install -y libegl1-mesa libxkbcommon-x11-0
+      - name: Run Unit Tests
+        run: coverage run -m pytest
       - name: Coverage Report
-        run: |
-          coverage run -m pytest
-          coverage report --fail-under=100 --omit='*/mvc_controller/*','*/mvc_view/*' --show-missing /Users/runner/work/2024sp-420-PythonA/2024sp-420-PythonA/src/umleditor/mvc_model/*
+        run: coverage report --fail-under=100 --omit='*/mvc_controller/*','*/mvc_view/*' --show-missing /Users/runner/work/2024sp-420-PythonA/2024sp-420-PythonA/src/umleditor/mvc_model/*
+
 
