@@ -2,7 +2,7 @@
 # Secondary: Zhang
 
 from .custom_exceptions import CustomExceptions
-from typing import Optional
+
 
 class Entity:
 
@@ -15,9 +15,9 @@ class Entity:
         """
         self._name: str = entity_name
         self._fields: list[tuple[str, str]] = []
-        self.allowed_types = ["string", "int", "bool", "float" ]
+        self.allowed_types = ["string", "int", "bool", "float"]
         self._methods = []
-        self.allowed_return_types = ["void", "string","int","bool","float"]
+        self.allowed_return_types = ["void", "string", "int", "bool", "float"]
 
     def get_name(self):
         """
@@ -56,9 +56,9 @@ class Entity:
             raise CustomExceptions.FieldExistsError(field_name)
 
         else:
-                if field_type not in self.allowed_types:
-                    raise CustomExceptions.FieldtypeNotFoundError(field_type)
-                else:
+            if field_type not in self.allowed_types:
+                raise CustomExceptions.FieldtypeNotFoundError(field_type)
+            else:
                     self._fields.append((field_name, field_type))
 
     def delete_field(self, field_name: str):
@@ -67,7 +67,6 @@ class Entity:
 
         Args:
             field_name (str): The name of the field to be deleted from the entity.
-            field_type (str): The type of the field to be deleted from the entity.
 
         Raises:
             CustomExceptions.FieldNotFoundError: If the specified field
@@ -283,7 +282,7 @@ class UML_Method:
         self._name = method_name
         self._return_type = return_type
         self._params = []
-        self.allowed_types = ["string", "int", "bool", "float" ]
+        self.allowed_types = ["string", "int", "bool", "float"]
 
     def get_method_name(self):
         """
