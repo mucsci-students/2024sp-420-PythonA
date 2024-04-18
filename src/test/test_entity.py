@@ -142,7 +142,7 @@ def test_get_method_success():
     ent2 = Entity("entity2")
     assert not any(um._name == "method" and um._return_type == "string" for um in ent1._methods)
     ent1.add_method("method", "string")
-    assert ent1.get_method("method") == ent2.add_method("method")
+    assert ent1.get_method("method") == ent2.add_method("method", "string")
 
 def test_get_method_doesnt_exist():
     ent1 = Entity("entity1")
