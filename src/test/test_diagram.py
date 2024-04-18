@@ -69,6 +69,18 @@ def test_dia_delete_entity_success():
     dia.delete_entity("ent5")
     assert not dia.has_entity("ent5")
 
+def test_dia_delete_entity_with_relationship():
+    dia = Diagram()
+    assert not dia.has_entity("ent5")
+    dia.add_entity("ent5")
+    assert len(dia._relations) == 0
+    dia.add_relation("ent1", "ent5", "composition")
+    dia.add_relation("ent5", "ent4", "realization")
+    assert len(dia._relations) == 2
+    dia.delete_entity("ent5")
+    assert len(dia._relations) == 0
+
+
 def test_dia_delete_entity_error():
     dia = Diagram()
     assert not dia.has_entity("ent5")
