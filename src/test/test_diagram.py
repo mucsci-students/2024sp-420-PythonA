@@ -142,41 +142,46 @@ def test_dia_rename_multiple_entities():
     assert dia.has_entity("ent10")
     assert dia.has_entity("ent11")
 
-# def test_dia_list_entity_details_success():
-#     dia = Diagram()
-#     result = "ent1:\nent1's Fields:\n ent1's Methods:\n ent1's Relations:\n "
-#     assert dia.list_entity_details("ent1") == result
-#
-# def test_dia_list_entity_details_error():
-#     dia = Diagram()
-#     with pytest.raises(CustomExceptions.EntityNotFoundError):
-#         dia.list_entity_details("entity")
-#
-# def test_dia_list_everything():
-#     dia = Diagram()
-#     result = "y"
-#     assert dia.list_everything() == result
-#
-# def test_dia_list_entities():
-#     dia = Diagram()
-#     result = "class, ent1, ent2, ent3, ent4, ent5, ent7, ent10, ent11"
-#     assert dia.list_entities() == result
-#
-# def test_dia_list_relations():
-#     dia = Diagram()
-#     result = "y"
-#     assert dia.list_relations() == result
-#
-# def test_dia_list_entity_relations():
-#     dia = Diagram()
-#     result = "y"
-#     assert dia.list_entity_relations() == result
+def test_dia_list_entity_details_success():
+    dia = Diagram()
+    result = "string"
+    assert dia.list_entity_details("ent1") == result
+
+def test_dia_list_entity_details_error():
+    dia = Diagram()
+    with pytest.raises(CustomExceptions.EntityNotFoundError):
+        dia.list_entity_details("entity")
+
+def test_dia_list_everything():
+    dia = Diagram()
+    result = "string"
+    assert dia.list_everything() == result
+
+def test_dia_list_entities():
+    dia = Diagram()
+    result = "string"
+    assert dia.list_entities() == result
+
+def test_dia_list_relations():
+    dia = Diagram()
+    result = "string"
+    assert dia.list_relations() == result
+
+def test_dia_list_entity_relations():
+    dia = Diagram()
+    result = "string"
+    assert dia.list_entity_relations() == result
 
 def test_dia_add_relation_success():
     dia = Diagram()
     assert len(dia._relations) == 0
     dia.add_relation("ent1", "ent2", "aggregation")
     assert len(dia._relations) == 1
+
+def test_dia_add_relation_self():
+    dia = Diagram()
+    with pytest.raises(CustomExceptions.SelfRelationError):
+        dia.add_relation("ent1", "ent1", "composition")
 
 def test_dia_add_relation_source_doesnt_exist():
     dia = Diagram()
