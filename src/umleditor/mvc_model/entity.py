@@ -384,11 +384,9 @@ class UML_Method:
         None.
         """
 
-        if any(param[0] == np_name for param in self._params):
-            raise CustomExceptions.FieldExistsError(np_name)
+
 
         param_found = False
-
         for index, (param_name) in enumerate(self._params):
             if param_name == op_name:
 
@@ -400,7 +398,7 @@ class UML_Method:
                     break
 
         if not param_found:
-            raise CustomExceptions.FieldNotFoundError(op_name)
+            raise CustomExceptions.ParameterNotFoundError(op_name)
 
     def __str__(self):
         """
