@@ -44,6 +44,7 @@ def test_add_field_success():
 
 def test_add_field_already_exists():
     ent1 = Entity("entity1")
+    assert ("field2", "int") not in ent1._fields
     ent1.add_field("field2", "int")
     assert ("field2", "int") in ent1._fields
     with pytest.raises(CustomExceptions.FieldExistsError):
