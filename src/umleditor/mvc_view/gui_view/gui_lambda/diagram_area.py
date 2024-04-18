@@ -3,7 +3,7 @@ from PyQt6.QtWidgets import (QDialog, QMainWindow, QWidget, QVBoxLayout, QPushBu
                              QMessageBox, QHBoxLayout, QRadioButton, QDialogButtonBox, QListWidget, QLabel, QFrame,
                              QFileDialog)
 from PyQt6.QtGui import QAction, QPainter, QPen, QColor,QDesktopServices
-from umleditor.mvc_view.gui_view.gui_lambda.GUIV2_class_card import ClassCard
+from umleditor.mvc_view.gui_view.gui_lambda.class_card_revamp import ClassCard
 
 class DiagramArea(QWidget):
     def __init__(self, parent=None):

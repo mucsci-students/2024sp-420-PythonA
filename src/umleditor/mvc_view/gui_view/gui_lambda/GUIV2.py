@@ -4,10 +4,10 @@ from PyQt6.QtWidgets import (QDialog, QMainWindow, QWidget, QVBoxLayout, QPushBu
                              QMessageBox, QHBoxLayout, QRadioButton, QDialogButtonBox, QListWidget, QLabel, QFrame,
                              QFileDialog)
 from PyQt6.QtGui import QAction, QPainter, QPen, QColor,QDesktopServices
-
+from umleditor.mvc_view.gui_view.gui_lambda.diagram_area import DiagramArea
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.newClassDialog import NewClassDialog
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.deleteClassDialog import DeleteClassDialog
-from umleditor.mvc_view.gui_view.gui_lambda.GUIV2_class_card import ClassCard
+from umleditor.mvc_view.gui_view.gui_lambda.class_card_revamp import ClassCard
 from umleditor.mvc_view.gui_view.gui_cworld.class_input_dialog import CustomInputDialog
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.addMethodDialog import AddMethodDialog
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.changeParams import ChangeParamsDialog
@@ -613,17 +613,6 @@ class GUIV2(QMainWindow):
             self._process_task_signal.emit (f'rel -a {src_class} {dest_class} {relationship_type}', self)
             relationship_str = f"{src_class} -> {dest_class}"
             
-            for classCard in self.diagramArea.findChildren(ClassCard):
-                if classCard._name == src_class:
-                    
-                    classCard.add_relation(relationship_str)
-                    break
-            for classCard in self.diagramArea.findChildren(ClassCard):
-                if classCard._name == dest_class:
-                    
-                    classCard.add_relation(relationship_str)
-                    break
-                
         self.refreshRelationshipsList()
         self.diagramArea.addRelationship(src_class, dest_class)
         
@@ -644,16 +633,6 @@ class GUIV2(QMainWindow):
             
             relationship_str = f"{src_class} -> {dest_class}"
             
-            for classCard in self.diagramArea.findChildren(ClassCard):
-                if classCard._name == src_class:
-                    
-                    classCard.remove_relation(relationship_str)
-                    break
-            for classCard in self.diagramArea.findChildren(ClassCard):
-                if classCard._name == dest_class:
-                    
-                    classCard.remove_relation(relationship_str)
-                    break
                 
         self.diagramArea.removeRelationship(src_class, dest_class)
 

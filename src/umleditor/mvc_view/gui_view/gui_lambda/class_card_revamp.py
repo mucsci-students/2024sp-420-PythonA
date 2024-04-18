@@ -24,6 +24,7 @@ class ClassCard (QWidget):
         """
         super().__init__()
         self._name = name
+        self._size = 9
         self.initUI()
         # Used for capturing escape key
         self.installEventFilter(self)
@@ -53,9 +54,6 @@ class ClassCard (QWidget):
         self._list_methods = QListWidget()
     
 
-        # Connect right click
-        self.connect_menus()
-
         # Add Widgets to class card
         layout.addWidget(self._class_label)
         layout.addWidget(self._fields_label)
@@ -67,13 +65,10 @@ class ClassCard (QWidget):
         self.set_styles()
 
         # Set the minimum width
-        self.setMinimumWidth(150)
+        self.setMinimumWidth(100)
 
         # Set the layout
         self.setLayout(layout)
-
-        # Update the size dynamically
-        self.updateSize()
         
     def set_name(self, name: str):
             """
@@ -89,11 +84,9 @@ class ClassCard (QWidget):
         """
         Update the size of the ClassCard dynamically based on the content.
         """
-        # Calculate the required height based on the number of items in each list
-        total_items = self._list_field.count() + self._list_method.count()
 
         # Calculate the new height based on the number of items
-        new_height = max(total_items * 20, 200)  # Minimum height of 200, increase by 20 for each item
+        new_height = max(self._size * 20, 200)  # Minimum height of 200, increase by 20 for each item
 
         # Set the new size
         self.setFixedHeight(new_height)
@@ -103,16 +96,15 @@ class ClassCard (QWidget):
         Sets styles for the widgets.
         """
         # Set border style for list widgets
-        self._list_field.setStyleSheet("border: 1px solid black; border-top: none")
-        self._list_method.setStyleSheet("border: 1px solid black; border-bottom: none; border-top: none;")
-        self._list_relation.setStyleSheet("border: 1px solid black;")
+        self._list_fields.setStyleSheet("border: 1px solid black; border-top: none")
+        self._list_methods.setStyleSheet("border: 1px solid black; border-bottom: none; border-top: none;")
         # Set style for class label
         self._class_label.setStyleSheet("background-color: #6495ED; border: 1px solid black;")
         self._class_label.setMinimumHeight(30)
         self._fields_label.setStyleSheet("background-color: #6495ED; border: 1px solid black;")
-        self._fields_label.setMinimumHeight(30)
+        self._fields_label.setMinimumHeight(20)
         self._methods_label.setStyleSheet("background-color: #6495ED; border: 1px solid black;")
-        self._methods_label.setMinimumHeight(30)
+        self._methods_label.setMinimumHeight(20)
         # Set style for entire widget
         self.setStyleSheet("background-color: white;")
     def add_field(self, field):
@@ -139,6 +131,8 @@ class ClassCard (QWidget):
             text.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
             text.setReadOnly(True)
+            self._size += 1
+            self.updateSize()
             
     def remove_field(self, field):
         """
@@ -152,6 +146,8 @@ class ClassCard (QWidget):
             line_edit = self._list_fields.itemWidget(item)
             if line_edit and line_edit.text().startswith(field):
                 self._list_fields.takeItem(i)
+                self._size -= 1
+                self.updateSize()
                 break
             
     def rename_field(self, old_field_name, new_field_name):
@@ -177,19 +173,54 @@ class ClassCard (QWidget):
 
     def add_method(self, method):
         method_widget = MethodWidget(method)
-        list = self._list_method
-        list.addWidget(method_widget)
-        
-    def remove_method(self, method):
-        if method in self._list_methods:
-            methodCard = self._list_methods.pop(method)  
-            methodCard.deleteLater()   
-             
+        item = QListWidgetItem(self._list_methods)  
+        item.setSizeHint(method_widget.sizeHint())  
+        self._list_methods.addItem(item)  
+        self._list_methods.setItemWidget(item, method_widget)  
+        self._size += 2
+        self.updateSize()
+
+    def remove_method(self, method_name):
+        # Iterate over all items in the QListWidget
+        for i in range(self._list_methods.count()):
+            item = self._list_methods.item(i)
+            method_widget = self._list_methods.itemWidget(item)
+            if method_widget and method_widget._method_label.text() == method_name:
+                self._list_methods.takeItem(i)  
+                method_widget.deleteLater() 
+                self._size -= 2
+                self.updateSize()
+                break
+            
     def rename_method(self, old_method_name, new_method_name):
+        for i in range(self._list_methods.count()):
+            item = self._list_methods.item(i)
+            method_widget = self._list_methods.itemWidget(item)
+            if method_widget and method_widget._method_label.text() == old_method_name:
+                method_widget.rename_method(new_method_name)
+                break
+        
+    def add_param(self, method, param):
         for methodCard in self.findChildren(MethodWidget):
-            if methodCard._method_label == old_method_name:
-                methodCard.rename_method(new_method_name)
-                           
+            if methodCard._method_label == method:
+                methodCard.add_param(param)
+            self._size += 1
+            self.updateSize()
+                        
+        
+    def remove_param(self, method, param):
+        for methodCard in self.findChildren(MethodWidget):
+            if methodCard._method_label == method:
+                methodCard.remove_param(param)  
+            self._size -= 1
+            self.updateSize()
+                
+                
+    def rename_param(self, method, old_param_name, new_param_name):
+        for methodCard in self.findChildren(MethodWidget):
+            if methodCard._method_label == method:
+                methodCard.rename_param(old_param_name, new_param_name)  
+                                        
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
             self.moving = True
@@ -221,6 +252,10 @@ class MethodWidget(QWidget):
         layout.addWidget(self._method_label)
         layout.addWidget(self._params_label)
         layout.addWidget(self._list_params)
+        
+        self._list_params.setStyleSheet("border: 1px solid black; border-bottom: none; border-top: none;")
+        self._params_label.setStyleSheet("background-color: #6495ED; border: 1px solid black;")
+        self._params_label.setMinimumHeight(10)
         
         self.setLayout(layout) 
         
