@@ -52,15 +52,14 @@ class Entity:
         Returns:
             None.
         """
-        if field_name in self._fields:
+        if any(field[0] == field_name for field in self._fields):
             raise CustomExceptions.FieldExistsError(field_name)
 
         else:
-            if field_type not in self.allowed_types:
-                raise CustomExceptions.FieldtypeNotFoundError(field_type)
-
-            else:
-                self._fields.append((field_name, field_type))
+                if field_type not in self.allowed_types:
+                    raise CustomExceptions.FieldtypeNotFoundError(field_type)
+                else:
+                    self._fields.append((field_name, field_type))
 
     def delete_field(self, field_name: str):
         """
