@@ -1,9 +1,9 @@
 # Primary: Danish
 # Secondary: Zhang
-import sys,os
 from umleditor.mvc_model import CustomExceptions as CE
 from .uml_lexer import lex_input as lex
-from umleditor.mvc_model import Diagram, Entity, Relation, UML_Method, help_command
+from umleditor.mvc_model import Diagram, Entity, Relation, UML_Method
+from ..mvc_view import help_command
 import re
 
 # list of all classes that need to be searched for commands
