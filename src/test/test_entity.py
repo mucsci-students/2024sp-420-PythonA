@@ -119,7 +119,7 @@ def test_rename_field_new_name_already_exists():
     ent1.add_field("field14", "string")
     assert ("field15", "string") not in ent1._fields
     ent1.add_field("field15", "string")
-    with pytest.raises(CustomExceptions.FieldNotFoundError):
+    with pytest.raises(CustomExceptions.FieldExistsError):
         ent1.rename_field("field14", "string","field15","string")
 
 def test_rename_multiple_fields():
