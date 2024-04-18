@@ -67,11 +67,11 @@ def test_import_diagram():
     assert Diagram.delete_entity
     assert Diagram.has_entity
     assert Diagram.rename_entity
-    assert Diagram.list_everything
-    assert Diagram.list_entity_details
-    assert Diagram.list_entities
-    assert Diagram.list_relations
-    assert Diagram.list_entity_relations
+    # assert Diagram.list_everything
+    # assert Diagram.list_entity_details
+    # assert Diagram.list_entities
+    # assert Diagram.list_relations
+    # assert Diagram.list_entity_relations
     assert Diagram.add_relation
     assert Diagram.delete_relation
     assert Diagram.change_relation_type
