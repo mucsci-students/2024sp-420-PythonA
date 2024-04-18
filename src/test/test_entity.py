@@ -48,7 +48,7 @@ def test_add_field_already_exists():
     ent1.add_field("field2", "int")
     assert ("field2", "int") in ent1._fields
     with pytest.raises(CustomExceptions.FieldExistsError):
-        ent1.add_field("field2", "int")
+        ent1.add_field("field2", "bool")
 
 def test_add_field_invalid_type():
     ent1 = Entity("entity1")
