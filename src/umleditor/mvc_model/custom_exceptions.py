@@ -48,7 +48,7 @@ class CustomExceptions:
         Args:
             field_name (str): The name of the existing field.
         """
-        def __init__(self, field_name):
+        def __init__(self, field_name: str):
             super().__init__(f"Field with name '{field_name}' already exists.")
     
     class FieldNotFoundError(Error):
@@ -67,7 +67,7 @@ class CustomExceptions:
             field_name (str): The name of the field not found.
         """
 
-        def __init__(self, field_name:type):
+        def __init__(self, field_name:str):
             self.field_type = field_name
             super().__init__(f"Field with name '{field_name}' does not exist.")
 
