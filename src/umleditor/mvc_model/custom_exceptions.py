@@ -61,7 +61,7 @@ class CustomExceptions:
         def __init__(self, field_name):
             super().__init__(f"Field with name '{field_name}' does not exist.")
 
-    class FieldtypeNotFoundError(Error):
+    class FieldTypeNotFoundError(Error):
         """Exception raised when a field with a given name is not found.
 
         Args:
