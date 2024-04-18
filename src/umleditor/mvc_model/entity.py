@@ -59,7 +59,7 @@ class Entity:
             if field_type not in self.allowed_types:
                 raise CustomExceptions.FieldTypeNotFoundError(field_type)
             else:
-                    self._fields.append((field_name, field_type))
+                self._fields.append((field_name, field_type))
 
     def delete_field(self, field_name: str):
         """
