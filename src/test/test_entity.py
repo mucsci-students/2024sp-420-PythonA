@@ -165,7 +165,7 @@ def test_add_method_already_exists():
 
 def test_add_method_invalid_return_type():
     ent1 = Entity("entity1")
-    with pytest.raises(CustomExceptions.MethodExistsError):
+    with pytest.raises(ValueError):
         ent1.add_method("method3", "type")
 
 def test_add_mutliple_methods():
