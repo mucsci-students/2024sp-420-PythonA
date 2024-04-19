@@ -50,7 +50,6 @@ def test_dia_get_entity_success():
     dia = Diagram()
     ent = dia.get_entity("entity")
     assert ent.get_name() == "entity"
-    assert ent.get_name() != "entity"
     assert dia.has_entity("entity")
 
 def test_dia_get_entity_error():
@@ -149,7 +148,7 @@ def test_dia_list_entity_details_error():
 
 def test_dia_list_everything():
     dia = Diagram()
-    result = "string"
+    result = "entity1:\nentity1's Fields:\n\nentity1's Methods:\nentity1's Relations:\n\nentity2:\nentity2's Fields:\n\nentity2's Methods:\nentity2's Relations:\n\n"
     assert dia.list_everything() == result
 
 def test_dia_list_entities():
