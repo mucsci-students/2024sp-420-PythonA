@@ -154,7 +154,12 @@ def test_dia_list_entity_details_error():
 
 def test_dia_list_everything():
     dia = Diagram()
-    result = "string"
+    result = ("class:\nclass's Fields:\n\nclass's Methods:\nclass's Relations:\n\nent:\nent's Fields:\n\nent's "
+              "Methods:\nent's Relations\n\nent1:\nent1's Fields:\n\nent1's Methods:\nent1's Relations\n\nent2:\nent2's"
+              "Fields:\n\nent2's Methods:\nent2's Relations\n\nent3:\nent3's Fields:\n\nent3's Methods:\nent3's "
+              "Relations\n\nent4:\nent4's Fields:\n\nent4's Methods:\nent4's Relations\n\nent7:\nent7's "
+              "Fields:\n\nent7's Methods:\nent7's Relations\n\nent10:\nent10's Fields:\n\nent10's Methods:\nent10's "
+              "Relations\n\nent11:\nent11's Fields:\n\nent11's Methods:\nent11's Relations\n\n")
     assert dia.list_everything() == result
 
 def test_dia_list_entities():
