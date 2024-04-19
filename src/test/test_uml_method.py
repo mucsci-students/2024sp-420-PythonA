@@ -1,4 +1,5 @@
-from umleditor.mvc_model import UML_Method
+from umleditor.mvc_model import UML_Method, CustomExceptions
+import pytest
 
 def test_create_method( ):
     md1 = UML_Method("method1","int")
@@ -23,6 +24,13 @@ def test_set_method_name():
 def test_get_return_type():
     md1 = UML_Method("method1", "int")
     assert md1.get_return_type() == "int"
+
+def test_check_duplicate_parameters():
+    md1 = UML_Method("method1", "int")
+    md1.add_parameters("param1")
+    with pytest.raises(CustomExceptions.DuplicateParametersError):
+        md1._check_duplicate_parameters("param1")
+
 
 def test_method_equals():
     md1 = UML_Method("md1", "string")
