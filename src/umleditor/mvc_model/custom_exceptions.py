@@ -65,7 +65,7 @@ class CustomExceptions:
         """Exception raised when a field with a given name is not found.
 
         Args:
-            field_type (str): The name of the field not found.
+            field_type (str): The name of the field type not found.
         """
 
         def __init__(self, field_type:str):

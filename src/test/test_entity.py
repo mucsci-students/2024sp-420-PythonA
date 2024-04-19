@@ -1,8 +1,9 @@
 # Primary: Danish
 #Secondary: Zhang
 
-from umleditor.mvc_model import Entity, CustomExceptions
 import pytest
+from umleditor.mvc_model import CustomExceptions
+from umleditor.mvc_model import Entity
 
 
 def test_create_entity():
@@ -65,6 +66,7 @@ def test_add_multiple_fields():
     assert ("field6", "bool") in ent1._fields
     assert ("field7", "int") not in ent1._fields
 
+
 def test_delete_field_success():
     ent1 = Entity("entity1")
     assert ("field7", "int") not in ent1._fields
@@ -78,6 +80,32 @@ def test_delete_field_doesnt_exist():
     assert ("field7", "bool") not in ent1._fields
     with pytest.raises(CustomExceptions.FieldNotFoundError):
         ent1.delete_field("field7")
+
+def test_add_multiple_fields():
+    ent1 = Entity("entity1")
+    ent1.add_field("field1", "int")
+    ent1.add_field("field2", "string")
+    ent1.add_field("field3", "bool")
+    assert ("field1", "int") in ent1._fields
+    assert ("field2", "string") in ent1._fields
+    assert ("field3", "bool") in ent1._fields
+    assert ("field4", "int") not in ent1._fields
+
+def test_add_field_already_exists():
+     ent1 = Entity("entity1")
+     assert ("field2", "int") not in ent1._fields
+     ent1.add_field("field2", "int")
+     assert ("field2", "int") in ent1._fields
+     with pytest.raises(CustomExceptions.FieldExistsError):
+      ent1.add_field("field2", "bool")
+
+
+def test_add_invalid_type():
+    ent1 = Entity("entity1")
+    ent1.add_field("field1", "int")
+    assert ("field1", "int") in ent1._fields
+    with pytest.raises(CustomExceptions.FieldTypeNotFoundError):
+        ent1.add_field("field2", "not")
 
 def test_delete_multiple_fields():
     ent1 = Entity("entity1")
