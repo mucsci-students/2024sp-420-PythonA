@@ -51,6 +51,7 @@ def test_add_parameter():
 
 def test_add_parameter_already_exists():
     md3 = UML_Method("md3", "int")
+    md3.add_parameters("prm1")
     assert "prm1" in md3._params
     with pytest.raises(CustomExceptions.ParameterExistsError):
         md3.add_parameters("prm1")
