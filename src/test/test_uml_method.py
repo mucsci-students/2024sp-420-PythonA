@@ -83,6 +83,11 @@ def test_change_duplicate_param():
     with pytest.raises(CustomExceptions.ParameterExistsError):
         md4.change_parameters("prm1", "prm2")
 
+def test_change_parameter_doesnt_exist():
+    md4 = UML_Method("md4", "bool")
+    with pytest.raises(CustomExceptions.ParameterNotFoundError):
+        md4.change_parameters("parameter", "new_parameter")
+
 def test_change_multiple_params():
     md1 = UML_Method("md1", "string")
     md1.add_parameters("prm1")
