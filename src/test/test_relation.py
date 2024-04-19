@@ -121,14 +121,14 @@ def test_to_string():
     source = Entity("ent1")
     destination = Entity("ent2")
     type = "aggregation"
-    rel = Relation(type=type, source=source, destination=destination)
+    rel = Relation(rel_type=type, source=source, destination=destination)
     assert str(rel) == "ent1 -> aggregation -> ent2"
 
 def test_eq_everything_equal():
     source1 = Entity("ent1")
     destination1 = Entity("ent2")
     type1 = "aggregation"
-    rel1 = Relation(type1, source1,destination1)
+    rel1 = Relation(type1, source1, destination1)
     source2 = Entity("ent1")
     destination2 = Entity("ent2")
     type2 = "aggregation"
