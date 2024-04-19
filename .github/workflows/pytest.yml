@@ -13,6 +13,7 @@ jobs:
         run: |
           pip install -e .
           pip install pytest-cov
+          winget install xmlstarlet
 #      - name: Coverage Report
 #        run: |
 #          coverage run -m pytest
@@ -83,7 +84,8 @@ jobs:
       - name: Install Project and Dependencies
         run: |
           pip install -e .
-          pip install coverage
+          pip install pytest-cov
+          sudo apt-get install xmlstarlet
       - name: Install PyQt6 dependencies
         run: sudo apt-get update && sudo apt-get install -y libegl1-mesa libxkbcommon-x11-0
       - name: Run Tests
