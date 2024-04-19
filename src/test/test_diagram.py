@@ -164,13 +164,21 @@ def test_dia_list_entities():
 
 def test_dia_list_relations():
     dia = Diagram()
+    dia.add_relation("ent1", "ent2", "inheritance")
+    dia.add_relation("ent3", "ent4", "realization")
     result = "string"
     assert dia.list_relations() == result
+    dia.delete_relation("ent1", "ent2")
+    dia.delete_relation("ent3", "ent4")
 
 def test_dia_list_entity_relations():
     dia = Diagram()
+    dia.add_relation("ent1", "ent2", "inheritance")
+    dia.add_relation("ent3", "ent4", "realization")
     result = "string"
     assert dia.list_entity_relations() == result
+    dia.delete_relation("ent1", "ent2")
+    dia.delete_relation("ent3", "ent4")
 
 def test_dia_add_relation_success():
     dia = Diagram()
