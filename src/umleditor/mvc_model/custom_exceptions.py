@@ -1,6 +1,7 @@
 # Primary: Danish
 # Secondary: Zhang
 
+
 import re   #for argc errors
 class CustomExceptions:
     class Error(Exception):
@@ -60,16 +61,15 @@ class CustomExceptions:
         def __init__(self, field_name):
             super().__init__(f"Field with name '{field_name}' does not exist.")
 
-    class FieldtypeNotFoundError(Error):
+    class FieldTypeNotFoundError(Error):
         """Exception raised when a field with a given name is not found.
 
         Args:
-            field_name (str): The name of the field not found.
+            field_type (str): The name of the field type not found.
         """
 
-        def __init__(self, field_name:str):
-            self.field_type = field_name
-            super().__init__(f"Field with name '{field_name}' does not exist.")
+        def __init__(self, field_type:str):
+            super().__init__(f"Field type '{field_type}' does not exist.")
 
     #===============================================================================#
                                 #Relation Exceptions
@@ -185,7 +185,7 @@ class CustomExceptions:
         Exception raised when the parameter type mismatched.
 
         Args:
-        parameter_type (type): The type of the parameter is mismatched or not allowed.
+        parameter_type (str): The type of the parameter is mismatched or not allowed.
         """
 
         def __init__(self, parameter_type):

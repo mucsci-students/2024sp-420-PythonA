@@ -101,7 +101,7 @@ def test_import_uml_method():
     assert UML_Method.change_parameters
 
 def test_import_help():
-    from src.umleditor.mvc_model.help_command import help_menu
+    from umleditor.mvc_view.help_command import help_menu
     assert help_menu
 
 def test_import_relation():
