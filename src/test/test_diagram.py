@@ -183,7 +183,7 @@ def test_dia_add_relation_success():
 def test_dia_add_relation_self():
     dia = Diagram()
     with pytest.raises(CustomExceptions.SelfRelationError):
-        dia.add_relation("ent1", "ent1", "composition")
+        dia.add_relation("ent2", "ent3", "composition")
 
 def test_dia_add_relation_source_doesnt_exist():
     dia = Diagram()
@@ -198,7 +198,7 @@ def test_dia_add_relation_destination_doesnt_exist():
 def test_dia_add_relation_that_already_exists():
     dia = Diagram()
     with pytest.raises(CustomExceptions.RelationExistsError):
-        dia.add_relation("ent1", "ent2", "aggregation")
+        dia.add_relation("ent1", "ent2", "inheritance")
 
 def test_dia_add_relation_invalid_type():
     dia = Diagram()
@@ -249,6 +249,6 @@ def test_change_relation_type_destination_doesnt_exist():
 def test_change_relation_type_relation_doesnt_exist():
     dia = Diagram()
     with pytest.raises(CustomExceptions.RelationDoesNotExistError):
-        dia.change_relation_type("ent2", "ent3", "realization")
+        dia.change_relation_type("ent2", "ent4", "realization")
 
 
