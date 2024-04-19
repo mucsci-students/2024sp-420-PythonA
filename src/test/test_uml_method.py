@@ -1,19 +1,19 @@
 from umleditor.mvc_model import UML_Method
 
 def test_create_method( ):
-    md1 = UML_Method("method1")
+    md1 = UML_Method("method1","int")
     assert md1
 
 def test_get_method_name():
-    md1 = UML_Method("method1")
-    md2 = UML_Method("method2")
+    md1 = UML_Method("method1", "int")
+    md2 = UML_Method("method2", "float")
     assert md1.get_method_name() == "method1"
     assert md1.get_method_name() != "method2"
     assert md2.get_method_name() != "method1"
     assert md2.get_method_name() == "method2"
 
 def test_set_method_name():
-    md1 = UML_Method("method1")
+    md1 = UML_Method("method1", "int")
     assert md1.get_method_name() == "method1"
     assert md1.get_method_name() != "method2"
     md1.set_method_name("method2")
@@ -21,15 +21,15 @@ def test_set_method_name():
     assert md1.get_method_name() == "method2"
 
 def test_method_equals():
-    md1 = UML_Method("md1")
-    md2 = UML_Method("md2")
+    md1 = UML_Method("md1", "string")
+    md2 = UML_Method("md2", "bool")
     assert md1 == md1
     assert md1 != md2
     assert md2 == md2
     assert md2 != md1
 
 def test_add_parameter():
-    md3 = UML_Method("md3")
+    md3 = UML_Method("md3", "int")
     assert "prm1" not in md3._params
     md3.add_parameters("prm1")
     assert "prm1" in md3._params
@@ -38,14 +38,14 @@ def test_add_parameter():
     assert "prm2" in md3._params
 
 def test_add_one_remove_one_parameter():
-    md1 = UML_Method("md1")
+    md1 = UML_Method("md1", "string")
     md1.add_parameters("prm1")
     assert "prm1" in md1._params
     md1.remove_parameters("prm1")
     assert "prm1" not in md1._params
 
 def test_change_one_param():
-    md1 = UML_Method("md1")
+    md1 = UML_Method("md1", "string")
     md1.add_parameters("prm1")
     assert "prm1" in md1._params
     assert "prm2" not in md1._params
@@ -54,7 +54,7 @@ def test_change_one_param():
     assert "prm2" in md1._params
 
 def test_change_multiple_params():
-    md1 = UML_Method("md1")
+    md1 = UML_Method("md1", "string")
     md1.add_parameters("prm1")
     md1.add_parameters("prm2")
     md1.add_parameters("prm3")
