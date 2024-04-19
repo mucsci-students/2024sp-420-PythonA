@@ -20,6 +20,10 @@ def test_set_method_name():
     assert md1.get_method_name() != "method1"
     assert md1.get_method_name() == "method2"
 
+def test_get_return_type():
+    md1 = UML_Method("method1", "int")
+    assert md1.get_return_type() == "int"
+
 def test_method_equals():
     md1 = UML_Method("md1", "string")
     md2 = UML_Method("md2", "bool")
