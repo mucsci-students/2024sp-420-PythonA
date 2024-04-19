@@ -157,26 +157,26 @@ class Entity:
 
         new_method = UML_Method(method_name, return_type)
         self._methods.append(new_method)
-
-    def add_method_and_params(self, method_name: str, return_type: str, param_name: str):
-        """
-        Adds a method with specified parameters to the class.
-
-        Parameters:
-            method_name (str): The name of the method to add.
-        """
-
-        self.add_method(method_name, return_type)
-        self.get_method(method_name).add_parameters(param_name)
-
-    def edit_method(self, old_method: str, new_method: str, return_type: str, param_name: str):
-        deleted_method = self.get_method(old_method)
-        self.delete_method(old_method)
-        try:
-            self.add_method_and_params(new_method, return_type, param_name)
-        except Exception as e:
-            self._methods.append(deleted_method)
-            raise e
+    #
+    # def add_method_and_params(self, method_name: str, return_type: str, param_name: str):
+    #     """
+    #     Adds a method with specified parameters to the class.
+    #
+    #     Parameters:
+    #         method_name (str): The name of the method to add.
+    #     """
+    #
+    #     self.add_method(method_name, return_type)
+    #     self.get_method(method_name).add_parameters(param_name)
+    #
+    # def edit_method(self, old_method: str, new_method: str, return_type: str, param_name: str):
+    #     deleted_method = self.get_method(old_method)
+    #     self.delete_method(old_method)
+    #     try:
+    #         self.add_method_and_params(new_method, return_type, param_name)
+    #     except Exception as e:
+    #         self._methods.append(deleted_method)
+    #         raise e
 
     def delete_method(self, method_name: str):
         """
