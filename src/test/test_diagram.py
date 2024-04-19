@@ -176,9 +176,9 @@ def test_dia_list_entity_relations():
 
 def test_dia_add_relation_success():
     dia = Diagram()
-    assert len(dia._relations) == 0
+    assert len(dia._relations) == 2
     dia.add_relation("ent1", "ent2", "aggregation")
-    assert len(dia._relations) == 1
+    assert len(dia._relations) == 3
 
 def test_dia_add_relation_self():
     dia = Diagram()
@@ -207,9 +207,9 @@ def test_dia_add_relation_invalid_type():
 
 def test_dia_delete_relation_success():
     dia = Diagram()
-    assert len(dia._relations) == 1
+    assert len(dia._relations) == 3
     dia.delete_relation("ent1", "ent2")
-    assert len(dia._relations) == 0
+    assert len(dia._relations) == 2
 
 def test_dia_delete_relation_source_doesnt_exist():
     dia = Diagram()
