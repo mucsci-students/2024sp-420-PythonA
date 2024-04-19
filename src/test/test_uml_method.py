@@ -62,6 +62,11 @@ def test_add_one_remove_one_parameter():
     md1.remove_parameters("prm1")
     assert "prm1" not in md1._params
 
+def test_remove_parameter_doesnt_exist():
+    md1 = UML_Method("md1", "string")
+    with pytest.raises(CustomExceptions.ParameterNotFoundError):
+        md1.remove_parameters("string")
+
 def test_change_one_param():
     md1 = UML_Method("md1", "string")
     md1.add_parameters("prm1")
