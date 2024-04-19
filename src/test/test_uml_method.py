@@ -50,11 +50,10 @@ def test_add_parameter():
     assert "prm2" in md3._params
 
 def test_add_parameter_already_exists():
-    md1 = UML_Method("method1", "int")
-    assert "param1" not in md1._params
-    md1.add_parameters("param1")
+    md3 = UML_Method("md3", "int")
+    assert "prm1" in md3._params
     with pytest.raises(CustomExceptions.ParameterExistsError):
-        md1.add_parameters("param1")
+        md3.add_parameters("prm1")
 
 def test_add_one_remove_one_parameter():
     md1 = UML_Method("md1", "string")
