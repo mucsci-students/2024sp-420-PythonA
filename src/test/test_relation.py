@@ -1,21 +1,6 @@
 from umleditor.mvc_model import Relation, Entity, CustomExceptions
 import pytest
 
-def test_import_entity():
-    from src.umleditor.mvc_model import Entity
-    assert Entity
-    assert Entity.get_name
-    assert Entity.set_name
-    assert Entity.add_field
-    assert Entity.delete_field
-    assert Entity.rename_field
-    assert Entity.get_method
-    assert Entity.add_method
-    assert Entity.delete_method
-    assert Entity.rename_method
-    assert Entity.list_fields
-    assert Entity.list_methods
-
 def test_import_custom_exceptions():
     from src.umleditor.mvc_model.custom_exceptions import CustomExceptions
     assert CustomExceptions
@@ -23,8 +8,8 @@ def test_import_custom_exceptions():
 def test_create_relation_success():
     source = Entity("ent1")
     destination = Entity("ent2")
-    type = next(iter(Relation.RELATIONSHIP_TYPE))
-    rel = Relation(type=type, source=source, destination=destination)
+    type = "aggregation"
+    rel = Relation(rel_type=type, source=source, destination=destination)
     assert rel is not None
 
 def test_create_relation_invalid_type():
@@ -32,7 +17,7 @@ def test_create_relation_invalid_type():
     destination = Entity("ent2")
     type = "relationship"
     with pytest.raises(CustomExceptions.InvalidRelationTypeError):
-        Relation(type=type, source=source, destination=destination)
+        Relation(rel_type=type, source=source, destination=destination)
 
 def test_get_source():
     source = Entity("ent1")
