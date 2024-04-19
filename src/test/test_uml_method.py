@@ -120,5 +120,5 @@ def test_str():
     md1.add_parameters("parameter1")
     md1.add_parameters("parameter2")
     md1.add_parameters("parameter3")
-    result = "string"
+    result = "\nmd1\n\tReturn Type: string\n\tmd1's Params: parameter1, parameter2, parameter3\n"
     assert md1.__str__() == result
