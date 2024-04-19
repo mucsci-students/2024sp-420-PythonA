@@ -159,7 +159,7 @@ def test_dia_list_everything():
 
 def test_dia_list_entities():
     dia = Diagram()
-    result = "string"
+    result = "\nclass, ent, ent1, ent2, ent3, ent4, ent7, ent10, ent11"
     assert dia.list_entities() == result
 
 def test_dia_list_relations():
