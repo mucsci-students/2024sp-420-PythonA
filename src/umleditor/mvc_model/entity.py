@@ -329,7 +329,7 @@ class UML_Method:
         """
         for existing_param_name in self._params:
             if existing_param_name == param_name:
-                raise CustomExceptions.ParameterExistsError(param_name)
+                raise CustomExceptions.DuplicateParametersError(param_name)
 
     def add_parameters(self, param_name: str):
         """
