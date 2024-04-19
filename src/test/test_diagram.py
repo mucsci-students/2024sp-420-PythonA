@@ -166,7 +166,7 @@ def test_dia_list_relations():
     dia = Diagram()
     dia.add_relation("ent1", "ent2", "inheritance")
     dia.add_relation("ent3", "ent4", "realization")
-    result = "['ent1 -> inheritance -> ent2', 'ent3 -> realization -> ent4']"
+    result = ['ent1 -> inheritance -> ent2', 'ent3 -> realization -> ent4']
     assert dia.list_relations() == result
 
 def test_dia_list_entity_relations():
