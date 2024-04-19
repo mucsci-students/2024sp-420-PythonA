@@ -122,3 +122,50 @@ def test_str():
     md1.add_parameters("parameter3")
     result = "\nmd1\n\tReturn Type: string\n\tmd1's Params: parameter1, parameter2, parameter3\n"
     assert md1.__str__() == result
+
+def test_eq_success():
+    md1 = UML_Method("method1", "float")
+    md2 = UML_Method("method1", "float")
+    md1.add_parameters("parameter1")
+    md1.add_parameters("parameter2")
+    md2.add_parameters("parameter1")
+    md2.add_parameters("parameter2")
+    assert md1.__eq__(md2) is True
+    assert md2.__eq__(md1) is True
+
+def test_eq_not_a_method():
+    md1 = UML_Method("method1", "float")
+    md1.add_parameters("parameter1")
+    md1.add_parameters("parameter2")
+    assert md1.__eq__("method") is False
+
+def test_eq_names_not_equal():
+    md1 = UML_Method("method1", "float")
+    md2 = UML_Method("method2", "float")
+    md1.add_parameters("parameter1")
+    md1.add_parameters("parameter2")
+    md2.add_parameters("parameter1")
+    md2.add_parameters("parameter2")
+    assert md1.__eq__(md2) is False
+    assert md2.__eq__(md1) is False
+
+def test_eq_number_of_params_not_equal():
+    md1 = UML_Method("method1", "float")
+    md2 = UML_Method("method1", "float")
+    md1.add_parameters("parameter1")
+    md1.add_parameters("parameter2")
+    md2.add_parameters("parameter1")
+    md2.add_parameters("parameter2")
+    md2.add_parameters("parameter3")
+    assert md1.__eq__(md2) is False
+    assert md2.__eq__(md1) is False
+
+def test_eq_params_not_equal():
+    md1 = UML_Method("method1", "float")
+    md2 = UML_Method("method1", "float")
+    md1.add_parameters("parameter1")
+    md1.add_parameters("parameter2")
+    md2.add_parameters("parameter3")
+    md2.add_parameters("parameter4")
+    assert md1.__eq__(md2) is False
+    assert md2.__eq__(md1) is False
