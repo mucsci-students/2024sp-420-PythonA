@@ -172,7 +172,7 @@ def test_dia_list_relations():
 def test_dia_list_entity_relations():
     dia = Diagram()
     result = "string"
-    assert dia.list_entity_relations() == result
+    assert dia.list_entity_relations("ent1") == result
 
 def test_dia_add_relation_success():
     dia = Diagram()
