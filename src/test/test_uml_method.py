@@ -114,3 +114,11 @@ def test_change_multiple_params():
     assert "prm6" in md1._params
     assert "prm7" in md1._params
     assert "prm8" in md1._params
+
+def test_str():
+    md1 = UML_Method("md1", "string")
+    md1.add_parameters("parameter1")
+    md1.add_parameters("parameter2")
+    md1.add_parameters("parameter3")
+    result = "string"
+    assert md1.__str__() == result
