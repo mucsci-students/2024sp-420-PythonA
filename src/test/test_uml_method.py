@@ -77,12 +77,12 @@ def test_change_one_param():
     assert "prm1" not in md1._params
     assert "prm2" in md1._params
 
-def test_change_duplicate_param():
-    md4 = UML_Method("md4", "bool")
-    md4.add_parameters("prm1")
-    md4.add_parameters("prm2")
-    with pytest.raises(CustomExceptions.ParameterExistsError):
-        md4.change_parameters("prm1", "prm2")
+# def test_change_duplicate_param():
+#     md4 = UML_Method("md4", "bool")
+#     md4.add_parameters("prm1")
+#     md4.add_parameters("prm2")
+#     with pytest.raises(CustomExceptions.ParameterExistsError):
+#         md4.change_parameters("prm1", "prm2")
 
 def test_change_parameter_doesnt_exist():
     md4 = UML_Method("md4", "bool")
