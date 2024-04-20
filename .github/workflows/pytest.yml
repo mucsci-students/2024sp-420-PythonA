@@ -46,7 +46,7 @@ jobs:
       - name: Get Current and Previous Code Coverage
         run: |
           pytest --cov=src/umleditor/mvc_models --cov-report xml:current_coverage.xml
-          git checkout HEAD^
+          git revert HEAD
           pytest --cov=src/umleditor/mvc_models --cov-report xml:previous_coverage.xml
           git checkout -
       - name: Compare Code Coverage
@@ -81,7 +81,7 @@ jobs:
       - name: Get Current and Previous Code Coverage
         run: |
           pytest --cov=src/umleditor/mvc_models --cov-report xml:current_coverage.xml
-          git checkout HEAD^
+          git revert HEAD
           pytest --cov=src/umleditor/mvc_models --cov-report xml:previous_coverage.xml
           git checkout -
       - name: Compare Code Coverage
