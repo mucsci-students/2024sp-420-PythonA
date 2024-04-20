@@ -48,7 +48,7 @@ jobs:
           pytest --cov=src/umleditor/mvc_models --cov-report xml:current_coverage.xml
           git reset HEAD
           pytest --cov=src/umleditor/mvc_models --cov-report xml:previous_coverage.xml
-          git checkout -
+          git reset HEAD@{1}
       - name: Compare Code Coverage
         run: |
           current_coverage=$(xml sel -t -v "/coverage/@line-rate" current_coverage.xml)
@@ -83,7 +83,7 @@ jobs:
           pytest --cov=src/umleditor/mvc_models --cov-report xml:current_coverage.xml
           git reset HEAD
           pytest --cov=src/umleditor/mvc_models --cov-report xml:previous_coverage.xml
-          git checkout -
+          git reset HEAD@{1}
       - name: Compare Code Coverage
         run: |
           current_coverage=$(xml sel -t -v "/coverage/@line-rate" current_coverage.xml)
