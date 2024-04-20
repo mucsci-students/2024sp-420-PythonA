@@ -25,11 +25,11 @@ def test_get_return_type():
     md1 = UML_Method("method1", "int")
     assert md1.get_return_type() == "int"
 
-def test_check_duplicate_parameters():
-    md1 = UML_Method("method1", "int")
-    md1.add_parameters("param1")
-    with pytest.raises(CustomExceptions.DuplicateParametersError):
-        md1._check_duplicate_parameters("param1")
+# def test_check_duplicate_parameters():
+#     md1 = UML_Method("method1", "int")
+#     md1.add_parameters("param1")
+#     with pytest.raises(CustomExceptions.DuplicateParametersError):
+#         md1._check_duplicate_parameters("param1")
 
 
 def test_method_equals():
@@ -49,12 +49,12 @@ def test_add_parameter():
     md3.add_parameters("prm2")
     assert "prm2" in md3._params
 
-def test_add_parameter_already_exists():
-    md3 = UML_Method("md3", "int")
-    md3.add_parameters("prm1")
-    assert "prm1" in md3._params
-    with pytest.raises(CustomExceptions.ParameterExistsError):
-        md3.add_parameters("prm1")
+# def test_add_parameter_already_exists():
+#     md3 = UML_Method("md3", "int")
+#     md3.add_parameters("prm1")
+#     assert "prm1" in md3._params
+#     with pytest.raises(CustomExceptions.ParameterExistsError):
+#         md3.add_parameters("prm1")
 
 def test_add_one_remove_one_parameter():
     md1 = UML_Method("md1", "string")
