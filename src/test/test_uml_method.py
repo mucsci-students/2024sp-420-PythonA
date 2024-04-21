@@ -28,7 +28,7 @@ def test_get_return_type():
 def test_check_duplicate_parameters():
     md1 = UML_Method("method1", "int")
     md1.add_parameters("param1")
-    with pytest.raises(CustomExceptions.DuplicateParametersError):
+    with pytest.raises(CustomExceptions.ParameterExistsError):
         md1._check_duplicate_parameters("param1")
 
 
