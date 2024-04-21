@@ -3,7 +3,7 @@ from PyQt6.QtCore import pyqtSignal, Qt, QPoint, QUrl
 from PyQt6.QtWidgets import (QDialog, QMainWindow, QWidget, QVBoxLayout, QPushButton, QApplication, QGridLayout,
                              QMessageBox, QHBoxLayout, QRadioButton, QDialogButtonBox, QListWidget, QLabel, QFrame,
                              QFileDialog)
-from PyQt6.QtGui import QAction, QPainter, QPen, QColor,QDesktopServices
+from PyQt6.QtGui import QAction, QPainter, QPen, QColor, QDesktopServices, QPixmap
 
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.newClassDialog import NewClassDialog
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.deleteClassDialog import DeleteClassDialog
@@ -222,6 +222,10 @@ class GUIV2(QMainWindow):
         btnSave.clicked.connect(self.saveFile)
         layout.addWidget(btnSave)
 
+        btnExportAsImg = QPushButton("Export as Image")
+        btnExportAsImg.clicked.connect(self.exportDiagram)
+        layout.addWidget(btnExportAsImg)
+
         # btnRedraw = QPushButton("Redraw")
         # btnRedraw.clicked.connect(self.redrawDiagram)
         # layout.addWidget(btnRedraw)
@@ -237,8 +241,7 @@ class GUIV2(QMainWindow):
             
             self._process_task_signal.emit(f'load {save_name}', self)
             self.refreshGUI()
-        
-        
+
     def newFile(self):
         # Logic to reset the application state for a new file
         print("Creating a new file...")
@@ -250,6 +253,13 @@ class GUIV2(QMainWindow):
             save_name = dialog.getFilename()
             
             self._process_task_signal.emit(f'save {save_name}', self)
+
+    def exportDiagram(self):
+        # Open a file dialog to select the path for saving the PNG
+        filePath, _ = QFileDialog.getSaveFileName(self, "Save Diagram", "", "PNG Files (*.png)")
+        if filePath:
+            self.diagramArea.exportAsImage(filePath)
+            QMessageBox.information(self, "Export", "Diagram exported successfully as PNG.")
 
     def editAction(self):
         dialog = QDialog(self)
@@ -834,6 +844,8 @@ class GUIV2(QMainWindow):
     def clearGUI(self):
             self.diagramArea.clearAll() 
             self.lstRelationships.clear()
+
+
              
     def refreshGUI(self):
         """Refreshes the entire GUI to reflect the current state."""
@@ -870,8 +882,7 @@ class GUIV2(QMainWindow):
                 
                 self.statusBar().showMessage("GUI Refreshed")
    
-        
-            
+
 class DiagramArea(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
