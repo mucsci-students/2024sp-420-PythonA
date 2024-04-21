@@ -24,6 +24,7 @@ class ClassCard (QWidget):
             name (str): The name of the class.
         """
         super().__init__()
+        self._list_relation = QListWidget()
         self._name = name
         self._size = 9
 
@@ -268,4 +269,41 @@ class ClassCard (QWidget):
     def centerPos(self):
          return self.geometry().center()
      
+    def add_relation(self, relation):
+        """
+        Adds a relation.
+        """
+        list = self._list_relation
+
+        # Create field and add to list
+        item = QListWidgetItem()
+        list.addItem(item)  
+        text = QLineEdit()
+        text.setText(relation)
+        text.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+
+        # Pass the QLineEdit instance 
+        text.customContextMenuRequested.connect(lambda pos: self.show_row_menu(pos, text))
+
+        # lambda ensures text is only evaluated on enter
+        text.returnPressed.connect(lambda: self.verify_input(text.text(), list))
+
+        # Formatting / Style
+        list.setItemWidget(item, text)
+        text.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        text.setReadOnly(True)
+
+    def remove_relation(self, relation_to_remove):
+        """
+        Removes a relation based on the provided relation string.
+        """
+        list_widget = self._list_relation
+
+        for index in range(list_widget.count()):
+            item_widget = list_widget.itemWidget(list_widget.item(index))
+            if item_widget and item_widget.text() == relation_to_remove:
+                # Take the item out of the list, which effectively removes it
+                list_widget.takeItem(index)
+                break  # Exit the loop after finding and removing the relation
        
