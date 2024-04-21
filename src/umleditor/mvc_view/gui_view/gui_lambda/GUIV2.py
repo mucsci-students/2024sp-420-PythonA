@@ -214,9 +214,9 @@ class GUIV2(QMainWindow):
         btnOpen.clicked.connect(self.openFile)
         layout.addWidget(btnOpen)
 
-        # btnNew = QPushButton("New File")
-        # btnNew.clicked.connect(self.newFile)
-        # layout.addWidget(btnNew)
+        btnNew = QPushButton("New File")
+        btnNew.clicked.connect(self.newFile)
+        layout.addWidget(btnNew)
 
         btnSave = QPushButton("Save")
         btnSave.clicked.connect(self.saveFile)
@@ -227,6 +227,11 @@ class GUIV2(QMainWindow):
         layout.addWidget(btnExportAsImg)
         
         
+
+        # btnRedraw = QPushButton("Redraw")
+        # btnRedraw.clicked.connect(self.redrawDiagram)
+        # layout.addWidget(btnRedraw)
+
         dialog.setLayout(layout)
         dialog.exec()
     ### FILE ACTION STUBS
@@ -237,9 +242,14 @@ class GUIV2(QMainWindow):
             save_name = dialog.getFilename()
             
             self._process_task_signal.emit(f'load {save_name}', self)
-            
             self.refreshGUI()
         
+        
+    def newFile(self):
+        # Logic to reset the application state for a new file
+        print("Creating a new file...")
+        # Example: Clearing the UI, resetting data models, etc.
+
     def saveFile(self):
         dialog = SaveDialog(self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
@@ -354,10 +364,9 @@ class GUIV2(QMainWindow):
         dialog = NewClassDialog(self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
             class_name = dialog.getClassname()
-            self._process_task_signal.emit('class -a ' + class_name, self)
-            entity = self._diagram.get_entity(class_name)
-            classCard = ClassCard(class_name, entity)
+            classCard = ClassCard(class_name)
             self.diagramArea.addClassCard(classCard, class_name)
+            self._process_task_signal.emit('class -a ' + class_name, self)
         
     def deleteClassAction(self): 
         class_names = [entity._name for entity in self._diagram._entities]
@@ -378,7 +387,7 @@ class GUIV2(QMainWindow):
             self.diagramArea.renameClassCard(selected_class_name, new_class_name)
         else:
             QMessageBox.warning(self, "Rename Class", "Invalid new class name or name already exists.")
-    
+         
     def attributesAction(self):
         dialog = QDialog(self)
         dialog.setWindowTitle("Attributes and Methods")
@@ -825,11 +834,6 @@ class GUIV2(QMainWindow):
             name = class_name.get_name()
             classCard = ClassCard(name)
             self.diagramArea.addClassCard(classCard, name)
-            if hasattr(class_name, '_location'):
-                classCard.move(QPoint(class_name._location[0], class_name._location[1]))
-            else:
-                # Default position if no location data is available
-                classCard.move(QPoint(10, 10))
             for field in class_name._fields:
                 field_name, field_type_gen, *rest = field
                 field_type = str(field_type_gen).split("'")[1]  
