@@ -618,7 +618,7 @@ class GUIV2(QMainWindow):
             relationship_str = f"{src_class} -> {dest_class}"
             
         self.refreshRelationshipsList()
-        self.diagramArea.addRelationship(src_class, dest_class)
+        self.diagramArea.addRelationship(src_class, dest_class, relationship_type)
         
 
     def removeRelationshipAction(self):
@@ -841,11 +841,11 @@ class GUIV2(QMainWindow):
                 classCard.add_method(method_str)
                 
         for relation in self._diagram._relations:
-            src_class, _, dest_class = str(relation).split(" -> ")
+            src_class, type, dest_class = str(relation).split(" -> ")
             relationship_str = f"{src_class} -> {dest_class}"
             
             self.refreshRelationshipsList()
-            self.diagramArea.addRelationship(src_class, dest_class)
+            self.diagramArea.addRelationship(src_class, dest_class, type)
             # Updating ClassCard objects with relations
             for classCard in self.diagramArea.findChildren(ClassCard):
                 if classCard._name == src_class or classCard._name == dest_class:
