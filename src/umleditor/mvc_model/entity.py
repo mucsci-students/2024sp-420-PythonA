@@ -325,11 +325,11 @@ class UML_Method:
            param_name: The list of new parameters to be checked.
 
         Raises:
-            CustomExceptions.DuplicateParametersError: If any of the parameter occurs more than once.
+            CustomExceptions.ParameterExistsError: If any of the parameter occurs more than once.
         """
         for existing_param_name in self._params:
             if existing_param_name == param_name:
-                raise CustomExceptions.DuplicateParametersError(param_name)
+                raise CustomExceptions.ParameterExistsError(param_name)
 
     def add_parameters(self, param_name: str):
         """
@@ -342,6 +342,7 @@ class UML_Method:
             CustomExceptions.ParameterExistsError: If any of the parameter already exists in the method.
 
         Returns:
+            None.
             None.
         """
         if self._check_duplicate_parameters(param_name):
