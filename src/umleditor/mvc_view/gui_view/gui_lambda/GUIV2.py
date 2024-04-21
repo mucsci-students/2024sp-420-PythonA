@@ -4,10 +4,10 @@ from PyQt6.QtWidgets import (QDialog, QMainWindow, QWidget, QVBoxLayout, QPushBu
                              QMessageBox, QHBoxLayout, QRadioButton, QDialogButtonBox, QListWidget, QLabel, QFrame,
                              QFileDialog)
 from PyQt6.QtGui import QAction, QPainter, QPen, QColor,QDesktopServices
-
+from umleditor.mvc_view.gui_view.gui_lambda.diagram_area import DiagramArea
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.newClassDialog import NewClassDialog
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.deleteClassDialog import DeleteClassDialog
-from umleditor.mvc_view.gui_view.gui_lambda.GUIV2_class_card import ClassCard
+from umleditor.mvc_view.gui_view.gui_lambda.class_card_revamp import ClassCard
 from umleditor.mvc_view.gui_view.gui_cworld.class_input_dialog import CustomInputDialog
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.addMethodDialog import AddMethodDialog
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.changeParams import ChangeParamsDialog
@@ -221,6 +221,12 @@ class GUIV2(QMainWindow):
         btnSave = QPushButton("Save")
         btnSave.clicked.connect(self.saveFile)
         layout.addWidget(btnSave)
+        
+        btnExportAsImg = QPushButton("Export as Image")
+        btnExportAsImg.clicked.connect(self.exportDiagram)
+        layout.addWidget(btnExportAsImg)
+        
+        
 
         # btnRedraw = QPushButton("Redraw")
         # btnRedraw.clicked.connect(self.redrawDiagram)
@@ -250,6 +256,13 @@ class GUIV2(QMainWindow):
             save_name = dialog.getFilename()
             
             self._process_task_signal.emit(f'save {save_name}', self)
+            
+    def exportDiagram(self):
+        # Open a file dialog to select the path for saving the PNG
+        filePath, _ = QFileDialog.getSaveFileName(self, "Save Diagram", "", "PNG Files (*.png)")
+        if filePath:
+            self.diagramArea.exportAsImage(filePath)
+            QMessageBox.information(self, "Export", "Diagram exported successfully as PNG.")
 
     def editAction(self):
         dialog = QDialog(self)
@@ -613,17 +626,6 @@ class GUIV2(QMainWindow):
             self._process_task_signal.emit (f'rel -a {src_class} {dest_class} {relationship_type}', self)
             relationship_str = f"{src_class} -> {dest_class}"
             
-            for classCard in self.diagramArea.findChildren(ClassCard):
-                if classCard._name == src_class:
-                    
-                    classCard.add_relation(relationship_str)
-                    break
-            for classCard in self.diagramArea.findChildren(ClassCard):
-                if classCard._name == dest_class:
-                    
-                    classCard.add_relation(relationship_str)
-                    break
-                
         self.refreshRelationshipsList()
         self.diagramArea.addRelationship(src_class, dest_class)
         
@@ -644,16 +646,6 @@ class GUIV2(QMainWindow):
             
             relationship_str = f"{src_class} -> {dest_class}"
             
-            for classCard in self.diagramArea.findChildren(ClassCard):
-                if classCard._name == src_class:
-                    
-                    classCard.remove_relation(relationship_str)
-                    break
-            for classCard in self.diagramArea.findChildren(ClassCard):
-                if classCard._name == dest_class:
-                    
-                    classCard.remove_relation(relationship_str)
-                    break
                 
         self.diagramArea.removeRelationship(src_class, dest_class)
 
@@ -870,68 +862,6 @@ class GUIV2(QMainWindow):
                 
                 self.statusBar().showMessage("GUI Refreshed")
    
-        
-            
-class DiagramArea(QWidget):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.initUI()
-        self.classCards = {}  # Dictionary to track class cards
-        self.lastCardPosition = QPoint(10, 10)  # Initial position for the first card
-        self.offsetIncrement = QPoint(15, 15)  # Offset for the next card position
-        self.relationships = []
-
-    def initUI(self):
-        self.setFixedSize(650, 850)  # Adjust size as necessary
-        self.setStyleSheet("background-color: white;")
-
-    def addClassCard(self, classCard, className):
-        classCard.setParent(self)
-        classCard.move(self.lastCardPosition)
-        classCard.show()
-        self.lastCardPosition += self.offsetIncrement
-        if self.lastCardPosition.x() > self.width() - 100 or self.lastCardPosition.y() > self.height() - 100:
-            self.lastCardPosition = QPoint(10, 10)
-        self.classCards[className] = classCard  # Store the class card with its name as the key
-        classCard.cardMoved.connect(self.update)
-
-    def removeClassCard(self, className):
-        if className in self.classCards:
-            classCard = self.classCards.pop(className)  
-            classCard.deleteLater() 
-            
-    def renameClassCard(self, old_name, new_name):
-    # Find the class card widget with the old_name
-        for classCard in self.findChildren(ClassCard):
-            if classCard._name == old_name:
-                classCard.set_name(new_name)
-                
-    def clearAll(self):
-        """Clears all visual elements from the diagram area."""
-        for classCard in self.findChildren(ClassCard):
-            classCard.deleteLater()  # Removes the widget and schedules it for deletion
-        self.classCards.clear()  # Clear the tracking dictionary
-        self.relationships.clear()  # Clear any stored relationships
-        self.update()  # Redraw the area
-                
-    def paintEvent(self, event):
-        super().paintEvent(event)
-        painter = QPainter(self)
-        # Set the pen with the correct QColor usage
-        painter.setPen(QPen(QColor('black'), 2)) 
-        for src, dest in self.relationships:
-            if src in self.classCards and dest in self.classCards:
-                src_pos = self.classCards[src].centerPos()
-                dest_pos = self.classCards[dest].centerPos()
-                painter.drawLine(src_pos, dest_pos)
-
-    def addRelationship(self, src_class_name, dest_class_name):
-        self.relationships.append((src_class_name, dest_class_name))
-        self.update()  # Request a repaint to draw the new line
-        
-    def removeRelationship(self, src_class_name, dest_class_name):
-        self.relationships.remove((src_class_name, dest_class_name))
-        self.update()  # Request a repaint to draw the new line
         
 if __name__ == "__main__":
     app = QApplication([])
