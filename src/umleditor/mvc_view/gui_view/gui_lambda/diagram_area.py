@@ -21,13 +21,13 @@ class DiagramArea(QWidget):
 
     def addClassCard(self, classCard, className):
         classCard.setParent(self)
-        classCard.move(self.lastCardPosition)
         classCard.show()
-        self.lastCardPosition += self.offsetIncrement
-        if self.lastCardPosition.x() > self.width() - 100 or self.lastCardPosition.y() > self.height() - 100:
-            self.lastCardPosition = QPoint(10, 10)
-        self.classCards[className] = classCard  # Store the class card with its name as the key
-        classCard.cardMoved.connect(self.update)
+        classCard.cardMoved.connect(lambda: self.updateEntityPosition(classCard))
+
+        self.classCards[className] = classCard  
+        
+        if classCard._entity and hasattr(classCard._entity, '_location') and classCard._entity._location:
+            classCard.move(classCard._entity._location[0], classCard._entity._location[1])
 
     def removeClassCard(self, className):
         if className in self.classCards:
@@ -38,7 +38,14 @@ class DiagramArea(QWidget):
         for classCard in self.findChildren(ClassCard):
             if classCard._name == old_name:
                 classCard.set_name(new_name)
-                
+    
+    def updateEntityPosition(self, classCard):
+        if classCard._entity:
+            # Get the new position from the ClassCard
+            newPosition = classCard.pos()
+            # Update the entity's location
+            classCard._entity._location = [newPosition.x(), newPosition.y()]
+            
     def clearAll(self):
         """Clears all visual elements from the diagram area."""
         for classCard in self.findChildren(ClassCard):
