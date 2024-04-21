@@ -18,14 +18,17 @@ class DiagramArea(QWidget):
         self.setStyleSheet("background-color: white;")
 
     def addClassCard(self, classCard, className):
+    # Ensure classCard has a non-None entity and the entity has a defined location
+        # if classCard._entity and hasattr(classCard._entity, '_location') and classCard._entity._location:
+        #     classCard.move(classCard._entity._location[0], classCard._entity._location[1])
+        # else:
+        #     # Provide a default location if no location data is available
+        #     classCard.move(10, 10)
         classCard.setParent(self)
-        classCard.move(self.lastCardPosition)
         classCard.show()
-        self.lastCardPosition += self.offsetIncrement
-        if self.lastCardPosition.x() > self.width() - 100 or self.lastCardPosition.y() > self.height() - 100:
-            self.lastCardPosition = QPoint(10, 10)
+        classCard.cardMoved.connect(lambda: self.updateEntityPosition(classCard))
+
         self.classCards[className] = classCard  # Store the class card with its name as the key
-        classCard.cardMoved.connect(self.update)
 
     def removeClassCard(self, className):
         if className in self.classCards:
@@ -36,7 +39,13 @@ class DiagramArea(QWidget):
         for classCard in self.findChildren(ClassCard):
             if classCard._name == old_name:
                 classCard.set_name(new_name)
-                
+    
+    def updateEntityPosition(self,  classCard):
+        if classCard._entity:
+            newPosition = classCard.pos()
+            # Update the entity's location based on classCard's current position
+            classCard._entity._location = [newPosition.x(), newPosition.y()]
+            
     def clearAll(self):
         """Clears all visual elements from the diagram area."""
         for classCard in self.findChildren(ClassCard):

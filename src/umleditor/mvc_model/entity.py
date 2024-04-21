@@ -18,6 +18,7 @@ class Entity:
         self.allowed_types = ["string", "int", "bool", "float"]
         self._methods = []
         self.allowed_return_types = ["void", "string", "int", "bool", "float"]
+        self._location = [0,0]
 
     def get_name(self):
         """
