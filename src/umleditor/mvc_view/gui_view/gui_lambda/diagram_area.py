@@ -2,7 +2,7 @@ from PyQt6.QtCore import pyqtSignal, Qt, QPoint, QUrl
 from PyQt6.QtWidgets import (QDialog, QMainWindow, QWidget, QVBoxLayout, QPushButton, QApplication, QGridLayout,
                              QMessageBox, QHBoxLayout, QRadioButton, QDialogButtonBox, QListWidget, QLabel, QFrame,
                              QFileDialog)
-from PyQt6.QtGui import QAction, QPainter, QPen, QColor,QDesktopServices
+from PyQt6.QtGui import QAction, QPainter, QPen, QColor,QDesktopServices, QPixmap
 from umleditor.mvc_view.gui_view.gui_lambda.class_card_revamp import ClassCard
 
 class DiagramArea(QWidget):
@@ -15,7 +15,6 @@ class DiagramArea(QWidget):
         self.relationships = []
 
     def initUI(self):
-        self.setFixedSize(650, 850)  # Adjust size as necessary
         self.setStyleSheet("background-color: white;")
 
     def addClassCard(self, classCard, className):
@@ -64,3 +63,16 @@ class DiagramArea(QWidget):
     def removeRelationship(self, src_class_name, dest_class_name):
         self.relationships.remove((src_class_name, dest_class_name))
         self.update()  # Request a repaint to draw the new line
+        
+    def exportAsImage(self, filePath):
+        # Create a QPixmap object with the same dimensions as the DiagramArea
+        pixmap = QPixmap(self.size())
+        pixmap.fill(Qt.GlobalColor.white)  # Fill the pixmap with white background
+
+        # Create a QPainter to draw on the pixmap
+        painter = QPainter(pixmap)
+        self.render(painter)  # This draws the entire content of the DiagramArea onto the pixmap
+        painter.end()
+
+        # Save the pixmap as a PNG file
+        pixmap.save(filePath, "PNG")

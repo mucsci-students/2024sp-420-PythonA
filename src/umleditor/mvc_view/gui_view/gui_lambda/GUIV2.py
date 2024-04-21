@@ -221,6 +221,12 @@ class GUIV2(QMainWindow):
         btnSave = QPushButton("Save")
         btnSave.clicked.connect(self.saveFile)
         layout.addWidget(btnSave)
+        
+        btnExportAsImg = QPushButton("Export as Image")
+        btnExportAsImg.clicked.connect(self.exportDiagram)
+        layout.addWidget(btnExportAsImg)
+        
+        
 
         # btnRedraw = QPushButton("Redraw")
         # btnRedraw.clicked.connect(self.redrawDiagram)
@@ -250,6 +256,13 @@ class GUIV2(QMainWindow):
             save_name = dialog.getFilename()
             
             self._process_task_signal.emit(f'save {save_name}', self)
+            
+    def exportDiagram(self):
+        # Open a file dialog to select the path for saving the PNG
+        filePath, _ = QFileDialog.getSaveFileName(self, "Save Diagram", "", "PNG Files (*.png)")
+        if filePath:
+            self.diagramArea.exportAsImage(filePath)
+            QMessageBox.information(self, "Export", "Diagram exported successfully as PNG.")
 
     def editAction(self):
         dialog = QDialog(self)
