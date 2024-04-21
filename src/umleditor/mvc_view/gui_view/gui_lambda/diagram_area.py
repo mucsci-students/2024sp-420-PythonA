@@ -54,28 +54,61 @@ class DiagramArea(QWidget):
 
         for src, dest, rel_type in self.relationships:
             if src in self.classCards and dest in self.classCards:
-                src_pos = self.classCards[src].centerPos()
-                dest_pos = self.classCards[dest].centerPos()
+                src_rect = self.classCards[src].rect().translated(self.classCards[src].pos())
+                dest_rect = self.classCards[dest].rect().translated(self.classCards[dest].pos())
 
-                # Set styles based on relationship type
+                src_pos = self.calculateNearestPoint(dest_rect.center(), src_rect)
+                dest_pos = self.calculateNearestPoint(src_rect.center(), dest_rect)
+
+                # Set styles based on relationship type and draw lines and arrows
                 if rel_type == 'realization':
-                    painter.setPen(QPen(QColor('black'), 2, Qt.PenStyle.SolidLine))
+                    self.drawRealization(painter, src_pos, dest_pos)
                 elif rel_type == 'aggregation':
-                    painter.setPen(QPen(QColor('blue'), 2, Qt.PenStyle.DashLine))
-                    self.drawArrow(painter, src_pos, dest_pos, QColor('blue'))
+                    self.drawAggregation(painter, src_pos, dest_pos)
                 elif rel_type == 'composition':
-                    painter.setPen(QPen(QColor('green'), 3, Qt.PenStyle.DashDotLine))
-                    self.drawArrow(painter, src_pos, dest_pos, QColor('green'))
+                    self.drawComposition(painter, src_pos, dest_pos)
                 elif rel_type == 'inheritance':
-                    painter.setPen(QPen(QColor('red'), 2, Qt.PenStyle.DotLine))
-                    self.drawArrow(painter, src_pos, dest_pos, QColor('red'))
+                    self.drawInheritance(painter, src_pos, dest_pos)
 
-                painter.drawLine(src_pos, dest_pos)
+    def drawRealization(self, painter, src_pos, dest_pos):
+        painter.setPen(QPen(QColor('black'), 2, Qt.PenStyle.DashLine))
+        painter.drawLine(src_pos, dest_pos)
+        self.drawArrow(painter, src_pos, dest_pos, QColor('black'), fill=False)
 
-    def drawArrow(self, painter, src_pos, dest_pos, color):
-        # Arrowhead drawing
-        arrow_size = 10
+    def drawAggregation(self, painter, src_pos, dest_pos):
+        painter.setPen(QPen(QColor('blue'), 2))
+        painter.drawLine(src_pos, dest_pos)
+        self.drawDiamond(painter, src_pos, dest_pos, QColor('white'))
+
+
+    def drawComposition(self, painter, src_pos, dest_pos):
+        painter.setPen(QPen(QColor('green'), 3))
+        self.drawDiamond(painter, src_pos, dest_pos, QColor('green'))
+        painter.drawLine(src_pos, dest_pos)
+
+    def drawInheritance(self, painter, src_pos, dest_pos):
+        painter.setPen(QPen(QColor('red'), 2))
+        painter.drawLine(src_pos, dest_pos)
+        self.drawArrow(painter, src_pos, dest_pos, QColor('red'), fill=True)
+
+    def drawDiamond(self, painter, src_pos, dest_pos, color):
+        diamond_size = 10
         painter.setBrush(color)
+        offset_pos = self.calculateOffsetPoint(src_pos, dest_pos, diamond_size)
+
+        points = [
+            offset_pos + QPoint(0, -diamond_size),
+            offset_pos + QPoint(diamond_size, 0),
+            offset_pos + QPoint(0, diamond_size),
+            offset_pos + QPoint(-diamond_size, 0)
+        ]
+        diamond = QPolygon(points)
+        painter.drawPolygon(diamond)
+
+    def drawArrow(self, painter, src_pos, dest_pos, color, fill):
+        arrow_size = 10
+        painter.setPen(QPen(color, 2))
+        painter.setBrush(QColor('black') if fill else Qt.GlobalColor.transparent)
 
         angle = math.atan2(-(dest_pos.y() - src_pos.y()), dest_pos.x() - src_pos.x())
         arrow_p1 = dest_pos + QPoint(math.sin(angle - math.pi / 3) * arrow_size,
@@ -85,6 +118,23 @@ class DiagramArea(QWidget):
 
         arrow_head = QPolygon([dest_pos, arrow_p1, arrow_p2])
         painter.drawPolygon(arrow_head)
+
+    def calculateNearestPoint(self, target, rect):
+        points = [
+            QPoint(rect.left(), rect.top() + rect.height() / 2),  # Left edge
+            QPoint(rect.right(), rect.top() + rect.height() / 2),  # Right edge
+            QPoint(rect.left() + rect.width() / 2, rect.top()),    # Top edge
+            QPoint(rect.left() + rect.width() / 2, rect.bottom())  # Bottom edge
+        ]
+        # Find the point with minimum distance to target
+        nearest_point = min(points, key=lambda point: (point.x() - target.x())**2 + (point.y() - target.y())**2)
+        return nearest_point
+
+    def calculateOffsetPoint(self, src_pos, dest_pos, distance):
+        angle = math.atan2(dest_pos.y() - src_pos.y(), dest_pos.x() - src_pos.x())
+        return src_pos + QPoint(math.cos(angle) * distance, math.sin(angle) * distance)
+
+
 
     def addRelationship(self, src_class_name, dest_class_name, rel_type):
         self.relationships.append((src_class_name, dest_class_name, rel_type))
