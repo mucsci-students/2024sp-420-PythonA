@@ -829,7 +829,7 @@ class GUIV2(QMainWindow):
         self.clearGUI()
         for class_name in self._diagram._entities:
             name = class_name.get_name()
-            classCard = ClassCard(name)
+            classCard = ClassCard(name, class_name)
             self.diagramArea.addClassCard(classCard, name)
             if hasattr(class_name, '_location'):
                 classCard.move(QPoint(class_name._location[0], class_name._location[1]))
