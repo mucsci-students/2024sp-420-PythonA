@@ -18,6 +18,7 @@ class Entity:
         self.allowed_types = ["string", "int", "bool", "float"]
         self._methods = []
         self.allowed_return_types = ["void", "string", "int", "bool", "float"]
+        self._location = [0,0]
 
     def get_name(self):
         """
@@ -85,15 +86,13 @@ class Entity:
         if not field_found:
             raise CustomExceptions.FieldNotFoundError(field_name)
 
-    def rename_field(self, old_field: str, old_type: str, new_field: str, new_type: str):
+    def rename_field(self, old_field: str, new_field: str):
         """
         Renames a field from its old name to a new name
 
         Args:
             old_field(str): The current name of the field.
-            old_type(str): The current type of the field.
             new_field (str): The new name for the field.
-            new_type (str): The new type for the field.
 
         Raises:
             CustomExceptions.FieldNotFoundError: If the old field does
@@ -110,8 +109,8 @@ class Entity:
 
         field_found = False
         for index, (field_name, field_type) in enumerate(self._fields):
-            if field_name == old_field and field_type == old_type:
-                self._fields[index] = (new_field, new_type)
+            if field_name == old_field:
+                self._fields[index] = (new_field, field_type)
                 field_found = True
                 break
 

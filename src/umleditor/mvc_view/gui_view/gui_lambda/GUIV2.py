@@ -35,6 +35,7 @@ class GUIV2(QMainWindow):
         self.initUI()
         self.applyDarkTheme()
         self.currentFilePath = " "
+        self.classes_methods_params = []
         
     def get_signal(self):
         return self._process_task_signal
@@ -214,10 +215,6 @@ class GUIV2(QMainWindow):
         btnOpen.clicked.connect(self.openFile)
         layout.addWidget(btnOpen)
 
-        btnNew = QPushButton("New File")
-        btnNew.clicked.connect(self.newFile)
-        layout.addWidget(btnNew)
-
         btnSave = QPushButton("Save")
         btnSave.clicked.connect(self.saveFile)
         layout.addWidget(btnSave)
@@ -364,9 +361,10 @@ class GUIV2(QMainWindow):
         dialog = NewClassDialog(self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
             class_name = dialog.getClassname()
-            classCard = ClassCard(class_name)
-            self.diagramArea.addClassCard(classCard, class_name)
             self._process_task_signal.emit('class -a ' + class_name, self)
+            entity = self._diagram.get_entity(class_name)
+            classCard = ClassCard(class_name, entity)
+            self.diagramArea.addClassCard(classCard, class_name)
         
     def deleteClassAction(self): 
         class_names = [entity._name for entity in self._diagram._entities]
@@ -463,7 +461,7 @@ class GUIV2(QMainWindow):
 
         dialog = AddMethodDialog(class_names, return_types, self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
-            class_name, method_name, params, return_type = dialog.getMethodInfo()
+            class_name, method_name, return_type = dialog.getMethodInfo()
             
             if method_name:  # Basic validation
                 self._process_task_signal.emit(f'mthd -a {class_name} {method_name} {return_type}', self)
@@ -515,7 +513,25 @@ class GUIV2(QMainWindow):
     def changeMethodParamsAction(self):
         dialog = ChangeParamsDialog(self.classes_methods_params, self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
-            className, methodName, newParams, paramsToRemove = dialog.getChanges()
+            class_name, method_name, newParams, toRemove = dialog.getChanges()
+            newParams = newParams.split(',')
+            toRemove = toRemove.split(',')            
+            for param in newParams:
+                if newParams:
+                    self._process_task_signal.emit(f'prm -a {class_name} {method_name} {param}', self)
+                    for classCard in self.diagramArea.findChildren(ClassCard):
+                        if classCard._name == class_name:
+                            classCard.add_param(method_name, param)
+                            break
+            for param in toRemove:
+                if toRemove:
+                    self._process_task_signal.emit(f'prm -d {class_name} {method_name} {param}', self)
+                    for classCard in self.diagramArea.findChildren(ClassCard):
+                        if classCard._name == class_name:
+                            classCard.remove_param(method_name, param)
+                            break
+                
+                
 
     def addFieldAction(self):
         types = ["int", "string", "bool", "float"]
@@ -545,7 +561,7 @@ class GUIV2(QMainWindow):
             field_name = field_name_and_type.split(": ")[0]  
             field_type = field_name_and_type.split(": ")[1]
             
-            self._process_task_signal.emit(f'fld -d {class_name} {field_name}{field_type}', self)
+            self._process_task_signal.emit(f'fld -d {class_name} {field_name}', self)
             for class_card in self.findChildren(ClassCard):
                 if class_card._name == class_name:
                     class_card.remove_field(field_name_and_type)
@@ -562,7 +578,7 @@ class GUIV2(QMainWindow):
             class_name, old_field_name_and_type, new_field_name = dialog.getSelection()
             old_field_name = old_field_name_and_type.split(" : ")[0]  
 
-            # Check for basic validation
+            #TODO Check for basic validation
             if new_field_name:
                 self._process_task_signal.emit(f'fld -r {class_name} {old_field_name} {new_field_name}', self)
                 for classCard in self.diagramArea.findChildren(ClassCard):
@@ -832,14 +848,30 @@ class GUIV2(QMainWindow):
         self.clearGUI()
         for class_name in self._diagram._entities:
             name = class_name.get_name()
-            classCard = ClassCard(name)
+            classCard = ClassCard(name, class_name)
             self.diagramArea.addClassCard(classCard, name)
+            if hasattr(class_name, '_location'):
+                classCard.move(QPoint(class_name._location[0], class_name._location[1]))
+            else:
+                classCard.move(QPoint(10, 10))
+            
             for field in class_name._fields:
                 field_name, field_type_gen, *rest = field
-                field_type = str(field_type_gen).split("'")[1]  
-                field_str = (f'{field_name} : {field_type}')
+                try:
+                    # Attempt to handle the field type directly if it's not complex
+                    if isinstance(field_type_gen, str):
+                        field_type = field_type_gen
+                    else:
+                        # Handle complex types which are represented as strings containing the type
+                        field_type = str(field_type_gen).split("'")[1]
+                except IndexError:
+                    # Log or handle cases where field type is not in the expected format
+                    print(f"Error processing field type for {field_name}: {field_type_gen}")
+                    continue  # Skip this field or handle as needed
+
+                field_str = f'{field_name} : {field_type}'
                 classCard.add_field(field_str)
-                       
+                    
             for method in class_name._methods:
                 method_str = f"{method.get_method_name()} : {method.get_return_type()}"
                 classCard.add_method(method_str)
@@ -855,13 +887,9 @@ class GUIV2(QMainWindow):
                 if classCard._name == src_class or classCard._name == dest_class:
                     classCard.add_relation(relationship_str)
                 
-
-                # Example: Redraw diagram or custom widgets
-                self.diagramArea.update()
-
-                
-                self.statusBar().showMessage("GUI Refreshed")
-   
+            self.diagramArea.update()
+            self.statusBar().showMessage("GUI Refreshed")
+    
         
 if __name__ == "__main__":
     app = QApplication([])
