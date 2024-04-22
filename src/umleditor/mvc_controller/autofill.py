@@ -78,7 +78,7 @@ class ComplexCommandStrategy(Strategy):
     def get_completions(self, words, text, completer):
         if (len(words) == 4 or len(words) == 6) and text.endswith(' '):
             if words[0] == 'fld':
-                if words[1] == '-a' or (words[1] == '-r' and len(words) == 6):
+                if words[1] == '-a':
                     yield from completer.suggestion_type(words[2])
             elif words[0] == 'mthd' and words[1] == '-a':
                 yield from completer.suggestion_return_type(words[2])
@@ -151,12 +151,9 @@ class CommandCompleter(Completer):
 
     def field_args(self, words):
         fields = self.diagram.get_entity(words[2])._fields
-        if words[1] == '-r':
-            for field in fields:
-                yield Completion(field[0] + " " + field[1], start_position=0)
-        else:
-            for field in fields:
-                yield Completion(field[0], start_position=0, display_meta="Type: " + field[1])
+
+        for field in fields:
+            yield Completion(field[0], start_position=0, display_meta="Type: " + field[1])
 
     def method_args(self, words):
         methods = self.diagram.get_entity(words[2])._methods
