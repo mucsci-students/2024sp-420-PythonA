@@ -214,10 +214,6 @@ class GUIV2(QMainWindow):
         btnOpen.clicked.connect(self.openFile)
         layout.addWidget(btnOpen)
 
-        btnNew = QPushButton("New File")
-        btnNew.clicked.connect(self.newFile)
-        layout.addWidget(btnNew)
-
         btnSave = QPushButton("Save")
         btnSave.clicked.connect(self.saveFile)
         layout.addWidget(btnSave)
@@ -364,9 +360,10 @@ class GUIV2(QMainWindow):
         dialog = NewClassDialog(self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
             class_name = dialog.getClassname()
-            classCard = ClassCard(class_name)
-            self.diagramArea.addClassCard(classCard, class_name)
             self._process_task_signal.emit('class -a ' + class_name, self)
+            entity = self._diagram.get_entity(class_name)
+            classCard = ClassCard(class_name, entity)
+            self.diagramArea.addClassCard(classCard, class_name)
         
     def deleteClassAction(self): 
         class_names = [entity._name for entity in self._diagram._entities]
@@ -834,6 +831,12 @@ class GUIV2(QMainWindow):
             name = class_name.get_name()
             classCard = ClassCard(name)
             self.diagramArea.addClassCard(classCard, name)
+            if hasattr(class_name, '_location'):
+                classCard.move(QPoint(class_name._location[0], class_name._location[1]))
+            else:
+                # Default position if no location data is available
+                classCard.move(QPoint(10, 10))
+                
             for field in class_name._fields:
                 field_name, field_type_gen, *rest = field
                 field_type = str(field_type_gen).split("'")[1]  

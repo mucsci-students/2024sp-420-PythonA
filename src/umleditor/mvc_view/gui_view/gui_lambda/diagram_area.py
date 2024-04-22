@@ -16,18 +16,17 @@ class DiagramArea(QWidget):
         self.offsetIncrement = QPoint(15, 15)  # Offset for the next card position
         self.relationships = []
 
+        for card in self.classCards.values():
+            card.cardMoved.connect(self.updateDiagram)
+        
     def initUI(self):
         self.setStyleSheet("background-color: white;")
 
     def addClassCard(self, classCard, className):
         classCard.setParent(self)
-        classCard.move(self.lastCardPosition)
         classCard.show()
-        self.lastCardPosition += self.offsetIncrement
-        if self.lastCardPosition.x() > self.width() - 100 or self.lastCardPosition.y() > self.height() - 100:
-            self.lastCardPosition = QPoint(10, 10)
-        self.classCards[className] = classCard  # Store the class card with its name as the key
-        classCard.cardMoved.connect(self.update)
+        self.classCards[className] = classCard  
+        classCard.cardMoved.connect(lambda: self.updateEntityPosition(classCard))
 
     def removeClassCard(self, className):
         if className in self.classCards:
@@ -38,7 +37,14 @@ class DiagramArea(QWidget):
         for classCard in self.findChildren(ClassCard):
             if classCard._name == old_name:
                 classCard.set_name(new_name)
-                
+    
+    def updateEntityPosition(self, classCard):
+        if classCard._entity:
+            # Get the new position from the ClassCard
+            newPosition = classCard.pos()
+            # Update the entity's location based on classCard's current position
+            classCard._entity._location = [newPosition.x(), newPosition.y()]   
+                    
     def clearAll(self):
         """Clears all visual elements from the diagram area."""
         for classCard in self.findChildren(ClassCard):
@@ -72,7 +78,6 @@ class DiagramArea(QWidget):
 
     def drawRealization(self, painter, src_pos, dest_pos):
         painter.setPen(QPen(QColor('black'), 2, Qt.PenStyle.DashLine))
-        painter.drawLine(src_pos, dest_pos)
         self.drawArrow(painter, src_pos, dest_pos, QColor('black'), fill=False)
 
     def drawAggregation(self, painter, src_pos, dest_pos):
@@ -88,7 +93,7 @@ class DiagramArea(QWidget):
 
     def drawInheritance(self, painter, src_pos, dest_pos):
         painter.setPen(QPen(QColor('red'), 2))
-        painter.drawLine(src_pos, dest_pos)
+        
         self.drawArrow(painter, src_pos, dest_pos, QColor('red'), fill=True)
 
     def drawDiamond(self, painter, src_pos, dest_pos, color):
@@ -110,21 +115,27 @@ class DiagramArea(QWidget):
         painter.setPen(QPen(color, 2))
         painter.setBrush(QColor('black') if fill else Qt.GlobalColor.transparent)
 
+        painter.drawLine(src_pos, dest_pos)
+        
+        # Calculate the angle
         angle = math.atan2(-(dest_pos.y() - src_pos.y()), dest_pos.x() - src_pos.x())
-        arrow_p1 = dest_pos + QPoint(math.sin(angle - math.pi / 3) * arrow_size,
-                                     math.cos(angle - math.pi / 3) * arrow_size)
-        arrow_p2 = dest_pos + QPoint(math.sin(angle - math.pi + math.pi / 3) * arrow_size,
-                                     math.cos(angle - math.pi + math.pi / 3) * arrow_size)
 
+        # Calculate the points for the arrowhead and ensure they are integers
+        arrow_p1 = dest_pos + QPoint(int(math.sin(angle - math.pi // 3) * arrow_size),
+                                    int(math.cos(angle - math.pi // 3) * arrow_size))
+        arrow_p2 = dest_pos + QPoint(int(math.sin(angle - math.pi + math.pi // 3) * arrow_size),
+                                    int(math.cos(angle - math.pi + math.pi // 3) * arrow_size))
+
+        # Create a QPolygon for the arrowhead
         arrow_head = QPolygon([dest_pos, arrow_p1, arrow_p2])
         painter.drawPolygon(arrow_head)
 
     def calculateNearestPoint(self, target, rect):
         points = [
-            QPoint(rect.left(), rect.top() + rect.height() / 2),  # Left edge
-            QPoint(rect.right(), rect.top() + rect.height() / 2),  # Right edge
-            QPoint(rect.left() + rect.width() / 2, rect.top()),    # Top edge
-            QPoint(rect.left() + rect.width() / 2, rect.bottom())  # Bottom edge
+            QPoint(rect.left(), rect.top() + rect.height() // 2),  # Left edge
+            QPoint(rect.right(), rect.top() + rect.height() // 2),  # Right edge
+            QPoint(rect.left() + rect.width() // 2, rect.top()),    # Top edge
+            QPoint(rect.left() + rect.width() // 2, rect.bottom())  # Bottom edge
         ]
         # Find the point with minimum distance to target
         nearest_point = min(points, key=lambda point: (point.x() - target.x())**2 + (point.y() - target.y())**2)
@@ -132,9 +143,10 @@ class DiagramArea(QWidget):
 
     def calculateOffsetPoint(self, src_pos, dest_pos, distance):
         angle = math.atan2(dest_pos.y() - src_pos.y(), dest_pos.x() - src_pos.x())
-        return src_pos + QPoint(math.cos(angle) * distance, math.sin(angle) * distance)
-
-
+        # Convert the results of the trigonometric calculations to integers
+        offset_x = int(math.cos(angle) * distance)
+        offset_y = int(math.sin(angle) * distance)
+        return src_pos + QPoint(offset_x, offset_y)
 
     def addRelationship(self, src_class_name, dest_class_name, rel_type):
         self.relationships.append((src_class_name, dest_class_name, rel_type))
@@ -156,3 +168,6 @@ class DiagramArea(QWidget):
 
         # Save the pixmap as a PNG file
         pixmap.save(filePath, "PNG")
+        
+    def updateDiagram(self):
+        self.update()  

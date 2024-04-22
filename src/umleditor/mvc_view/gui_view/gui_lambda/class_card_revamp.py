@@ -16,7 +16,7 @@ class ClassCard (QWidget):
     _enable_widgets_signal = pyqtSignal(bool, QWidget)
     cardMoved = pyqtSignal() 
     
-    def __init__(self, name: str):
+    def __init__(self, name: str, entity):
         """
         Initializes the ClassCard widget.
 
@@ -27,6 +27,7 @@ class ClassCard (QWidget):
         self._list_relation = QListWidget()
         self._name = name
         self._size = 9
+        self._entity = entity
 
         self.initUI()
         self.diagram = Diagram()
@@ -307,3 +308,4 @@ class ClassCard (QWidget):
                 list_widget.takeItem(index)
                 break  # Exit the loop after finding and removing the relation
        
+    

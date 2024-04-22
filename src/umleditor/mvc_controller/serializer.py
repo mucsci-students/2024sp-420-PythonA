@@ -65,6 +65,9 @@ def serialize(diagram: Diagram, path: str) -> None:
                 saved_param['name'] = param_name
                 # class method param type
                 # saved_param['type'] = param_type if param_type else 'None'
+            if hasattr(entity, '_location') and entity._location:
+                saved_class['position'] = {'x': entity._location[0], 'y': entity._location[1]}
+                
     # relationships
     saved_relationships = []
     for relation in diagram._relations:
@@ -151,6 +154,11 @@ def deserialize(diagram: Diagram, path: str) -> None:
                 loaded_method._params = loaded_params
                 loaded_methods.append(loaded_method)
             loaded_class._methods = loaded_methods
+            
+            if 'position' in saved_class:
+                loaded_class._location = [saved_class['position']['x'], saved_class['position']['y']]
+
+
 
             loaded_classes.append(loaded_class)
         diagram._entities = loaded_classes
