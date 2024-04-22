@@ -1,6 +1,7 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QListWidget, QMenu, QLineEdit, QLabel, QListWidgetItem, QSizePolicy
 from PyQt6.QtGui import QAction
 from PyQt6.QtCore import Qt, pyqtSignal, QEvent, QPoint, QSize
+from umleditor.mvc_model.diagram import Diagram
 
 
 class ClassCard (QWidget):
@@ -15,7 +16,7 @@ class ClassCard (QWidget):
     _enable_widgets_signal = pyqtSignal(bool, QWidget)
     cardMoved = pyqtSignal() 
     
-    def __init__(self, name: str, entity = None):
+    def __init__(self, name: str):
         """
         Initializes the ClassCard widget.
 
@@ -26,9 +27,9 @@ class ClassCard (QWidget):
         self._list_relation = QListWidget()
         self._name = name
         self._size = 9
-        self._entity = entity  # Entity object reference
 
         self.initUI()
+        self.diagram = Diagram()
         
         self.installEventFilter(self)
         self.moving = False
@@ -99,7 +100,7 @@ class ClassCard (QWidget):
         """
         new_height = self._size * 10  
         self.setMinimumHeight(new_height)
-        self.adjustSize() 
+        #self.adjustSize() 
 
         
     def sizeHint(self):
@@ -109,7 +110,6 @@ class ClassCard (QWidget):
         """
         Sets styles for the widgets.
         """
-        
         # Set border style for list widgets
         self._list_fields.setStyleSheet("border: 1px solid black; border-top: none")
         # Set style for class label
@@ -121,7 +121,6 @@ class ClassCard (QWidget):
         self._methods_label.setMinimumHeight(15)
         # Set style for entire widget
         self.setStyleSheet("background-color: white;")
-        
     def add_field(self, field):
             """
             Adds a field.
