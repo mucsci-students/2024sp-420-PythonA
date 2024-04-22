@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QListWidget, QMenu, QLineEdit, QLabel, QListWidgetItem, QSizePolicy, QTextEdit
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QListWidget, QMenu, QLineEdit, QLabel, QListWidgetItem, QSizePolicy
 from PyQt6.QtGui import QAction
 from PyQt6.QtCore import Qt, pyqtSignal, QEvent, QPoint, QSize
 from umleditor.mvc_model.diagram import Diagram
@@ -205,12 +205,15 @@ class ClassCard (QWidget):
             # Create field and add to list
             item = QListWidgetItem()
             list.addItem(item) 
-            text = QTextEdit()
+            text = QLineEdit()
             text.setText(method)
             text.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
 
             # Pass the QLineEdit instance 
             text.customContextMenuRequested.connect(lambda pos: self.show_row_menu(pos, text))
+
+            # lambda ensures text is only evaluated on enter
+            text.returnPressed.connect(lambda: self.verify_input(text.text(), list))
 
             # Formatting / Style
             list.setItemWidget(item, text)
