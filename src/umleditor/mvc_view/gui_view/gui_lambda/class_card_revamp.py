@@ -16,7 +16,7 @@ class ClassCard (QWidget):
     _enable_widgets_signal = pyqtSignal(bool, QWidget)
     cardMoved = pyqtSignal() 
     
-    def __init__(self, name: str):
+    def __init__(self, name: str, entity):
         """
         Initializes the ClassCard widget.
 
@@ -27,6 +27,7 @@ class ClassCard (QWidget):
         self._list_relation = QListWidget()
         self._name = name
         self._size = 9
+        self._entity = entity
 
         self.initUI()
         self.diagram = Diagram()
@@ -100,7 +101,7 @@ class ClassCard (QWidget):
         """
         new_height = self._size * 10  
         self.setMinimumHeight(new_height)
-        #self.adjustSize() 
+        self.adjustSize() 
 
         
     def sizeHint(self):
@@ -112,6 +113,7 @@ class ClassCard (QWidget):
         """
         # Set border style for list widgets
         self._list_fields.setStyleSheet("border: 1px solid black; border-top: none")
+        self._list_methods.setStyleSheet("border: 1px solid black; border-top: none")
         # Set style for class label
         self._class_label.setStyleSheet("background-color: #6495ED; border: 1px solid black;")
         self._class_label.setMinimumHeight(20)
@@ -185,6 +187,15 @@ class ClassCard (QWidget):
                     line_edit.setText(new_field_name)
                 break   
 
+    def getFields(self):
+        """Returns a list of field signatures from the field list widget."""
+        fields = []
+        for i in range(self._list_fields.count()):
+            item = self._list_fields.item(i)
+            widget = self._list_fields.itemWidget(item)
+            if widget:
+                fields.append(widget.text())
+        return fields
     def add_method(self, method):
             """
             Adds a field.
@@ -212,18 +223,13 @@ class ClassCard (QWidget):
             self._size += 1
             self.updateSize()
             
-    def remove_method(self, field):
-        """
-        Removes a field from the class card.
-
-        Args:
-            field (str): The field to remove.
-        """
-        for i in range(self._list_fields.count()):
-            item = self._list_fields.item(i)
-            line_edit = self._list_fields.itemWidget(item)
-            if line_edit and line_edit.text().startswith(field):
-                self._list_fields.takeItem(i)
+    def remove_method(self, method):
+        """Removes a method from the class card based on method name."""
+        for i in range(self._list_methods.count()):
+            item = self._list_methods.item(i)
+            widget = self._list_methods.itemWidget(item)
+            if widget and widget.text() == method:
+                self._list_methods.takeItem(i)
                 self._size -= 1
                 self.updateSize()
                 break
@@ -248,7 +254,43 @@ class ClassCard (QWidget):
                     
                     line_edit.setText(new_method_name)
                 break  
+            
+    def getMethods(self):
+        """Returns a list of method signatures from the method list widget."""
+        methods = []
+        for i in range(self._list_methods.count()):
+            item = self._list_methods.item(i)
+            widget = self._list_methods.itemWidget(item)
+            if widget:
+                methods.append(widget.text())
+        return methods
+    
+    def add_param(self, method, param):
+        for i in range(self._list_methods.count()):
+            item = self._list_methods.item(i)
+            line_edit = self._list_methods.itemWidget(item)
+            if line_edit and method in line_edit.text():
+                parts = line_edit.text().split(' : ')
+                if len(parts) > 1:
+                    existing_params = parts[2] if len(parts) > 2 else ""
+                    new_params = (existing_params + ", " + param) if existing_params else param
+                    line_edit.setText(f"{parts[0]}: {parts[1]} : \n Parameters: {new_params}")
+                break
 
+    def remove_param(self, method, param_to_remove):
+        for i in range(self._list_methods.count()):
+            item = self._list_methods.item(i)
+            line_edit = self._list_methods.itemWidget(item)
+            if line_edit and method in line_edit.text():
+                parts = line_edit.text().split(' : ')
+                if len(parts) > 2:
+                    param_list = [p.strip() for p in parts[2].replace("Parameters:", "").split(',')]
+                    if param_to_remove in param_list:
+                        param_list.remove(param_to_remove)
+                        new_param_string = ", ".join(param_list)
+                        new_params_line = f"Parameters: {new_param_string}" if new_param_string else ""
+                        line_edit.setText(f"{parts[0]}: {parts[1]} : \n {new_params_line}")
+                break
                                         
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
@@ -307,3 +349,4 @@ class ClassCard (QWidget):
                 list_widget.takeItem(index)
                 break  # Exit the loop after finding and removing the relation
        
+    
