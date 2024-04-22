@@ -131,7 +131,7 @@ def test_rename_field():
     ent1.add_field("field11", "int")
     assert ("field11", "int") in ent1._fields
     assert ("field12", "int") not in ent1._fields
-    ent1.rename_field("field11", "int","field12","int")
+    ent1.rename_field("field11","field12")
     assert ("field11","int") not in ent1._fields
     assert ("field12","int") in ent1._fields
 
@@ -139,7 +139,7 @@ def test_rename_field_old_name_doesnt_exist():
     ent1 = Entity("entity1")
     assert ("field13","int") not in ent1._fields
     with pytest.raises(CustomExceptions.FieldNotFoundError):
-        ent1.rename_field("field13", "int","field2","int")
+        ent1.rename_field("field13","field2")
 
 def test_rename_field_new_name_already_exists():
     ent1 = Entity("entity1")
@@ -148,7 +148,7 @@ def test_rename_field_new_name_already_exists():
     assert ("field15", "string") not in ent1._fields
     ent1.add_field("field15", "string")
     with pytest.raises(CustomExceptions.FieldExistsError):
-        ent1.rename_field("field14", "string","field15","string")
+        ent1.rename_field("field14","field15")
 
 def test_rename_multiple_fields():
     ent1 = Entity("entity1")
@@ -158,8 +158,8 @@ def test_rename_multiple_fields():
     assert ("field17","int") in ent1._fields
     assert ("field18","int") not in ent1._fields
     assert ("field19","int") not in ent1._fields
-    ent1.rename_field("field16", "int", "field18", "int")
-    ent1.rename_field("field17", "int","field19", "int")
+    ent1.rename_field("field16", "field18")
+    ent1.rename_field("field17", "field19")
     assert ("field16", "int") not in ent1._fields
     assert ("field17", "int") not in ent1._fields
     assert ("field18", "int") in ent1._fields
