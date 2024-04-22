@@ -75,7 +75,6 @@ def test_import_diagram():
     assert Diagram.add_relation
     assert Diagram.delete_relation
     assert Diagram.change_relation_type
-    assert Diagram.edit_relation
 
 def test_import_entity():
     from src.umleditor.mvc_model import Entity
@@ -87,8 +86,6 @@ def test_import_entity():
     assert Entity.rename_field
     assert Entity.get_method
     assert Entity.add_method
-    assert Entity.add_method_and_params
-    assert Entity.edit_method
     assert Entity.delete_method
     assert Entity.rename_method
     assert Entity.list_fields
@@ -104,7 +101,7 @@ def test_import_uml_method():
     assert UML_Method.change_parameters
 
 def test_import_help():
-    from src.umleditor.mvc_model.help_command import help_menu
+    from umleditor.mvc_view.cli_view.help_command import help_menu
     assert help_menu
 
 def test_import_relation():

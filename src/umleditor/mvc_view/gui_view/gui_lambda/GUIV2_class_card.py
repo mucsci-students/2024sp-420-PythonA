@@ -49,9 +49,6 @@ class ClassCard(QWidget):
         self._list_method = QListWidget()
         self._list_relation = QListWidget()
 
-        # Connect right click
-        self.connect_menus()
-
         # Add Widgets to class card
         layout.addWidget(self._class_label)
         layout.addWidget(self._list_field)
@@ -577,7 +574,7 @@ class ClassCard(QWidget):
 
         # Create field and add to list
         item = QListWidgetItem()
-        list.addItem(item)  # !!!
+        list.addItem(item)  
         text = QLineEdit()
         text.setText(relation)
         text.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)

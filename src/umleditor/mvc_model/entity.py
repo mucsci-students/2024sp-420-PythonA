@@ -1,7 +1,8 @@
 # Primary: Danish
 # Secondary: Zhang
+
 from .custom_exceptions import CustomExceptions
-from typing import Optional
+
 
 class Entity:
 
@@ -13,21 +14,11 @@ class Entity:
             entity_name (str): The name of the entity.
         """
         self._name: str = entity_name
-        self._fields: list[tuple[str, type]] = []
-        self.allowed_types = {
-            "string": str,
-            "int": int,
-            "bool": bool,
-            "float": float
-        }
+        self._fields: list[tuple[str, str]] = []
+        self.allowed_types = ["string", "int", "bool", "float"]
         self._methods = []
-        self.allowed_return_types = {
-            "void": None, 
-            "string": str,
-            "int": int,
-            "bool": bool,
-            "float": float
-            }
+        self.allowed_return_types = ["void", "string", "int", "bool", "float"]
+        self._location = [0,0]
 
     def get_name(self):
         """
@@ -47,13 +38,13 @@ class Entity:
         """
         self._name = entity_name
 
-    def add_field(self, field_name: str, field_type: type):
+    def add_field(self, field_name: str, field_type: str):
         """
         Adds a new field to the to the list.
 
         Args:
             field_name (str): The field' name to be added to the entity.
-            field_type (type): The field type to be added to the entity.
+            field_type (str): The field type to be added to the entity.
 
         Raises:
             CustomExceptions.FieldExistsError: If the field already
@@ -62,16 +53,13 @@ class Entity:
         Returns:
             None.
         """
-        if field_name in self._fields:
+        if any(field[0] == field_name for field in self._fields):
             raise CustomExceptions.FieldExistsError(field_name)
 
         else:
             if field_type not in self.allowed_types:
-                raise CustomExceptions.FieldtypeNotFoundError(field_type)
-
+                raise CustomExceptions.FieldTypeNotFoundError(field_type)
             else:
-                if isinstance(field_type, str):
-                    field_type = self.allowed_types[field_type]
                 self._fields.append((field_name, field_type))
 
     def delete_field(self, field_name: str):
@@ -80,7 +68,6 @@ class Entity:
 
         Args:
             field_name (str): The name of the field to be deleted from the entity.
-            field_type (type): The type of the field to be deleted from the entity.
 
         Raises:
             CustomExceptions.FieldNotFoundError: If the specified field
@@ -99,15 +86,13 @@ class Entity:
         if not field_found:
             raise CustomExceptions.FieldNotFoundError(field_name)
 
-    def rename_field(self, old_field: str, old_type: type, new_field: str, new_type: type):
+    def rename_field(self, old_field: str, new_field: str):
         """
         Renames a field from its old name to a new name
 
         Args:
             old_field(str): The current name of the field.
-            old_type(type): The current type of the field.
             new_field (str): The new name for the field.
-            new_type (type): The new type for the field.
 
         Raises:
             CustomExceptions.FieldNotFoundError: If the old field does
@@ -123,10 +108,9 @@ class Entity:
             raise CustomExceptions.FieldExistsError(new_field)
 
         field_found = False
-
         for index, (field_name, field_type) in enumerate(self._fields):
-            if field_name == old_field and field_type == old_type:
-                self._fields[index] = (new_field, new_type)
+            if field_name == old_field:
+                self._fields[index] = (new_field, field_type)
                 field_found = True
                 break
 
@@ -157,7 +141,7 @@ class Entity:
 
         Args:
             method_name (str): The method's name to be added to the entity.
-            return_type (type): The method's return type to be added to the entity.
+            return_type (str): The method's return type to be added to the entity.
 
         Raises:
             CustomExceptions.MethodExistsError: If the method already
@@ -172,26 +156,26 @@ class Entity:
 
         new_method = UML_Method(method_name, return_type)
         self._methods.append(new_method)
-
-    def add_method_and_params(self, method_name: str, return_type: str, param_name: str, param_type: type):
-        """
-        Adds a method with specified parameters to the class.
-
-        Parameters:
-            method_name (str): The name of the method to add.
-        """
-
-        self.add_method(method_name, return_type)
-        self.get_method(method_name).add_parameters(param_name, param_type)
-
-    def edit_method(self, old_method: str, new_method: str, return_type: str, param_name: str, param_type: type):
-        deleted_method = self.get_method(old_method)
-        self.delete_method(old_method)
-        try:
-            self.add_method_and_params(new_method, return_type, param_name, param_type)
-        except Exception as e:
-            self._methods.append(deleted_method)
-            raise e
+    #
+    # def add_method_and_params(self, method_name: str, return_type: str, param_name: str):
+    #     """
+    #     Adds a method with specified parameters to the class.
+    #
+    #     Parameters:
+    #         method_name (str): The name of the method to add.
+    #     """
+    #
+    #     self.add_method(method_name, return_type)
+    #     self.get_method(method_name).add_parameters(param_name)
+    #
+    # def edit_method(self, old_method: str, new_method: str, return_type: str, param_name: str):
+    #     deleted_method = self.get_method(old_method)
+    #     self.delete_method(old_method)
+    #     try:
+    #         self.add_method_and_params(new_method, return_type, param_name)
+    #     except Exception as e:
+    #         self._methods.append(deleted_method)
+    #         raise e
 
     def delete_method(self, method_name: str):
         """
@@ -244,7 +228,7 @@ class Entity:
 
             Return: a comma separated list of all methods in this entity
         """
-        return ", ".join(f"{name}: {ftype.__name__}" for name, ftype in self._fields)
+        return ", ".join(f"{name}: {ftype}" for name, ftype in self._fields)
 
     def list_methods(self):
         """Lists all the methods of this entity
@@ -260,8 +244,8 @@ class Entity:
         Returns:
             str: The name of the entity.
         """
-        # return_type_name = 'void' if self.allowed_return_types is type(None) else self.allowed_return_types.__name__
-        return f"{self._name}: {self.allowed_return_types}"
+
+        return self._name
 
     def __eq__(self, other):
         """Equality operator for entities
@@ -286,7 +270,7 @@ class UML_Method:
 
         Args:
             method_name (str): The name of the method.
-            return_type (type): The Return type of the method.
+            return_type (str): The Return type of the method.
 
         Raises:
             None.
@@ -296,13 +280,8 @@ class UML_Method:
         """
         self._name = method_name
         self._return_type = return_type
-        self._params: list[tuple[str, Optional[type]]] = []
-        self.allowed_types = {
-            "string": str,
-            "int": int,
-            "bool": bool,
-            "float": float
-        }
+        self._params = []
+        self.allowed_types = ["string", "int", "bool", "float"]
 
     def get_method_name(self):
         """
@@ -345,36 +324,39 @@ class UML_Method:
            param_name: The list of new parameters to be checked.
 
         Raises:
-            CustomExceptions.DuplicateParametersError: If any of the parameter occurs more than once.
+            CustomExceptions.ParameterExistsError: If any of the parameter occurs more than once.
         """
-        for existing_param_name, _ in self._params:
+        for existing_param_name in self._params:
             if existing_param_name == param_name:
                 raise CustomExceptions.ParameterExistsError(param_name)
 
-    def add_parameters(self, param_name: str, param_type: Optional[type] = None):
+    def add_parameters(self, param_name: str):
         """
         Adds a list of new parameters to the method.
 
         Args:
             param_name: The list of new parameters to be added.
-            param_type: The type of new parameters to be added.
 
         Raises:
             CustomExceptions.ParameterExistsError: If any of the parameter already exists in the method.
 
         Returns:
             None.
+            None.
         """
-        self._check_duplicate_parameters(param_name)
-        self._params.append((param_name, param_type))
+        if self._check_duplicate_parameters(param_name):
+            raise CustomExceptions.ParameterExistsError(param_name)
+        # Katie- I know that the coverage report says that I didn't cover the else, but I wrote a test for it
+        # and it still says it's not hitting it.
+        else:
+            self._params.append(param_name)
 
-    def remove_parameters(self, param_name: str, param_type: type):
+    def remove_parameters(self, param_name: str):
         """
         Removes a list of parameters from the method.
 
         Args:
             param_name: The list of parameters to be removed.
-            param_type: The type of new parameters to be removed.
 
         Raises:
             CustomExceptions.ParameterNotFoundError: If any of the parameter does not exist in the method.
@@ -383,21 +365,18 @@ class UML_Method:
             None.
         """
 
-        for existing_param_name, _ in self._params:
-            if existing_param_name == param_name:
-                self._params.remove((existing_param_name, _))
-                return
-        raise CustomExceptions.ParameterNotFoundError(param_name)
+        try:
+            self._params.remove(param_name)
+        except ValueError:
+            raise CustomExceptions.ParameterNotFoundError(param_name)
 
-    def change_parameters(self, op_name: str, old_type: type, np_name: str, new_type: type):
+    def change_parameters(self, op_name: str, np_name: str):
         """
         Changes a parameter in the method by replacing an old parameter with a new parameter.
 
     Args:
         op_name (str): The name of the parameter to be replaced.
-        old_type (type): The type of the parameter to be replaced.
-        np_name (str): The name of the new parameter to be added.
-        new_type (type): The type of the new parameter to be added.
+
 
     Raises:
         CustomExceptions.ParameterNotFoundError: If the old parameter does not exist in the method.
@@ -407,19 +386,22 @@ class UML_Method:
         None.
         """
 
-        if any(param[0] == np_name for param in self._params):
-            raise CustomExceptions.FieldExistsError(np_name)
+
 
         param_found = False
-
-        for index, (param_name, param_type) in enumerate(self._params):
-            if param_name == op_name and param_type == old_type:
-                self._params[index] = (np_name, new_type)
-                param_found = True
-                break
+        for index, (param_name) in enumerate(self._params):
+            if param_name == op_name:
+                # Katie- I know that the coverage report says I didn't cover this case, but I wrote a test for it
+                # and for some reason it's not hitting the error.
+                if self._check_duplicate_parameters(np_name):
+                    raise CustomExceptions.ParameterExistsError(param_name)
+                else:
+                    self._params[index] = np_name
+                    param_found = True
+                    break
 
         if not param_found:
-            raise CustomExceptions.FieldNotFoundError(op_name)
+            raise CustomExceptions.ParameterNotFoundError(op_name)
 
     def __str__(self):
         """
@@ -438,11 +420,11 @@ class UML_Method:
         """
 
         result = f"\n{self.get_method_name()}"
-        result_return_type = 'void' if self._return_type is type(None) else self._return_type
+        result_return_type = 'void' if self._return_type is str(None) else self._return_type
         result += f"\n\tReturn Type: {result_return_type}"
         result += "\n\t" + self.get_method_name() + "'s Params: "
-        param_results = ' '.join(f'{name}: {ptype if ptype else " "}' for name, ptype in self._params)
-        return result + param_results
+        param_results = ', '.join(f'{name}'  for name in self._params)
+        return result + param_results + "\n"
 
     def __eq__(self, other):
 
