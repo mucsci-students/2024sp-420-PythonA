@@ -54,7 +54,7 @@ def parse(c, input_str: str) -> list:
 
         # Minimum length is 4 when the parameter type is not provided
 
-        if len(bits) < 4:
+        if len(bits) < 3:
             raise CE.NeedsMoreInput()
 
         # Extract parameters based on provided arguments
@@ -73,7 +73,7 @@ def parse(c, input_str: str) -> list:
 
     elif command_class == UML_Method and command_str == "remove_parameters":
 
-        if len(bits) < 4:
+        if len(bits) < 3:
             raise CE.NeedsMoreInput()
 
         entity_name, method_name, parameter_name = bits[2:5]

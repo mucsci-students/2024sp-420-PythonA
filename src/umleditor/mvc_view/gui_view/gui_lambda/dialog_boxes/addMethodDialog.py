@@ -19,11 +19,11 @@ class AddMethodDialog(QDialog):
         self.methodNameLineEdit = QLineEdit(self)
         layout.addWidget(self.methodNameLineEdit)
 
-        # Method parameters input with instructions for comma-separated values
-        paramsLabel = QLabel("Parameters (optional, separate by commas):")
-        layout.addWidget(paramsLabel)
-        self.parametersLineEdit = QLineEdit(self)
-        layout.addWidget(self.parametersLineEdit)
+        # # Method parameters input with instructions for comma-separated values
+        # paramsLabel = QLabel("Parameters (optional, separate by commas):")
+        # layout.addWidget(paramsLabel)
+        # self.parametersLineEdit = QLineEdit(self)
+        # layout.addWidget(self.parametersLineEdit)
 
         # Return type selection
         layout.addWidget(QLabel("Return Type:"))
@@ -46,5 +46,5 @@ class AddMethodDialog(QDialog):
     def getMethodInfo(self):
         # Return information as is, caller will handle splitting parameters if needed
         return (self.classComboBox.currentText(), self.methodNameLineEdit.text(),
-                self.parametersLineEdit.text(), self.returnTypeComboBox.currentText())
+               self.returnTypeComboBox.currentText())
 
