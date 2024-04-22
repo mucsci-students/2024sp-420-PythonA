@@ -153,7 +153,7 @@ class CommandCompleter(Completer):
         fields = self.diagram.get_entity(words[2])._fields
         if words[1] == '-r':
             for field in fields:
-                yield Completion(field[0] + " " + field[1], start_position=0)
+                yield Completion(field[0], start_position=0)
         else:
             for field in fields:
                 yield Completion(field[0], start_position=0, display_meta="Type: " + field[1])

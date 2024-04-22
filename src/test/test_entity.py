@@ -97,7 +97,7 @@ def test_rename_field():
     ent1.add_field("field1", "int")
     assert ("field1", "int") in ent1._fields
     assert ("field2", "int") not in ent1._fields
-    ent1.rename_field("field1", "int","field2","int")
+    ent1.rename_field("field1","field2")
     assert ("field1","int") not in ent1._fields
     assert ("field2","int") in ent1._fields
 
@@ -109,8 +109,8 @@ def test_rename_multiple_fields():
     assert ("field2","int") in ent1._fields
     assert ("field3","int") not in ent1._fields
     assert ("field4","int") not in ent1._fields
-    ent1.rename_field("field1", "int", "field3", "int")
-    ent1.rename_field("field2", "int","field4", "int")
+    ent1.rename_field("field1", "field3")
+    ent1.rename_field("field2","field4")
     assert ("field1", "int") not in ent1._fields
     assert ("field2", "int") not in ent1._fields
     assert ("field3", "int") in ent1._fields
