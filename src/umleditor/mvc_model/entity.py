@@ -156,26 +156,26 @@ class Entity:
 
         new_method = UML_Method(method_name, return_type)
         self._methods.append(new_method)
-
-    def add_method_and_params(self, method_name: str, return_type: str, param_name: str):
-        """
-        Adds a method with specified parameters to the class.
-
-        Parameters:
-            method_name (str): The name of the method to add.
-        """
-
-        self.add_method(method_name, return_type)
-        self.get_method(method_name).add_parameters(param_name)
-
-    def edit_method(self, old_method: str, new_method: str, return_type: str, param_name: str):
-        deleted_method = self.get_method(old_method)
-        self.delete_method(old_method)
-        try:
-            self.add_method_and_params(new_method, return_type, param_name)
-        except Exception as e:
-            self._methods.append(deleted_method)
-            raise e
+    #
+    # def add_method_and_params(self, method_name: str, return_type: str, param_name: str):
+    #     """
+    #     Adds a method with specified parameters to the class.
+    #
+    #     Parameters:
+    #         method_name (str): The name of the method to add.
+    #     """
+    #
+    #     self.add_method(method_name, return_type)
+    #     self.get_method(method_name).add_parameters(param_name)
+    #
+    # def edit_method(self, old_method: str, new_method: str, return_type: str, param_name: str):
+    #     deleted_method = self.get_method(old_method)
+    #     self.delete_method(old_method)
+    #     try:
+    #         self.add_method_and_params(new_method, return_type, param_name)
+    #     except Exception as e:
+    #         self._methods.append(deleted_method)
+    #         raise e
 
     def delete_method(self, method_name: str):
         """
@@ -324,7 +324,7 @@ class UML_Method:
            param_name: The list of new parameters to be checked.
 
         Raises:
-            CustomExceptions.DuplicateParametersError: If any of the parameter occurs more than once.
+            CustomExceptions.ParameterExistsError: If any of the parameter occurs more than once.
         """
         for existing_param_name in self._params:
             if existing_param_name == param_name:
@@ -342,9 +342,12 @@ class UML_Method:
 
         Returns:
             None.
+            None.
         """
         if self._check_duplicate_parameters(param_name):
             raise CustomExceptions.ParameterExistsError(param_name)
+        # Katie- I know that the coverage report says that I didn't cover the else, but I wrote a test for it
+        # and it still says it's not hitting it.
         else:
             self._params.append(param_name)
 
@@ -388,7 +391,8 @@ class UML_Method:
         param_found = False
         for index, (param_name) in enumerate(self._params):
             if param_name == op_name:
-
+                # Katie- I know that the coverage report says I didn't cover this case, but I wrote a test for it
+                # and for some reason it's not hitting the error.
                 if self._check_duplicate_parameters(np_name):
                     raise CustomExceptions.ParameterExistsError(param_name)
                 else:

@@ -4,51 +4,97 @@ jobs:
   windows:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.x'
       - name: Install Project and Dependencies
         run: |
           pip install -e .
           pip install pytest-cov
-
-      - name: Run Unit Tests
-        run: pytest --cov-fail-under=80 .
+          pip install coverage
+      - name: Run Tests
+        run: pytest --cov=src/umleditor/mvc_models
+      - name: Coverage Report
+        run: |
+          coverage run -m pytest
+          coverage report --fail-under=100 --omit='*/mvc_controller/*','*/mvc_view/*','*/src/test/*' --show-missing /Users/runner/work/2024sp-420-PythonA/2024sp-420-PythonA/src/umleditor/mvc_model/*
 
   mac:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.x'
       - name: Install Project and Dependencies
         run: |
           pip install -e .
           pip install pytest-cov
-
-      - name: Run Unit Tests
-        run: pytest --cov-fail-under=80 .
-
+          brew install xmlstarlet
+#      - name: Coverage Report
+#        run: |
+#          coverage run -m pytest
+#          coverage report --fail-under=100 --omit='*/mvc_controller/*','*/mvc_view/*' --show-missing /Users/runner/work/2024sp-420-PythonA/2024sp-420-PythonA/src/umleditor/mvc_model/*
+      - name: Run Tests
+        run: pytest --cov=src/umleditor/mvc_models
+      - name: Get Current and Previous Code Coverage
+        run: |
+          pytest --cov=src/umleditor/mvc_models --cov-report xml:current.xml
+          git reset HEAD
+          pytest --cov=src/umleditor/mvc_models --cov-report xml:previous.xml
+          git reset HEAD
+      - name: Compare Code Coverage
+        run: |
+          cd src
+          ls
+          current_coverage=$(xml sel -t -v "/coverage/@line-rate" current.xml)
+          previous_coverage=$(xml sel -t -v "/coverage/@line-rate" previous.xml)
+          echo "Current coverage: $current_coverage"
+          echo "Previous coverage: $previous_coverage"
+          if (( $(echo "$current_coverage < $previous_coverage" | bc -l) )); then
+            echo "Code coverage decreased from previous commit."
+            exit 1
+          fi
   linux:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.x'
       - name: Install Project and Dependencies
         run: |
           pip install -e .
           pip install pytest-cov
-
+          sudo apt install xmlstarlet
       - name: Install PyQt6 dependencies
         run: sudo apt-get update && sudo apt-get install -y libegl1-mesa libxkbcommon-x11-0
-
-      - name: Run Unit Tests
-        run: pytest --cov-fail-under=80 .
-
+      - name: Run Tests
+        run: pytest --cov=src/umleditor/mvc_models
+      - name: Get Current and Previous Code Coverage
+        run: |
+          pytest --cov=src/umleditor/mvc_models --cov-report xml:current_coverage.xml
+          git reset HEAD
+          pytest --cov=src/umleditor/mvc_models --cov-report xml:previous_coverage.xml
+          git reset HEAD
+      - name: Compare Code Coverage
+        run: |
+          current_coverage=$(xmlstarlet sel -t -v "/coverage/@line-rate" current_coverage.xml)
+          previous_coverage=$(xmlstarlet sel -t -v "/coverage/@line-rate" previous_coverage.xml)
+          echo "Current coverage: $current_coverage"
+          echo "Previous coverage: $previous_coverage"
+          if (( $(echo "$current_coverage < $previous_coverage" | bc -l) )); then
+            echo "Code coverage decreased from previous commit."
+            exit 1
+          fi

@@ -1,4 +1,3 @@
-from math import e
 from .entity import Entity, UML_Method
 from .relation import Relation
 from .custom_exceptions import CustomExceptions
@@ -136,18 +135,18 @@ class Diagram:
         for entity in self._entities:
             result += self.list_entity_details(entity.get_name()) + "\n"
         return result
-        
+
     def list_entity_details(self, entity_name):
         """
         Returns the fields, methods, params, and relations of the entity.
-        
+
         Args:
             entity_name (str): The name of the entity to get details of.
-            
+
         Raises:
             CustomExceptions.EntityNotFoundError: If an entity with the old name
                 does not exist.
-            
+
         Returns:
             str: A templated string containing the fields, methods, params
                 and relations of an entity.
@@ -163,13 +162,13 @@ class Diagram:
         """
 
         Returns the entities in the relation.
-        
+
         Returns:
             str: String containing names of all existing entities.
         """
         entity_names = list(str(e) for e in self._entities)
         return '\n' + ', '.join(entity_names)
-    
+
     def list_relations(self):
         """
         Lists all existing relations as a string.
@@ -181,10 +180,10 @@ class Diagram:
         for rel in self._relations:
             relations_list.append(str(rel))
         return relations_list
-    
+
     def list_entity_relations(self, name:str):
         ''' Lists all relations that contain a specific entity
-        
+
             Return: A string containing all relations
         '''
         relations_list = []
@@ -278,34 +277,7 @@ class Diagram:
                 rel.set_type(new_type)
                 return
         raise CustomExceptions.RelationDoesNotExistError(source, destination)
-    
-    def edit_relation(self, old_src: str, old_dst: str, old_type: str,
-                      new_src:str, new_dst:str, new_type:str):
-        """
-        This method allows for editing an existing relation between two entities by modifying their source,
-        destination, or type. If the input parameters remain unchanged, no action is taken.
 
-        Args:
-            old_src (str): The original source entity.
-            old_dst (str): The original destination entity.
-            old_type (str): The original type of relation.
-            new_src (str): The new source entity.
-            new_dst (str): The new destination entity.
-            new_type (str): The new type of relation.
-        """
-        src = self.get_entity(new_src)
-        dst = self.get_entity(new_dst)
-        # If input unchanged, return
-        if old_src == new_src and old_dst == new_dst and old_type == new_type:
-            return
-        # If src, dst same attempt to change relation type
-        elif old_src == new_src and old_dst == new_dst:
-            self.change_relation_type(new_src, new_dst, new_type)
-        # Otherwise new relation T.F. add then delete
-        else:
-            self.add_relation(new_src, new_dst, new_type)
-            self.delete_relation(old_src, old_dst)
-            
     def getInstance(cls):
         """
         Returns the singleton instance of the Diagram class.
