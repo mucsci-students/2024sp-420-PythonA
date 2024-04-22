@@ -6,7 +6,7 @@ from umleditor.mvc_view.gui_view.gui_lambda.GUIV2 import GUIV2
 from umleditor.mvc_view.gui_view.gui_lambda.GUI3 import GUI3
 from umleditor.mvc_view.gui_view.gui_cworld.view_GUI import ViewGUI
 from umleditor.mvc_controller.gui_controller import ControllerGUI
-from umleditor.mvc_controller.GUIV2_controller import ControllerGUIV2
+from umleditor.mvc_controller.GUIV2_controller import ControllerGUI as ControllerGUIV2
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.versionDialog import VersionSelectionDialog
 
 
