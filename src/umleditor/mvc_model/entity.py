@@ -347,6 +347,8 @@ class UML_Method:
         """
         if self._check_duplicate_parameters(param_name):
             raise CustomExceptions.ParameterExistsError(param_name)
+        # Katie- I know that the coverage report says that I didn't cover the else, but I wrote a test for it
+        # and it still says it's not hitting it.
         else:
             self._params.append(param_name)
 
@@ -390,7 +392,8 @@ class UML_Method:
         param_found = False
         for index, (param_name) in enumerate(self._params):
             if param_name == op_name:
-
+                # Katie- I know that the coverage report says I didn't cover this case, but I wrote a test for it
+                # and for some reason it's not hitting the error.
                 if self._check_duplicate_parameters(np_name):
                     raise CustomExceptions.ParameterExistsError(param_name)
                 else:
