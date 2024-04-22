@@ -73,10 +73,18 @@ Regardless of operating system, this project will install dependencies when it i
 
 ## Design Patterns
 
-- Momento
-- Singleton
-- Command
-- MVC
+* Momento
+  * The momento.py file, which is located in src/umleditor/mvc_controller, implements the Momento design pattern.
+* Singleton
+  * The diagram.py file, which is located in src/umleditor/mvc_model, implements the Singleton design pattern.
+* Controller
+  * The controller.py file, which is located in src/umleditor/mvc_controller, implements the Controller design pattern.
+* Strategy
+  * The autofill.py file, which is located in src/umleditor/mvc_controller, implements the Strategy design pattern. 
+* Facade
+  * The main.py file, which is located in the root directory of the project, implements the Facade design pattern.
+* MVC
+  *  MVC pattern is clearly organized into three separate directories under src/umleditor.
 ## Authors
 
 #### LamdaLegion 
