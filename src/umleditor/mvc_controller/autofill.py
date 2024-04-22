@@ -78,7 +78,7 @@ class ComplexCommandStrategy(Strategy):
     def get_completions(self, words, text, completer):
         if (len(words) == 4 or len(words) == 6) and text.endswith(' '):
             if words[0] == 'fld':
-                if words[1] == '-a' or (words[1] == '-r' and len(words) == 6):
+                if words[1] == '-a':
                     yield from completer.suggestion_type(words[2])
             elif words[0] == 'mthd' and words[1] == '-a':
                 yield from completer.suggestion_return_type(words[2])
