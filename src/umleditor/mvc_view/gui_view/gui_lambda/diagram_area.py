@@ -149,12 +149,17 @@ class DiagramArea(QWidget):
         return src_pos + QPoint(offset_x, offset_y)
 
     def addRelationship(self, src_class_name, dest_class_name, rel_type):
-        self.relationships.append((src_class_name, dest_class_name, rel_type))
-        self.update()  # Request a repaint to draw the new line
-        
+        # Ensure the relationship does not already exist
+        if not any(r for r in self.relationships if r[:2] == (src_class_name, dest_class_name)):
+            self.relationships.append((src_class_name, dest_class_name, rel_type))
+            self.update()  # Request a repaint to draw the new line
+
     def removeRelationship(self, src_class_name, dest_class_name):
-        self.relationships.remove((src_class_name, dest_class_name))
-        self.update()  # Request a repaint to draw the new line
+        # Filter out the relationship to remove
+        original_length = len(self.relationships)
+        self.relationships = [rel for rel in self.relationships if not (rel[0] == src_class_name and rel[1] == dest_class_name)]
+        if len(self.relationships) < original_length:
+            self.update()
         
     def exportAsImage(self, filePath):
         # Create a QPixmap object with the same dimensions as the DiagramArea

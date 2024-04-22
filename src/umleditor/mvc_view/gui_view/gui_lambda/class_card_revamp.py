@@ -101,7 +101,7 @@ class ClassCard (QWidget):
         """
         new_height = self._size * 10  
         self.setMinimumHeight(new_height)
-        #self.adjustSize() 
+        self.adjustSize() 
 
         
     def sizeHint(self):

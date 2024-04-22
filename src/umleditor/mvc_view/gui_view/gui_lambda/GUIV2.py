@@ -514,7 +514,8 @@ class GUIV2(QMainWindow):
         dialog = ChangeParamsDialog(self.classes_methods_params, self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
             class_name, method_name, newParams, toRemove = dialog.getChanges()
-           
+            newParams = newParams.split(',')
+            toRemove = toRemove.split(',')            
             for param in newParams:
                 if newParams:
                     self._process_task_signal.emit(f'prm -a {class_name} {method_name} {param}', self)
@@ -852,15 +853,25 @@ class GUIV2(QMainWindow):
             if hasattr(class_name, '_location'):
                 classCard.move(QPoint(class_name._location[0], class_name._location[1]))
             else:
-                # Default position if no location data is available
                 classCard.move(QPoint(10, 10))
-                
+            
             for field in class_name._fields:
                 field_name, field_type_gen, *rest = field
-                field_type = str(field_type_gen).split("'")[1]  
-                field_str = (f'{field_name} : {field_type}')
+                try:
+                    # Attempt to handle the field type directly if it's not complex
+                    if isinstance(field_type_gen, str):
+                        field_type = field_type_gen
+                    else:
+                        # Handle complex types which are represented as strings containing the type
+                        field_type = str(field_type_gen).split("'")[1]
+                except IndexError:
+                    # Log or handle cases where field type is not in the expected format
+                    print(f"Error processing field type for {field_name}: {field_type_gen}")
+                    continue  # Skip this field or handle as needed
+
+                field_str = f'{field_name} : {field_type}'
                 classCard.add_field(field_str)
-                       
+                    
             for method in class_name._methods:
                 method_str = f"{method.get_method_name()} : {method.get_return_type()}"
                 classCard.add_method(method_str)
@@ -876,13 +887,9 @@ class GUIV2(QMainWindow):
                 if classCard._name == src_class or classCard._name == dest_class:
                     classCard.add_relation(relationship_str)
                 
-
-                # Example: Redraw diagram or custom widgets
-                self.diagramArea.update()
-
-                
-                self.statusBar().showMessage("GUI Refreshed")
-   
+            self.diagramArea.update()
+            self.statusBar().showMessage("GUI Refreshed")
+    
         
 if __name__ == "__main__":
     app = QApplication([])
