@@ -14,14 +14,13 @@ jobs:
         run: |
           pip install -e .
           pip install pytest-cov
-#          pip install coverage
+          pip install coverage
       - name: Run Tests
         run: pytest --cov=src/umleditor/mvc_models
       - name: Coverage Report
         run: |
           coverage run -m pytest
           coverage report --fail-under=100 --omit='*/mvc_controller/*','*/mvc_view/*','*/src/test/*' --show-missing /Users/runner/work/2024sp-420-PythonA/2024sp-420-PythonA/src/umleditor/mvc_model/*
-
   mac:
     runs-on: macos-latest
     steps:
@@ -36,9 +35,7 @@ jobs:
       - name: Install Project and Dependencies
         run: |
           pip install -e .
-          pip install pytest
           pip install pytest-cov
-          pip insall coverage
           brew install xmlstarlet
 #      - name: Coverage Report
 #        run: |
@@ -49,10 +46,8 @@ jobs:
       - name: Get Current and Previous Code Coverage
         run: |
           pytest --cov=src/umleditor/mvc_models --cov-report xml:current.xml
-#          coverage xml --include='*/mvc_models/*' --fail-under=80 -o current.xml
           git reset HEAD
           pytest --cov=src/umleditor/mvc_models --cov-report xml:previous.xml
-#          coverage xml --include='*/mvc_models/*' -o previous.xml
           git reset HEAD
       - name: Compare Code Coverage
         run: |
@@ -80,9 +75,7 @@ jobs:
       - name: Install Project and Dependencies
         run: |
           pip install -e .
-          pip install pytest
           pip install pytest-cov
-#          pip install coverage
           sudo apt install xmlstarlet
       - name: Install PyQt6 dependencies
         run: sudo apt-get update && sudo apt-get install -y libegl1-mesa libxkbcommon-x11-0
