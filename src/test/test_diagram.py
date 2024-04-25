@@ -244,4 +244,8 @@ def test_change_relation_type_relation_doesnt_exist():
     with pytest.raises(CustomExceptions.RelationDoesNotExistError):
         dia.change_relation_type("entity1", "entity3", "realization")
 
+def test_getInstance():
+    dia = Diagram()
+    assert dia.getInstance() == dia
+
 
