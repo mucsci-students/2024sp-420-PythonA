@@ -42,12 +42,12 @@ jobs:
 #          coverage run -m pytest
 #          coverage report --fail-under=100 --omit='*/mvc_controller/*','*/mvc_view/*' --show-missing /Users/runner/work/2024sp-420-PythonA/2024sp-420-PythonA/src/umleditor/mvc_model/*
       - name: Run Tests
-        run: pytest --cov=src/umleditor/mvc_models
+        run: pytest --cov=src/umleditor/mvc_model
       - name: Get Current and Previous Code Coverage
         run: |
-          pytest --cov=src/umleditor/mvc_models --cov-report xml:current.xml
+          pytest --cov=src/umleditor/mvc_model --cov-report xml:current.xml
           git reset HEAD
-          pytest --cov=src/umleditor/mvc_models --cov-report xml:previous.xml
+          pytest --cov=src/umleditor/mvc_model --cov-report xml:previous.xml
           git reset HEAD
       - name: Compare Code Coverage
         run: |
@@ -80,12 +80,12 @@ jobs:
       - name: Install PyQt6 dependencies
         run: sudo apt-get update && sudo apt-get install -y libegl1-mesa libxkbcommon-x11-0
       - name: Run Tests
-        run: pytest --cov=src/umleditor/mvc_models
+        run: pytest --cov=src/umleditor/mvc_model
       - name: Get Current and Previous Code Coverage
         run: |
-          pytest --cov=src/umleditor/mvc_models --cov-report xml:current_coverage.xml
+          pytest --cov=src/umleditor/mvc_model --cov-report xml:current_coverage.xml
           git reset HEAD
-          pytest --cov=src/umleditor/mvc_models --cov-report xml:previous_coverage.xml
+          pytest --cov=src/umleditor/mvc_model --cov-report xml:previous_coverage.xml
           git reset HEAD
       - name: Compare Code Coverage
         run: |
