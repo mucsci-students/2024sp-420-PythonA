@@ -59,6 +59,8 @@ jobs:
             echo "Code coverage decreased from previous commit."
             exit 1
           fi
+      - name: Coverage Report
+        run: pytest --cov=src/umleditor/mvc_model --cov-report term-missing
   linux:
     runs-on: ubuntu-latest
     steps:
