@@ -1,6 +1,6 @@
 from .entity import Entity
 from .relation import Relation
-from umleditor.mvc_model.custom_exceptions import CustomExceptions
+from umleditor.custom_exceptions import CustomExceptions
 
 class Diagram:
     #Singleton Design Pattern

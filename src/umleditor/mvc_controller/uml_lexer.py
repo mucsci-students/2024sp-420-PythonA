@@ -1,4 +1,4 @@
-from umleditor.mvc_model.custom_exceptions import CustomExceptions as CE
+from umleditor.custom_exceptions import CustomExceptions as CE
 
 #map relating commands to the flags that can be passed to them
 #NOTE: These must be synched with the command_function_map based on idx

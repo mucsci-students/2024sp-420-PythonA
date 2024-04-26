@@ -1,4 +1,4 @@
-from umleditor.mvc_model.custom_exceptions import CustomExceptions as CE
+from umleditor.custom_exceptions import CustomExceptions as CE
 
 def write(s: str) -> None:
     print(s)

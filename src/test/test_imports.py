@@ -56,7 +56,7 @@ def test_import_uml_parser():
                         #Import From Model Tests#
 #===============================================================================#
 def test_import_custom_exceptions():
-    from umleditor.mvc_model.custom_exceptions import CustomExceptions
+    from umleditor.custom_exceptions import CustomExceptions
     assert CustomExceptions
 
 def test_import_diagram():
