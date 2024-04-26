@@ -37,32 +37,11 @@ class ApplicationFacade:
         self.block_gui_terminal()
         app = QApplication(sys.argv)
 
-        try:
-            dialog = VersionSelectionDialog()
-            result = dialog.exec()
+        mainWindow = GUIV2()
+        controller = ControllerGUIV2(mainWindow)
+        mainWindow.show()
+        sys.exit(app.exec())
 
-            if result == QDialog.DialogCode.Accepted:
-                if dialog.selected_version == "1":
-                    mainWindow = ViewGUI()
-                    controller = ControllerGUI(mainWindow)
-                elif dialog.selected_version == "2":
-                    mainWindow = GUIV2()
-                    controller = ControllerGUIV2(mainWindow)
-                elif dialog.selected_version == "3":
-                    mainWindow = GUI3()
-                else:
-                    print("Invalid selection, defaulting to Gui V2.")
-                    mainWindow = GUIV2()
-
-                mainWindow.show()
-                sys.exit(app.exec())
-            else:
-                print("No selection made, exiting.")
-                sys.exit(0)
-        except KeyboardInterrupt:
-            print("\nApplication closed.")
-        except Exception as e:
-            print(f"Unexpected error occurred: {e}")
 
     def main(self):
         if len(sys.argv) >= 2 and sys.argv[1] == 'cli':
