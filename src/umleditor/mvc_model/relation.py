@@ -1,5 +1,5 @@
 from .entity import Entity
-from umleditor.custom_exceptions import CustomExceptions
+from umleditor.mvc_model.custom_exceptions import CustomExceptions
 
 class Relation:
     RELATIONSHIP_TYPE = ['aggregation', 'composition', 'inheritance', 'realization']

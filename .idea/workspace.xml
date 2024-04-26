@@ -4,19 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1e72d64a-81c4-4828-a95a-1fe0f0380a19" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/test/test_diagram.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/test_diagram.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/test_entity.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/test_entity.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/test_imports.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/test_imports.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/test_relation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/test_relation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/test_uml_method.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/test_uml_method.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/umleditor/mvc_controller/serializer.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/umleditor/mvc_controller/serializer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/umleditor/mvc_model/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/umleditor/mvc_model/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/umleditor/mvc_model/custom_exceptions.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/umleditor/custom_exceptions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/umleditor/mvc_model/diagram.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/umleditor/mvc_model/diagram.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/umleditor/mvc_model/entity.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/umleditor/mvc_model/entity.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/umleditor/mvc_model/relation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/umleditor/mvc_model/relation.py" afterDir="false" />
-    </list>
+    <list default="true" id="1e72d64a-81c4-4828-a95a-1fe0f0380a19" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -101,7 +89,7 @@
       <workItem from="1713754815078" duration="3283000" />
       <workItem from="1713985392538" duration="1647000" />
       <workItem from="1714075201122" duration="8831000" />
-      <workItem from="1714155430014" duration="414000" />
+      <workItem from="1714155430014" duration="730000" />
     </task>
     <servers />
   </component>

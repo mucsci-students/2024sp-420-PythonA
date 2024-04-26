@@ -1,5 +1,5 @@
 from umleditor.mvc_model.diagram import Diagram
-from umleditor.custom_exceptions import CustomExceptions
+from umleditor.mvc_model.custom_exceptions import CustomExceptions
 import pytest
 """
 These test that the basic functions for Diagram interact

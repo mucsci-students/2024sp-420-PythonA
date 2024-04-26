@@ -2,7 +2,7 @@
 #Secondary: Zhang
 
 import pytest
-from umleditor.custom_exceptions import CustomExceptions
+from umleditor.mvc_model.custom_exceptions import CustomExceptions
 from umleditor.mvc_model.entity import Entity
 
 
