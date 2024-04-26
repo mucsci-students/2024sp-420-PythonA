@@ -2,8 +2,8 @@
 #Secondary: Zhang
 
 import pytest
-from umleditor.mvc_model import CustomExceptions
-from umleditor.mvc_model import Entity
+from umleditor.custom_exceptions import CustomExceptions
+from umleditor.mvc_model.entity import Entity
 
 
 def test_create_entity():

@@ -15,12 +15,12 @@ class CustomJSONEncoder(json.JSONEncoder):
             return list(obj)
         return json.JSONEncoder.default(self, obj)
 
-from umleditor.mvc_controller.controller_input import read_file, read_line
+from umleditor.mvc_controller.controller_input import read_file
 import umleditor.mvc_controller.controller_output as controller_output
 from umleditor.mvc_model.diagram import Diagram
 from umleditor.mvc_model.entity import Entity, UML_Method
 from umleditor.mvc_model.relation import Relation
-from umleditor.mvc_model.custom_exceptions import CustomExceptions as CE
+from umleditor.custom_exceptions import CustomExceptions as CE
 
 
 def serialize(diagram: Diagram, path: str) -> None:
