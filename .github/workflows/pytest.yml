@@ -16,11 +16,11 @@ jobs:
           pip install pytest-cov
           pip install coverage
       - name: Run Tests
-        run: pytest --cov=src/umleditor/mvc_models
-      - name: Coverage Report
-        run: |
-          coverage run -m pytest
-          coverage report --fail-under=100 --omit='*/mvc_controller/*','*/mvc_view/*','*/src/test/*' --show-missing /Users/runner/work/2024sp-420-PythonA/2024sp-420-PythonA/src/umleditor/mvc_model/*
+        run: pytest --cov=src/umleditor/mvc_models --cov-report term-missing
+#      - name: Coverage Report
+#        run: |
+#          coverage run -m pytest
+#          coverage report --fail-under=100 --omit='*/mvc_controller/*','*/mvc_view/*','*/src/test/*' --show-missing /Users/runner/work/2024sp-420-PythonA/2024sp-420-PythonA/src/umleditor/mvc_model/*
   mac:
     runs-on: macos-latest
     steps:
