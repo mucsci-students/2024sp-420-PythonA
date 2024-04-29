@@ -5,6 +5,7 @@ from .uml_lexer import lex_input as lex
 from umleditor.mvc_model import Diagram, Entity, Relation, UML_Method
 from ..mvc_view.cli_view import help_command
 import re
+import keyword
 
 # list of all classes that need to be searched for commands
 classes = [Diagram, Entity, Relation, UML_Method, help_command]
@@ -155,6 +156,10 @@ def __find_class(function: str):
             return cl
 
 
+def is_valid_arg(arg):
+    if keyword.iskeyword(arg) or not re.match(r'^[a-zA-Z_][a-zA-Z0-9_\-]*$', arg):
+        return False
+    return True
 def check_args(args: list):
     """Given a list of args, checks to make sure each one is valid.
         Valid is defined as containing alphanumeric chars, underscore, and hyphen.
@@ -167,6 +172,9 @@ def check_args(args: list):
             CustomExceptions.InvalidArgumentError if an argument provided is invalid
             The list of args provided if all args are valid
     """
-    exp = re.compile('[^a-zA-Z-_0-9]')
-    
+    for arg in args:
+        if not is_valid_arg(arg):
+            raise CE.InvalidArgumentError(arg)
+
     return args
+
