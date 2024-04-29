@@ -159,6 +159,8 @@ class GUIV2(QMainWindow):
             ("Save", "#FFFFFF", self.saveFile),
             ("Load", "#FFFFFF", self.openFile),
             ("Edit", "#BB4CC3", self.editAction),
+            ("Undo", "#FFFFFF", self.undoAction),
+            ("Redo", "#FFFFFF", self.redoAction),
             ("Classes", "#CB5551", self.classesAction),
             ("Attributes", "#C78640", self.attributesAction),
             ("Relationships", "#4882CF", self.relationshipsAction),
