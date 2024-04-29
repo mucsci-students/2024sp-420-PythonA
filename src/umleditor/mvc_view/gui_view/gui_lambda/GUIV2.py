@@ -1,3 +1,5 @@
+import os
+
 from umleditor.mvc_model.diagram import Diagram
 from PyQt6.QtCore import pyqtSignal, Qt, QPoint, QUrl
 from PyQt6.QtWidgets import (QDialog, QMainWindow, QWidget, QVBoxLayout, QPushButton, QApplication, QGridLayout,
@@ -213,11 +215,12 @@ class GUIV2(QMainWindow):
     ### FILE ACTION STUBS
 
     def openFile(self):
-        dialog = LoadDialog(self)
-        if dialog.exec() == QDialog.DialogCode.Accepted:
-            save_name = dialog.getFilename()
-            
-            self._process_task_signal.emit(f'load {save_name}', self)
+        file_name, _ = QFileDialog.getOpenFileName(self, "Open File")
+        if file_name:
+            file_name_without_ext, ext = os.path.splitext(file_name)
+            if ext.lower() == ".json":
+                file_name = file_name_without_ext
+            self._process_task_signal.emit(f'load {file_name}', self)
             self.refreshGUI()
         
         
@@ -227,10 +230,8 @@ class GUIV2(QMainWindow):
         # Example: Clearing the UI, resetting data models, etc.
 
     def saveFile(self):
-        dialog = SaveDialog(self)
-        if dialog.exec() == QDialog.DialogCode.Accepted:
-            save_name = dialog.getFilename()
-            
+        save_name, _ = QFileDialog.getSaveFileName(self, "Save File")
+        if save_name:
             self._process_task_signal.emit(f'save {save_name}', self)
             
     def exportDiagram(self):
