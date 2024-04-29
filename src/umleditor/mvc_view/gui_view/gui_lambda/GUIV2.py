@@ -614,18 +614,18 @@ class GUIV2(QMainWindow):
         # Populate the lstRelationships widget with updated relationships
         for relationship in current_relationships:
             self.lstRelationships.addItem(relationship)
-            
+
     def createRelationshipAction(self):
         class_names = [entity._name for entity in self._diagram._entities]
         dialog = CreateRelationshipDialog(class_names, self)
-        
+
         if dialog.exec() == QDialog.DialogCode.Accepted:
             src_class, dest_class, relationship_type = dialog.getRelationshipInfo()
-            self._process_task_signal.emit (f'rel -a {src_class} {dest_class} {relationship_type}', self)
+            self._process_task_signal.emit(f'rel -a {src_class} {dest_class} {relationship_type}', self)
             relationship_str = f"{src_class} -> {dest_class}"
-            
-        self.refreshRelationshipsList()
-        self.diagramArea.addRelationship(src_class, dest_class, relationship_type)
+
+            self.refreshRelationshipsList()
+            self.diagramArea.addRelationship(src_class, dest_class, relationship_type)
         
 
     def removeRelationshipAction(self):
@@ -636,18 +636,15 @@ class GUIV2(QMainWindow):
 
             src_class, type, dest_class = selected_relationship.split(" -> ")
 
-           
             self._process_task_signal.emit(f'rel -d {src_class} {dest_class}', self)
 
-            
             self.refreshRelationshipsList()
-            
-            relationship_str = f"{src_class} -> {dest_class}"
-            
-                
-        self.diagramArea.removeRelationship(src_class, dest_class)
 
-                    
+            relationship_str = f"{src_class} -> {dest_class}"
+
+            self.diagramArea.removeRelationship(src_class, dest_class)
+
+
     def helpAction(self):
         dialog = QDialog(self)
         dialog.setWindowTitle("Help")
