@@ -43,7 +43,8 @@ class DiagramArea(QWidget):
             # Get the new position from the ClassCard
             newPosition = classCard.pos()
             # Update the entity's location based on classCard's current position
-            classCard._entity._location = [newPosition.x(), newPosition.y()]   
+            classCard._entity._location = [newPosition.x(), newPosition.y()]
+            self.update()
                     
     def clearAll(self):
         """Clears all visual elements from the diagram area."""
