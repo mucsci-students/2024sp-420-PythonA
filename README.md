@@ -65,6 +65,13 @@ Regardless of operating system, this project will install dependencies when it i
 - `'py main.py cli'   - runs the program in CLI mode instead of creating a gui.
 - `'py main.py debug' - runs the program in CLI debug mode. This mode is nearly identical to the CLI mode, just with slightly less error handling. Use at your own risk.
 
+### Keyboard Shortcut in CLI mode
+* 'Ctrl+z' for undo.
+* 'Ctrl+y' for redo.
+* 'Up' and 'Down' for navigating through the history of input commands.
+
+
+
 **If you are in the CLI mode, type 'help' for a list of commands.**
 **In the gui, use the menu options available at the top of the screen and/or by right clicking to manipulate the diagram to your needs**
 
@@ -82,7 +89,7 @@ Regardless of operating system, this project will install dependencies when it i
 * Strategy
   * The autofill.py file, which is located in src/umleditor/mvc_controller, implements the Strategy design pattern. 
 * Facade
-  * The main.py file, which is located in the root directory of the project, implements the Facade design pattern.
+  * The main.py file, which is located in the root directory of the project, implements the Command design pattern.
 * MVC
   *  MVC pattern is clearly organized into three separate directories under src/umleditor.
 ## Authors

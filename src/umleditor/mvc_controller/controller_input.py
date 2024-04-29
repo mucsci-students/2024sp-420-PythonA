@@ -1,15 +1,33 @@
 from umleditor.mvc_model import CustomExceptions as CE
 from umleditor.mvc_controller.autofill import CommandCompleter
 from prompt_toolkit import prompt
+from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.history import InMemoryHistory
 
 history = InMemoryHistory()
 
+bindings = KeyBindings()
+
+
+@bindings.add('c-z')
+def _undo(event):
+    event.app.current_buffer.text = 'undo'
+    event.app.exit(result='undo')
+
+
+@bindings.add('c-y')
+def _redo(event):
+    event.app.current_buffer.text = 'redo'
+    event.app.exit(result='redo')
+
 
 def read_line(s='Command: ') -> str:
     while True:
-        user_input = prompt(s, completer=CommandCompleter(), history=history)
-        break
+        try:
+            user_input = prompt(s, completer=CommandCompleter(), history=history, key_bindings=bindings)
+            break
+        except Exception as e:
+            print(f"Unexpected Error: {e}")
     return user_input
 
 
