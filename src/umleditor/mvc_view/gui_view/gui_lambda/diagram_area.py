@@ -1,4 +1,5 @@
 import math
+import random
 
 from PyQt6.QtCore import pyqtSignal, Qt, QPoint, QUrl
 from PyQt6.QtWidgets import (QDialog, QMainWindow, QWidget, QVBoxLayout, QPushButton, QApplication, QGridLayout,
@@ -176,4 +177,15 @@ class DiagramArea(QWidget):
         pixmap.save(filePath, "PNG")
         
     def updateDiagram(self):
-        self.update()  
+        self.update()
+
+    def get_random_color(self):
+        # Dark mode color palette excluding black, white, and gray
+        colors = [
+            "#E57373", "#F06292", "#BA68C8", "#9575CD", "#7986CB",
+            "#64B5F6", "#4FC3F7", "#4DD0E1", "#4DB6AC", "#81C784",
+            "#AED581", "#DCE775", "#FFF176", "#FFD54F", "#FFB74D",
+            "#FF8A65", "#A1887F", "#E0E0E0", "#90A4AE"
+        ]
+
+        return random.choice(colors)

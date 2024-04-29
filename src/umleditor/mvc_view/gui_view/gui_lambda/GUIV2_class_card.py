@@ -31,8 +31,6 @@ class ClassCard(QWidget):
         self.moving = False
         self.offset = None
 
-    
-
     def initUI(self):
         """
         Initializes the user interface of the ClassCard widget.
@@ -81,6 +79,7 @@ class ClassCard(QWidget):
         """
         self._name = name
         self._class_label.setText(name)
+
     def set_styles(self):
         """
         Sets styles for the widgets.
@@ -90,10 +89,10 @@ class ClassCard(QWidget):
         self._list_method.setStyleSheet("border: 1px solid black; border-bottom: none; border-top: none;")
         self._list_relation.setStyleSheet("border: 1px solid black;")
         # Set style for class label
-        self._class_label.setStyleSheet("background-color: #6495ED; border: 1px solid black;")
+        self._class_label.setStyleSheet(f"background-color: {self.get_random_color()}; border: 1px solid black;")
         self._class_label.setMinimumHeight(30)
         # Set style for entire widget
-        self.setStyleSheet("background-color: white;")
+        self.setStyleSheet("background-color: black;")
 
     def show_class_menu(self, position):
         """
@@ -423,7 +422,7 @@ class ClassCard(QWidget):
 
         # Create field and add to list
         item = QListWidgetItem()
-        list.addItem(item) 
+        list.addItem(item)
         text = QLineEdit()
         text.setText(field)
         text.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
@@ -439,7 +438,7 @@ class ClassCard(QWidget):
         text.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         text.setReadOnly(True)
-        
+
     def getFields(self):
         """
         Returns a list of fields names added to the class card.
@@ -455,7 +454,7 @@ class ClassCard(QWidget):
             field_name = self._list_field.itemWidget(item).text()
             fields.append(field_name)
         return fields
-        
+
     def remove_field(self, field_name):
         """
         Removes a field from the class card.
@@ -469,7 +468,7 @@ class ClassCard(QWidget):
             if line_edit and line_edit.text() == field_name:
                 self._list_field.takeItem(i)
                 break
-            
+
     def rename_field(self, old_field_name, new_field_name):
         """
         Renames an existing field in the class card.
@@ -484,12 +483,12 @@ class ClassCard(QWidget):
             if line_edit and line_edit.text().startswith(old_field_name):
                 parts = line_edit.text().split(' : ')
                 if len(parts) > 1:
-                    
+
                     line_edit.setText(f"{new_field_name}: {parts[1].strip()}")
                 else:
-                    
+
                     line_edit.setText(new_field_name)
-                break    
+                break
 
     def add_method(self, method):
         """
@@ -499,7 +498,7 @@ class ClassCard(QWidget):
 
         # Create field and add to list
         item = QListWidgetItem()
-        list.addItem(item) 
+        list.addItem(item)
         text = QLineEdit()
         text.setText(method)
         text.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
@@ -515,7 +514,7 @@ class ClassCard(QWidget):
         text.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         text.setReadOnly(True)
-        
+
     def getMethods(self):
         """
         Returns a list of method names added to the class card.
@@ -525,13 +524,12 @@ class ClassCard(QWidget):
         """
         methods = []
         for index in range(self._list_method.count()):
-
             item = self._list_method.item(index)
-      
+
             method_name = self._list_method.itemWidget(item).text()
             methods.append(method_name)
         return methods
-        
+
     def remove_method(self, method_name):
         """
         Removes a method from the class card.
@@ -545,6 +543,7 @@ class ClassCard(QWidget):
             if line_edit and line_edit.text() == method_name:
                 self._list_method.takeItem(i)
                 break
+
     def rename_method(self, old_method_name, new_method_name):
         """
         Renames an existing method in the class card.
@@ -557,15 +556,16 @@ class ClassCard(QWidget):
             item = self._list_method.item(i)
             line_edit = self._list_method.itemWidget(item)
             if line_edit and line_edit.text().startswith(old_method_name):
-          
+
                 parts = line_edit.text().split(' : ')
                 if len(parts) > 1:
-                   
+
                     line_edit.setText(f"{new_method_name}: {parts[1].strip()}")
                 else:
-                   
+
                     line_edit.setText(new_method_name)
-                break    
+                break
+
     def add_relation(self, relation):
         """
         Adds a relation.
@@ -574,7 +574,7 @@ class ClassCard(QWidget):
 
         # Create field and add to list
         item = QListWidgetItem()
-        list.addItem(item)  
+        list.addItem(item)
         text = QLineEdit()
         text.setText(relation)
         text.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
@@ -603,7 +603,7 @@ class ClassCard(QWidget):
                 # Take the item out of the list, which effectively removes it
                 list_widget.takeItem(index)
                 break  # Exit the loop after finding and removing the relation
-                    
+
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
             self.moving = True
@@ -619,6 +619,17 @@ class ClassCard(QWidget):
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
             self.moving = False
-            
+
     def centerPos(self):
-         return self.geometry().center()
+        return self.geometry().center()
+
+    def get_random_color(self):
+        # Dark mode color palette excluding black, white, and gray
+        colors = [
+            "#E57373", "#F06292", "#BA68C8", "#9575CD", "#7986CB",
+            "#64B5F6", "#4FC3F7", "#4DD0E1", "#4DB6AC", "#81C784",
+            "#AED581", "#DCE775", "#FFF176", "#FFD54F", "#FFB74D",
+            "#FF8A65", "#A1887F", "#E0E0E0", "#90A4AE"
+        ]
+
+        return random.choice(colors)

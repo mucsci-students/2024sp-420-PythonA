@@ -30,11 +30,13 @@ class GUIV2(QMainWindow):
     def __init__(self):
         super().__init__()
         self._diagram = Diagram()
+        self.diagramArea = DiagramArea()
         self.lstRelationships = QListWidget()
         self.gridLayout = QGridLayout()
         self.setWindowTitle("UML Editor - GUI V2")
         self.setGeometry(300, 300, 850, 850)
         self.initUI()
+
         self.applyDarkTheme()
         self.currentFilePath = " "
         self.classes_methods_params = []
@@ -117,7 +119,7 @@ class GUIV2(QMainWindow):
         self.setupSidebar(mainLayout)
 
         # Initialize DiagramArea and add it directly to the mainLayout
-        self.diagramArea = DiagramArea()
+
         mainLayout.addWidget(self.diagramArea)
         mainLayout.setStretchFactor(self.diagramArea, 4)  # Give the diagram area more space compared to the sidebar
 
@@ -131,17 +133,17 @@ class GUIV2(QMainWindow):
 
         # Define button info with actions
         buttons_info = [
-            ("File", "#69C68A", self.fileAction),
-            ("Save", "#FFFFFF", self.saveFile),
-            ("Load", "#FFFFFF", self.openFile),
-            ("Edit", "#BB4CC3", self.editAction),
-            ("Undo", "#FFFFFF", self.undoAction),
-            ("Redo", "#FFFFFF", self.redoAction),
-            ("Add Class", "#FFFFFF", self.newClassAction),
-            ("Edit Classes", "#CB5551", self.classesAction),
-            ("Attributes", "#C78640", self.attributesAction),
-            ("Relationships", "#4882CF", self.relationshipsAction),
-            ("Help", "#BB4A83", self.helpAction),
+            ("File", self.diagramArea.get_random_color(), self.fileAction),
+            ("Save", self.diagramArea.get_random_color(), self.saveFile),
+            ("Load", self.diagramArea.get_random_color(), self.openFile),
+            ("Edit", self.diagramArea.get_random_color(), self.editAction),
+            ("Undo", self.diagramArea.get_random_color(), self.undoAction),
+            ("Redo", self.diagramArea.get_random_color(), self.redoAction),
+            ("Add Class", self.diagramArea.get_random_color(), self.newClassAction),
+            ("Edit Classes", self.diagramArea.get_random_color(), self.classesAction),
+            ("Attributes", self.diagramArea.get_random_color(), self.attributesAction),
+            ("Relationships", self.diagramArea.get_random_color(), self.relationshipsAction),
+            ("Help", self.diagramArea.get_random_color(), self.helpAction),
             
         ]
 

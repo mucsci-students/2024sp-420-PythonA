@@ -1,3 +1,5 @@
+import random
+
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QListWidget, QMenu, QLineEdit, QLabel, QListWidgetItem, QSizePolicy
 from PyQt6.QtGui import QAction
 from PyQt6.QtCore import Qt, pyqtSignal, QEvent, QPoint, QSize
@@ -112,17 +114,17 @@ class ClassCard (QWidget):
         Sets styles for the widgets.
         """
         # Set border style for list widgets
-        self._list_fields.setStyleSheet("border: 1px solid black; border-top: none")
-        self._list_methods.setStyleSheet("border: 1px solid black; border-top: none")
+        self._list_fields.setStyleSheet("color: white; border: 1px solid black; border-top: none")
+        self._list_methods.setStyleSheet("color: white; border: 1px solid black; border-top: none")
         # Set style for class label
-        self._class_label.setStyleSheet("background-color: #6495ED; border: 1px solid black;")
+        self._class_label.setStyleSheet(f"background-color: {self.get_random_color()}; border: 1px solid black;")
         self._class_label.setMinimumHeight(20)
-        self._fields_label.setStyleSheet("background-color: #6495ED; border: 1px solid black;")
+        self._fields_label.setStyleSheet(f"background-color: {self.get_random_color()}; border: 1px solid black;")
         self._fields_label.setMinimumHeight(15)
-        self._methods_label.setStyleSheet("background-color: #6495ED; border: 1px solid black;")
+        self._methods_label.setStyleSheet(f"background-color: {self.get_random_color()}; border: 1px solid black;")
         self._methods_label.setMinimumHeight(15)
         # Set style for entire widget
-        self.setStyleSheet("background-color: white;")
+        self.setStyleSheet("background-color: #212121;")
     def add_field(self, field):
             """
             Adds a field.
@@ -349,4 +351,17 @@ class ClassCard (QWidget):
                 list_widget.takeItem(index)
                 break  # Exit the loop after finding and removing the relation
        
-    
+    def get_random_color(self):
+        # Dark mode color palette excluding black, white, and gray
+        colors = [
+            "#8e44ad",  # Purple
+            "#2980b9",  # Blue
+            "#27ae60",  # Green
+            "#f39c12",  # Orange
+            "#d35400",  # Dark Orange
+            "#c0392b",  # Red
+            "#e91e63",  # Pink
+            "#008080"  # Teal
+        ]
+
+        return random.choice(colors)
