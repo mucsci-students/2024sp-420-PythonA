@@ -156,6 +156,8 @@ class GUIV2(QMainWindow):
         # Define button info with actions
         buttons_info = [
             ("File", "#69C68A", self.fileAction),
+            ("Save", "#FFFFFF", self.saveFile),
+            ("Load", "#FFFFFF", self.openFile),
             ("Edit", "#BB4CC3", self.editAction),
             ("Classes", "#CB5551", self.classesAction),
             ("Attributes", "#C78640", self.attributesAction),
