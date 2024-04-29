@@ -170,13 +170,13 @@ class GUIV2(QMainWindow):
             btn.clicked.connect(action)
             sidebarLayout.addWidget(btn)
 
-        lblRelationships = QLabel("Relationships")
+        lblRelationships = QLabel("")
         lblRelationships.setObjectName("lblRelationships")
         sidebarLayout.addWidget(lblRelationships)
 
         self.lstRelationships = QListWidget()
         self.lstRelationships.setObjectName("lstRelationships")
-        sidebarLayout.addWidget(self.lstRelationships)
+        ##sidebarLayout.addWidget(self.lstRelationships)
 
         rel_list = self._diagram.list_relations()
         for rel in rel_list:
