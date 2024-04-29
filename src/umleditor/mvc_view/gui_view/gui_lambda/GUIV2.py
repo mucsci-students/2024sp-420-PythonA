@@ -105,32 +105,6 @@ class GUIV2(QMainWindow):
         self.actionRename_Method = QAction('Rename &Method', self)
         self.actionRename_Method.triggered.connect(self.renameMethodAction)
 
-        # Adding actions to the menu
-        menuBar = self.menuBar()
-        fileMenu = menuBar.addMenu('&File')
-        fileMenu.addAction(self.actionSave)
-        # fileMenu.addAction(self.actionSaveAs)
-        fileMenu.addAction(self.actionLoad)
-        fileMenu.addAction(self.actionExit)
-
-        editMenu = menuBar.addMenu('&Edit')
-        editMenu.addAction(self.actionAdd_Class)
-        editMenu.addAction(self.actionDelete_Class)
-        editMenu.addAction(self.actionRename_Class)
-        editMenu.addSeparator()  # Adds a visual separator between menu items
-        editMenu.addAction(self.actionAdd_Relationship)
-        editMenu.addAction(self.actionRemove_Relationship)
-        editMenu.addSeparator()
-        editMenu.addAction(self.actionAdd_Field)
-        editMenu.addAction(self.actionRemove_Field)
-        editMenu.addAction(self.actionRename_Field)
-        editMenu.addSeparator()
-        editMenu.addAction(self.actionAdd_Method)
-        editMenu.addAction(self.actionRemove_Method)
-        editMenu.addAction(self.actionRename_Method)
-
-        helpMenu = menuBar.addMenu('&Help')
-        helpMenu.addAction(self.actionHelp)
 
     def setupLayout(self):
         # Main layout for the entire window
