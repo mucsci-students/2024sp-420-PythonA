@@ -221,7 +221,7 @@ class GUIV2(QMainWindow):
         if file_name:
             file_name_without_ext, ext = os.path.splitext(file_name)
             if ext.lower() == ".json":
-                file_name = file_name_without_ext
+                file_name = os.path.basename(file_name_without_ext)
             self._process_task_signal.emit(f'load {file_name}', self)
             self.refreshGUI()
         
@@ -234,8 +234,9 @@ class GUIV2(QMainWindow):
     def saveFile(self):
         save_name, _ = QFileDialog.getSaveFileName(self, "Save File")
         if save_name:
-            self._process_task_signal.emit(f'save {save_name}', self)
-            
+            file_name_without_path = os.path.basename(save_name)
+            self._process_task_signal.emit(f'save {file_name_without_path}', self)
+
     def exportDiagram(self):
         # Open a file dialog to select the path for saving the PNG
         filePath, _ = QFileDialog.getSaveFileName(self, "Save Diagram", "", "PNG Files (*.png)")
