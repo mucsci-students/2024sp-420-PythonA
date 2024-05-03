@@ -88,7 +88,7 @@ Regardless of operating system, this project will install dependencies when it i
   * The controller.py file, which is located in src/umleditor/mvc_controller, implements the Controller design pattern.
 * Strategy
   * The autofill.py file, which is located in src/umleditor/mvc_controller, implements the Strategy design pattern. 
-* Facade
+* Command
   * The main.py file, which is located in the root directory of the project, implements the Command design pattern.
 * MVC
   *  MVC pattern is clearly organized into three separate directories under src/umleditor.
