@@ -28,6 +28,10 @@ class DiagramArea(QWidget):
         classCard.show()
         self.classCards[className] = classCard  
         classCard.cardMoved.connect(lambda: self.updateEntityPosition(classCard))
+         # Calculate the new position based on the last card's position and offset
+        newPosition = self.lastCardPosition + self.offsetIncrement
+        self.lastCardPosition = newPosition  # Update the last card's position
+        classCard.move(newPosition)  # Move the card to the new position
 
     def removeClassCard(self, className):
         if className in self.classCards:
