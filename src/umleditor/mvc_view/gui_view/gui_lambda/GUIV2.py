@@ -146,8 +146,13 @@ class GUIV2(QMainWindow):
 
         for text, color, action in buttons_info:
             btn = QPushButton(text)
-            if text == "Save" or text == "Edit Classes" or text == "Attributes" or text == "Relationships":
+            if text == "Save" or text == "Edit Classes" or text == "Attributes":
                 if len(self._diagram._entities) != 0:
+                    btn.setStyleSheet(f"QPushButton {{border: 2px solid {color};}}")
+                    btn.clicked.connect(action)
+                    self.sidebarLayout.addWidget(btn)
+            elif text == "Relationships":
+                if len(self._diagram._entities) >= 2:
                     btn.setStyleSheet(f"QPushButton {{border: 2px solid {color};}}")
                     btn.clicked.connect(action)
                     self.sidebarLayout.addWidget(btn)
@@ -323,11 +328,6 @@ class GUIV2(QMainWindow):
         else:  # If not in Dark Mode
             dialog.setStyleSheet("")  # Apply Light Mode styling or keep it default
 
-        # Button for New Class
-        btnNewClass = QPushButton("New Class")
-        btnNewClass.clicked.connect(self.newClassAction)
-        layout.addWidget(btnNewClass)
-
         # Button for Delete Class
         btnDeleteClass = QPushButton("Delete Class")
         btnDeleteClass.clicked.connect(self.deleteClassAction)
@@ -350,7 +350,7 @@ class GUIV2(QMainWindow):
                 entity = self._diagram.get_entity(class_name)
                 classCard = ClassCard(class_name, entity)
                 self.diagramArea.addClassCard(classCard, class_name)
-                if len(self._diagram._entities) == 1:
+                if len(self._diagram._entities) <= 2:
                     self.setupSidebar(self.mainLayout)
                     self.refreshGUI()
         
@@ -362,7 +362,7 @@ class GUIV2(QMainWindow):
             if selected_class_name:
                 self.diagramArea.removeClassCard(selected_class_name)
                 self._process_task_signal.emit('class -d ' + selected_class_name, self)
-                if len(self._diagram._entities) == 0:
+                if len(self._diagram._entities) <= 2:
                     self.setupSidebar(self.mainLayout)
                     self.refreshGUI()
                 
