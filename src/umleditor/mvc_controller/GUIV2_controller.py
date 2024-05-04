@@ -26,7 +26,14 @@ class ControllerGUI(Controller):
         self._window = window
         self._diagram = Diagram()
         self._window.get_signal().connect(self.run)
-
+        self._controller = Controller()
+        self._window.close_signal.connect(self.close_slot)
+    def close_slot(self):
+        """
+        Slot to handle the close signal.
+        """
+        self._controller.GUIquit()
+        
     def run(self, task: str, widget: QtWidgets):
         """
         Runs the specified task.
@@ -36,6 +43,7 @@ class ControllerGUI(Controller):
             widget (QtWidgets): Used to set particular widget to its completed state
         """
         print(task)
+
         try:
             out = super().run(task)
         except Exception as e:

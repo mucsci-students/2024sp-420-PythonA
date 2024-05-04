@@ -3,75 +3,56 @@ from PyQt6.QtWidgets import QApplication, QDialog
 
 from umleditor.mvc_controller.cli_controller import CLI_Controller
 from umleditor.mvc_view.gui_view.gui_lambda.GUIV2 import GUIV2
-from umleditor.mvc_view.gui_view.gui_lambda.GUI3 import GUI3
 from umleditor.mvc_view.gui_view.gui_cworld.view_GUI import ViewGUI
 from umleditor.mvc_controller.gui_controller import ControllerGUI
 from umleditor.mvc_controller.GUIV2_controller import ControllerGUI as ControllerGUIV2
 from umleditor.mvc_view.gui_view.gui_lambda.dialog_boxes.versionDialog import VersionSelectionDialog
 
 
-class ApplicationFacade:
-    def __init__(self):
-        self.cli_app = CLI_Controller()
+class Command:
+    def execute(self):
+        pass
 
-    def block_gui_terminal(self):
-        # Blocks GUI from printing to the terminal
-        sys.stdout = open(os.devnull, 'w')
 
-    def run_cli(self):
+class RunCLICommand(Command):
+    def __init__(self, cli_app):
+        self.cli_app = cli_app
+
+    def execute(self):
         try:
             self.cli_app.run()
         except KeyboardInterrupt:
-            # Handle ctrl+C gracefully
             pass
         except EOFError:
-            # Handle ctrl+D gracefully
             pass
         except Exception as e:
-            print(f"Oh no! Unexpected Error: {e}")
+            print(f"Unexpected Error: {e}")
 
-    def run_debug_cli(self):
+
+class RunDebugCLICommand(Command):
+    def __init__(self, cli_app):
+        self.cli_app = cli_app
+
+    def execute(self):
         self.cli_app.run()  # Debug mode does not handle exceptions
 
-    def run_gui(self):
-        self.block_gui_terminal()
+
+class RunGUICommand(Command):
+    def execute(self):
+        sys.stdout = open(os.devnull, 'w')  # Block GUI from printing to the terminal
         app = QApplication(sys.argv)
+        mainWindow = GUIV2()
+        controller = ControllerGUIV2(mainWindow)
+        mainWindow.show()
+        sys.exit(app.exec())
 
-        try:
-            dialog = VersionSelectionDialog()
-            result = dialog.exec()
 
-            if result == QDialog.DialogCode.Accepted:
-                if dialog.selected_version == "1":
-                    mainWindow = ViewGUI()
-                    controller = ControllerGUI(mainWindow)
-                elif dialog.selected_version == "2":
-                    mainWindow = GUIV2()
-                    controller = ControllerGUIV2(mainWindow)
-                elif dialog.selected_version == "3":
-                    mainWindow = GUI3()
-                else:
-                    print("Invalid selection, defaulting to Gui V2.")
-                    mainWindow = GUIV2()
-
-                mainWindow.show()
-                sys.exit(app.exec())
-            else:
-                print("No selection made, exiting.")
-                sys.exit(0)
-        except KeyboardInterrupt:
-            print("\nApplication closed.")
-        except Exception as e:
-            print(f"Unexpected error occurred: {e}")
-
-    def main(self):
-        if len(sys.argv) >= 2 and sys.argv[1] == 'cli':
-            self.run_cli()
-        elif len(sys.argv) >= 2 and sys.argv[1] == 'debug':
-            self.run_debug_cli()
-        else:
-            self.run_gui()
-
-if __name__ == '__main__':
-    facade = ApplicationFacade()
-    facade.main()
+if __name__ == "__main__":
+    cli_app = CLI_Controller()
+    commands = {
+        "cli": RunCLICommand(cli_app),
+        "debug": RunDebugCLICommand(cli_app),
+        "gui": RunGUICommand()
+    }
+    mode = sys.argv[1] if len(sys.argv) > 1 else "gui"
+    commands[mode].execute()

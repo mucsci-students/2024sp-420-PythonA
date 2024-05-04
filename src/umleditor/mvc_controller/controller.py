@@ -82,6 +82,10 @@ class Controller:
             return CE.IOFailedError("Save", "invalid filename")
 
         self.save(answer)
+    
+    def GUIquit(self):
+        self.momento.cleanup_states()
+
 
     def save(self, name: str) -> None:
         '''

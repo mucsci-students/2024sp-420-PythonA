@@ -1,4 +1,5 @@
 import math
+import random
 
 from PyQt6.QtCore import pyqtSignal, Qt, QPoint, QUrl
 from PyQt6.QtWidgets import (QDialog, QMainWindow, QWidget, QVBoxLayout, QPushButton, QApplication, QGridLayout,
@@ -27,6 +28,10 @@ class DiagramArea(QWidget):
         classCard.show()
         self.classCards[className] = classCard  
         classCard.cardMoved.connect(lambda: self.updateEntityPosition(classCard))
+         # Calculate the new position based on the last card's position and offset
+        newPosition = self.lastCardPosition + self.offsetIncrement
+        self.lastCardPosition = newPosition  # Update the last card's position
+        classCard.move(newPosition)  # Move the card to the new position
 
     def removeClassCard(self, className):
         if className in self.classCards:
@@ -43,7 +48,8 @@ class DiagramArea(QWidget):
             # Get the new position from the ClassCard
             newPosition = classCard.pos()
             # Update the entity's location based on classCard's current position
-            classCard._entity._location = [newPosition.x(), newPosition.y()]   
+            classCard._entity._location = [newPosition.x(), newPosition.y()]
+            self.update()
                     
     def clearAll(self):
         """Clears all visual elements from the diagram area."""
@@ -175,4 +181,15 @@ class DiagramArea(QWidget):
         pixmap.save(filePath, "PNG")
         
     def updateDiagram(self):
-        self.update()  
+        self.update()
+
+    def get_random_color(self):
+        # Dark mode color palette excluding black, white, and gray
+        colors = [
+            "#E57373", "#F06292", "#BA68C8", "#9575CD", "#7986CB",
+            "#64B5F6", "#4FC3F7", "#4DD0E1", "#4DB6AC", "#81C784",
+            "#AED581", "#DCE775", "#FFF176", "#FFD54F", "#FFB74D",
+            "#FF8A65", "#A1887F", "#E0E0E0", "#90A4AE"
+        ]
+
+        return random.choice(colors)
