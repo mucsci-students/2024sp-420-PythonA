@@ -125,6 +125,7 @@ class ClassCard (QWidget):
         self._methods_label.setMinimumHeight(15)
         # Set style for entire widget
         self.setStyleSheet("background-color: #212121;")
+        
     def add_field(self, field):
             """
             Adds a field.
