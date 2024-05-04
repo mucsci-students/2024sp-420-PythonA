@@ -422,47 +422,53 @@ class GUIV2(QMainWindow):
 
         layout = QVBoxLayout(dialog)
 
-        # Section for Methods
+
         methodsLabel = QLabel("Methods")
         layout.addWidget(methodsLabel)
 
         btnAddMethod = QPushButton("Add Method")
         btnAddMethod.clicked.connect(self.addMethodAction)
         layout.addWidget(btnAddMethod)
+        
+        for entity in self._diagram._entities:
+            if len(entity._methods) != 0:
+                btnRemoveMethod = QPushButton("Remove Method")
+                btnRemoveMethod.clicked.connect(self.removeMethodAction)
+                layout.addWidget(btnRemoveMethod)
 
-        btnRemoveMethod = QPushButton("Remove Method")
-        btnRemoveMethod.clicked.connect(self.removeMethodAction)
-        layout.addWidget(btnRemoveMethod)
-
-        btnRenameMethod = QPushButton("Rename Method")
-        btnRenameMethod.clicked.connect(self.renameMethodAction)
-        layout.addWidget(btnRenameMethod)
-
-        btnChangeParams = QPushButton("Change Parameters")
-        btnChangeParams.clicked.connect(self.changeMethodParamsAction)
-        layout.addWidget(btnChangeParams)
-
-        # Separator
+                btnRenameMethod = QPushButton("Rename Method")
+                btnRenameMethod.clicked.connect(self.renameMethodAction)
+                layout.addWidget(btnRenameMethod)
+                
+                btnChangeParams = QPushButton("Change Parameters")
+                btnChangeParams.clicked.connect(self.changeMethodParamsAction)
+                layout.addWidget(btnChangeParams)
+                
+                # Separator
         separator = QFrame()
         separator.setFrameShape(QFrame.Shape.HLine)
         separator.setFrameShadow(QFrame.Shadow.Sunken)
         layout.addWidget(separator)
-
-        # Section for Fields
+                
         fieldsLabel = QLabel("Fields")
         layout.addWidget(fieldsLabel)
 
         btnAddField = QPushButton("Add Field")
         btnAddField.clicked.connect(self.addFieldAction)
         layout.addWidget(btnAddField)
+        
+        for entity in self._diagram._entities:        
+            if len(entity._fields) != 0:
 
-        btnRemoveField = QPushButton("Remove Field")
-        btnRemoveField.clicked.connect(self.removeFieldAction)
-        layout.addWidget(btnRemoveField)
+                btnRemoveField = QPushButton("Remove Field")
+                btnRemoveField.clicked.connect(self.removeFieldAction)
+                layout.addWidget(btnRemoveField)
 
-        btnRenameField = QPushButton("Rename Field")
-        btnRenameField.clicked.connect(self.renameFieldAction)
-        layout.addWidget(btnRenameField)
+                btnRenameField = QPushButton("Rename Field")
+                btnRenameField.clicked.connect(self.renameFieldAction)
+                layout.addWidget(btnRenameField)
+                
+
 
         dialog.setLayout(layout)
         dialog.exec()
