@@ -26,6 +26,7 @@ import sys
 
 class GUIV2(QMainWindow):
     _process_task_signal = pyqtSignal(str, QWidget)
+    close_signal = pyqtSignal()
 
     def __init__(self):
             super().__init__()
@@ -176,6 +177,7 @@ class GUIV2(QMainWindow):
         self.sidebarWidget.setObjectName("sidebarWidget")
 
         self.mainLayout.setStretchFactor(self.sidebarWidget, 1)
+        
 
     def fileAction(self):
 
@@ -283,11 +285,6 @@ class GUIV2(QMainWindow):
         btnRedo = QPushButton("Redo")
         btnRedo.clicked.connect(self.redoAction)
         layout.addWidget(btnRedo)
-
-        # # Button for Clear
-        # btnClear = QPushButton("Clear")
-        # btnClear.clicked.connect(self.clearAction)
-        # layout.addWidget(btnClear)
 
         dialog.setLayout(layout)
         dialog.exec()
