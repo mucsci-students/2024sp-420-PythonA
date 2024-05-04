@@ -1,11 +1,8 @@
-from umleditor.mvc_model.relation import Relation
-from umleditor.mvc_model.entity import Entity
-from umleditor.custom_exceptions import CustomExceptions
-
+from umleditor.mvc_model import Relation, Entity, CustomExceptions
 import pytest
 
 def test_import_custom_exceptions():
-    from umleditor.custom_exceptions import CustomExceptions
+    from src.umleditor.mvc_model.custom_exceptions import CustomExceptions
     assert CustomExceptions
 
 def test_create_relation_success():

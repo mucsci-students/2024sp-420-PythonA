@@ -1,5 +1,4 @@
-from umleditor.mvc_model.entity import UML_Method
-from umleditor.custom_exceptions import CustomExceptions
+from umleditor.mvc_model import UML_Method, CustomExceptions
 import pytest
 
 def test_create_method( ):

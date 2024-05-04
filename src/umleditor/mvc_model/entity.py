@@ -1,7 +1,7 @@
 # Primary: Danish
 # Secondary: Zhang
 
-from umleditor.custom_exceptions import CustomExceptions
+from .custom_exceptions import CustomExceptions
 
 
 class Entity:

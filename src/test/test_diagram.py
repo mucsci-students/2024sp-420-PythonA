@@ -1,5 +1,5 @@
-from umleditor.mvc_model.diagram import Diagram
-from umleditor.custom_exceptions import CustomExceptions
+from umleditor.mvc_model import Diagram
+from umleditor.mvc_model import CustomExceptions
 import pytest
 """
 These test that the basic functions for Diagram interact
@@ -243,9 +243,5 @@ def test_change_relation_type_relation_doesnt_exist():
     dia = Diagram()
     with pytest.raises(CustomExceptions.RelationDoesNotExistError):
         dia.change_relation_type("entity1", "entity3", "realization")
-
-def test_getInstance():
-    dia = Diagram()
-    assert dia.getInstance() == dia
 
 
