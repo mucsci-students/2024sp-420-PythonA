@@ -2,8 +2,8 @@
 #Secondary: Zhang
 
 import pytest
-from umleditor.mvc_model import CustomExceptions
-from umleditor.mvc_model import Entity
+from umleditor.custom_exceptions import CustomExceptions
+from umleditor.mvc_model.entity import Entity
 
 
 def test_create_entity():
@@ -196,9 +196,9 @@ def test_rename_multiple_fields():
 
 def test_add_method_success():
     ent1 = Entity("entity1")
-    assert not any(um._name == "method1" and um._return_type == "void" for um in ent1._methods)
-    ent1.add_method("method1", "void")
-    assert any(um._name == "method1" and um._return_type == "void" for um in ent1._methods)
+    assert not any(um._name == "method1" and um._return_type == "int" for um in ent1._methods)
+    ent1.add_method("method1", "int")
+    assert any(um._name == "method1" and um._return_type == "int" for um in ent1._methods)
 
 def test_add_method_already_exists():
     ent1 = Entity("entity1")
@@ -214,17 +214,17 @@ def test_add_method_invalid_return_type():
 
 def test_add_mutliple_methods():
     ent1 = Entity("entity1")
-    assert not any(um._name == "method1" and um._return_type == "void" for um in ent1._methods)
-    assert not any(um._name == "method2" and um._return_type == "void" for um in ent1._methods)
-    assert not any(um._name == "method3" and um._return_type == "void" for um in ent1._methods)
-    assert not any(um._name == "method4" and um._return_type == "void" for um in ent1._methods)
-    ent1.add_method("method1","void")
-    ent1.add_method("method2", "void")
-    ent1.add_method("method3","void")
-    assert any(um._name == "method1" and um._return_type == "void" for um in ent1._methods)
-    assert any(um._name == "method2" and um._return_type == "void" for um in ent1._methods)
-    assert any(um._name == "method3" and um._return_type == "void" for um in ent1._methods)
-    assert not any(um._name == "method4" and um._return_type == "void" for um in ent1._methods)
+    assert not any(um._name == "method1" and um._return_type == "int" for um in ent1._methods)
+    assert not any(um._name == "method2" and um._return_type == "int" for um in ent1._methods)
+    assert not any(um._name == "method3" and um._return_type == "int" for um in ent1._methods)
+    assert not any(um._name == "method4" and um._return_type == "int" for um in ent1._methods)
+    ent1.add_method("method1","int")
+    ent1.add_method("method2", "int")
+    ent1.add_method("method3","int")
+    assert any(um._name == "method1" and um._return_type == "int" for um in ent1._methods)
+    assert any(um._name == "method2" and um._return_type == "int" for um in ent1._methods)
+    assert any(um._name == "method3" and um._return_type == "int" for um in ent1._methods)
+    assert not any(um._name == "method4" and um._return_type == "int" for um in ent1._methods)
 
 def test_delete_method_success():
     ent1 = Entity("entity1")
@@ -235,18 +235,18 @@ def test_delete_method_success():
 
 def test_delete_method_doesnt_exist():
     ent1 = Entity("entity1")
-    assert not any(um._name == "method6" and um._return_type == "void" for um in ent1._methods)
+    assert not any(um._name == "method6" and um._return_type == "int" for um in ent1._methods)
     with pytest.raises(CustomExceptions.MethodNotFoundError):
         ent1.delete_method("method6")
 
 def test_rename_method_success():
     ent1 = Entity("entity1")
-    ent1.add_method("method1","void")
-    assert any(um._name == "method1" and um._return_type == "void" for um in ent1._methods)
-    assert not any(um._name == "method2" and um._return_type == "void" for um in ent1._methods)
+    ent1.add_method("method1","int")
+    assert any(um._name == "method1" and um._return_type == "int" for um in ent1._methods)
+    assert not any(um._name == "method2" and um._return_type == "int" for um in ent1._methods)
     ent1.rename_method("method1", "method2")
-    assert not any(um._name == "method1" and um._return_type == "void" for um in ent1._methods)
-    assert any(um._name == "method2" and um._return_type == "void" for um in ent1._methods)
+    assert not any(um._name == "method1" and um._return_type == "int" for um in ent1._methods)
+    assert any(um._name == "method2" and um._return_type == "int" for um in ent1._methods)
 
 def test_rename_method_old_name_doesnt_exist():
     ent1 = Entity("entity1")
@@ -255,57 +255,64 @@ def test_rename_method_old_name_doesnt_exist():
 
 def test_rename_method_new_name_already_exists():
     ent1 = Entity("entity1")
-    ent1.add_method("method1", "void")
-    ent1.add_method("method2", "void")
+    ent1.add_method("method1", "int")
+    ent1.add_method("method2", "int")
     with pytest.raises(CustomExceptions.MethodExistsError):
         ent1.rename_method("method1", "method2")
 
 def test_rename_multiple_methods():
     ent1 = Entity("entity1")
-    ent1.add_method("method1","void")
-    ent1.add_method("method2","void")
-    assert any(um._name == "method1" and um._return_type == "void" for um in ent1._methods)
-    assert any(um._name == "method2" and um._return_type == "void" for um in ent1._methods)
-    assert not any(um._name == "method3" and um._return_type == "void" for um in ent1._methods)
-    assert not any(um._name == "method4" and um._return_type == "void" for um in ent1._methods)
+    ent1.add_method("method1","int")
+    ent1.add_method("method2","int")
+    assert any(um._name == "method1" and um._return_type == "int" for um in ent1._methods)
+    assert any(um._name == "method2" and um._return_type == "int" for um in ent1._methods)
+    assert not any(um._name == "method3" and um._return_type == "int" for um in ent1._methods)
+    assert not any(um._name == "method4" and um._return_type == "int" for um in ent1._methods)
     ent1.rename_method("method1", "method3")
     ent1.rename_method("method2", "method4")
-    assert not any(um._name == "method1" and um._return_type == "void" for um in ent1._methods)
-    assert not any(um._name == "method2" and um._return_type == "void" for um in ent1._methods)
-    assert any(um._name == "method3" and um._return_type == "void" for um in ent1._methods)
-    assert any(um._name == "method4" and um._return_type == "void" for um in ent1._methods)
+    assert not any(um._name == "method1" and um._return_type == "int" for um in ent1._methods)
+    assert not any(um._name == "method2" and um._return_type == "int" for um in ent1._methods)
+    assert any(um._name == "method3" and um._return_type == "int" for um in ent1._methods)
+    assert any(um._name == "method4" and um._return_type == "int" for um in ent1._methods)
 
 
 def test_add_param():
     ent1 = Entity("entity1")
-    ent1.add_method("method1", "void")
+    ent1.add_method("method1", "int")
     method = ent1._methods[0]
     method.add_parameters("param1")
-    assert ("param1") in method._params
-
+    assert "param1" in method._params
+    
+def test_add_param_already_exists():
+    ent1 = Entity("entity1")
+    ent1.add_method("method1", "int")
+    method = ent1._methods[0]
+    method.add_parameters("param2")
+    with pytest.raises(CustomExceptions.ParameterExistsError):
+        method.add_parameters("param2")
 
 def test_add_multiple_param():
     ent1 = Entity("entity1")
-    ent1.add_method("method1", "void")
+    ent1.add_method("method1", "int")
     method = ent1._methods[0]
     method.add_parameters("param2")
     method.add_parameters("param3")
     method.add_parameters("param4")
-    assert ("param2") in method._params
-    assert ("param3") in method._params
-    assert ("param4") in method._params
+    assert "param2" in method._params
+    assert "param3" in method._params
+    assert "param4" in method._params
 
 def test_delete_param():
     ent1 = Entity("entity1")
-    ent1.add_method("method1", "void")
+    ent1.add_method("method1", "int")
     method = ent1._methods[0]
     method.add_parameters("param1")
     method.remove_parameters("param1")
-    assert ("param1") not in method._params
+    assert "param1" not in method._params
 
 def test_remove_multiple_param():
     ent1 = Entity("entity1")
-    ent1.add_method("method1", "void")
+    ent1.add_method("method1", "int")
     method = ent1._methods[0]
     method.add_parameters("param1")
     method.add_parameters("param2")
@@ -315,27 +322,27 @@ def test_remove_multiple_param():
     method.remove_parameters("param2")
     method.remove_parameters("param3")
     method.remove_parameters("param4")
-    assert ("param1") not in method._params
-    assert ("param2") not in method._params
-    assert ("param3") not in method._params
-    assert ("param4") not in method._params
+    assert "param1" not in method._params
+    assert "param2" not in method._params
+    assert "param3" not in method._params
+    assert "param4" not in method._params
 
 def test_change_param():
     ent1 = Entity("entity1")
-    ent1.add_method("method1", "void")
+    ent1.add_method("method1", "int")
     method = ent1._methods[0]
     method.add_parameters("param1")
     method.change_parameters("param1","param2")
-    assert ("param2") in method._params
+    assert "param2" in method._params
 
 def test_change_multiple_param():
     ent1 = Entity("entity1")
-    ent1.add_method("method1", "void")
+    ent1.add_method("method1", "int")
     method = ent1._methods[0]
     method.add_parameters("param1")
     method.add_parameters("param2")
     method.change_parameters("param1", "param3")
     method.change_parameters("param2", "param4")
-    assert ("param3") in method._params
-    assert ("param4") in method._params
+    assert "param3" in method._params
+    assert "param4" in method._params
 

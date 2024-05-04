@@ -1,4 +1,4 @@
-from umleditor.mvc_model import CustomExceptions as CE
+from umleditor.custom_exceptions import CustomExceptions as CE
 from umleditor.mvc_controller.autofill import CommandCompleter
 from prompt_toolkit import prompt
 from prompt_toolkit.key_binding import KeyBindings

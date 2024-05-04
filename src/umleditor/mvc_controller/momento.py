@@ -1,5 +1,5 @@
 import os
-from umleditor.mvc_model import CustomExceptions as CE
+from umleditor.custom_exceptions import CustomExceptions as CE
 
 
 class Momento:
