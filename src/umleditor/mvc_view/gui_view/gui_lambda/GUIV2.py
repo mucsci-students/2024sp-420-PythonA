@@ -27,6 +27,8 @@ import sys
 class GUIV2(QMainWindow):
     _process_task_signal = pyqtSignal(str, QWidget)
     close_signal = pyqtSignal()
+    actionNum = 0
+    undoNum = 0
 
     def __init__(self):
             super().__init__()
@@ -39,6 +41,7 @@ class GUIV2(QMainWindow):
             self.setWindowTitle("UML Editor - GUI V2")
             self.setGeometry(300, 300, 850, 850)
             self.initUI()
+
 
             self.applyDarkTheme()
             self.currentFilePath = " "
@@ -157,6 +160,16 @@ class GUIV2(QMainWindow):
                     btn.setStyleSheet(f"QPushButton {{border: 2px solid {color};}}")
                     btn.clicked.connect(action)
                     self.sidebarLayout.addWidget(btn)
+            elif text == "Undo":
+                if self.actionNum > 0:
+                    btn.setStyleSheet(f"QPushButton {{border: 2px solid {color};}}")
+                    btn.clicked.connect(action)
+                    self.sidebarLayout.addWidget(btn)
+            elif text == "Redo":
+                if self.undoNum > 0:
+                    btn.setStyleSheet(f"QPushButton {{border: 2px solid {color};}}")
+                    btn.clicked.connect(action)
+                    self.sidebarLayout.addWidget(btn)                    
             else:
                 btn.setStyleSheet(f"QPushButton {{border: 2px solid {color};}}")
                 btn.clicked.connect(action)
@@ -294,10 +307,20 @@ class GUIV2(QMainWindow):
     def undoAction(self):
         self._process_task_signal.emit('undo', self)
         self.refreshGUI()
+        self.undoNum += 1
+        self.actionNum -= 1
+        self.setupSidebar(self.mainLayout)
+        self.refreshGUI()
+        
+        
         
 
     def redoAction(self):
         self._process_task_signal.emit('redo', self)
+        self.refreshGUI()
+        self.undoNum -= 1
+        self.actionNum += 1
+        self.setupSidebar(self.mainLayout)
         self.refreshGUI()
         
 
@@ -347,6 +370,7 @@ class GUIV2(QMainWindow):
                 entity = self._diagram.get_entity(class_name)
                 classCard = ClassCard(class_name, entity)
                 self.diagramArea.addClassCard(classCard, class_name)
+                self.actionNum += 1
                 if len(self._diagram._entities) <= 2:
                     self.setupSidebar(self.mainLayout)
                     self.refreshGUI()
@@ -359,6 +383,7 @@ class GUIV2(QMainWindow):
             if selected_class_name:
                 self.diagramArea.removeClassCard(selected_class_name)
                 self._process_task_signal.emit('class -d ' + selected_class_name, self)
+                self.actionNum += 1
                 if len(self._diagram._entities) <= 2:
                     self.setupSidebar(self.mainLayout)
                     self.refreshGUI()
@@ -370,6 +395,7 @@ class GUIV2(QMainWindow):
             selected_class_name = dialog.getSelectedClass()
         new_class_name = dialog.getNewClassName()
         if new_class_name and new_class_name not in class_names:
+            self.actionNum += 1
             self._process_task_signal.emit(f'class -r {selected_class_name} {new_class_name}', self)
             self.diagramArea.renameClassCard(selected_class_name, new_class_name)
         else:
@@ -457,6 +483,7 @@ class GUIV2(QMainWindow):
                 for classCard in self.diagramArea.findChildren(ClassCard):
                     if classCard._name == class_name:
                         classCard.add_method(f"{method_name} : {return_type}")
+                        self.actionNum += 1
                         break
             else:
                 QMessageBox.warning(self, "Error", "Method name cannot be empty.")
@@ -476,6 +503,7 @@ class GUIV2(QMainWindow):
                 for class_card in self.findChildren(ClassCard):
                     if class_card._name == class_name:
                         class_card.remove_method(method_name_and_type)
+                        self.actionNum += 1
                         break
 
     def renameMethodAction(self):
@@ -493,6 +521,7 @@ class GUIV2(QMainWindow):
                 for classCard in self.diagramArea.findChildren(ClassCard):
                     if classCard._name == class_name:
                         classCard.rename_method(old_method_name, new_method_name)
+                        self.actionNum += 1
                         break
             else:
                 QMessageBox.warning(self, "Error", "New method name cannot be empty.")
@@ -509,6 +538,7 @@ class GUIV2(QMainWindow):
                     for classCard in self.diagramArea.findChildren(ClassCard):
                         if classCard._name == class_name:
                             classCard.add_param(method_name, param)
+                            self.actionNum += 1
                             break
             for param in toRemove:
                 if toRemove:
@@ -516,6 +546,7 @@ class GUIV2(QMainWindow):
                     for classCard in self.diagramArea.findChildren(ClassCard):
                         if classCard._name == class_name:
                             classCard.remove_param(method_name, param)
+                            self.actionNum += 1
                             break
                 
                 
@@ -532,6 +563,7 @@ class GUIV2(QMainWindow):
                 for classCard in self.diagramArea.findChildren(ClassCard):
                     if classCard._name == class_name:
                         classCard.add_field(f"{field_name} : {type_name}")
+                        self.actionNum += 1
                         break
             else:
                 QMessageBox.warning(self, "Error", "Field name cannot be empty.")
@@ -552,6 +584,7 @@ class GUIV2(QMainWindow):
                 for class_card in self.findChildren(ClassCard):
                     if class_card._name == class_name:
                         class_card.remove_field(field_name_and_type)
+                        self.actionNum += 1
                         break
 
     def renameFieldAction(self):
@@ -571,6 +604,7 @@ class GUIV2(QMainWindow):
                     for classCard in self.diagramArea.findChildren(ClassCard):
                         if classCard._name == class_name:
                             classCard.rename_field(old_field_name, new_field_name)
+                            self.actionNum += 1
                             break
                 else:
                     QMessageBox.warning(self, "Error", "New field name cannot be empty.")
@@ -627,9 +661,13 @@ class GUIV2(QMainWindow):
         if dialog.exec() == QDialog.DialogCode.Accepted:
             src_class, dest_class, relationship_type = dialog.getRelationshipInfo()
             if src_class and dest_class and relationship_type:
+                if src_class != dest_class:
+                    self._process_task_signal.emit (f'rel -a {src_class} {dest_class} {relationship_type}', self)
+                    self.diagramArea.addRelationship(src_class, dest_class, relationship_type)
+                    self.actionNum += 1
+                else:
+                    QMessageBox.warning(self, "Error", "Source and destination cannot be the same.")
                 
-                self._process_task_signal.emit (f'rel -a {src_class} {dest_class} {relationship_type}', self)
-                self.diagramArea.addRelationship(src_class, dest_class, relationship_type)
                 
         self.refreshRelationshipsList()
        
@@ -646,6 +684,7 @@ class GUIV2(QMainWindow):
             if src_class and dest_class:
                 self._process_task_signal.emit(f'rel -d {src_class} {dest_class}', self)
                 self.diagramArea.removeRelationship(src_class, dest_class)
+                self.actionNum += 1
             
             self.refreshRelationshipsList()
             
